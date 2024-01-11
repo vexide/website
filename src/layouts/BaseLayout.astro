@@ -1,0 +1,69 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--base-hue: 228deg;
+		--accent-red-hue: 1deg;
+		--accent-yellow-hue: 47deg;
+
+		--accent-red: hsl(var(--accent-red-hue), 76%, 58%), #e54643;
+		--accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%), #e6c85c;
+
+		--background-primary: hsl(var(--base-hue), 12%, 16%), #24262e;
+		--background-secondary: hsl(var(--base-hue), 12%, 24%), #363945;
+
+		--foreground-primary: hsl(var(--base-hue), 27%, 82%), #c5cadd;
+		--foreground-secondary: hsl(var(--base-hue), 20%, 68%), #9da4be;
+
+		--font-monospace: "Iosevka", ui-monospace, Menlo, Monaco,
+			"Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
+			"Ubuntu Monospace", "Source Code Pro", "Fira Mono",
+			"Droid Sans Mono", "Courier New", monospace;
+
+		--font-primary: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
+			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
+	}
+
+	html,
+	body {
+		color-scheme: dark;
+		font-family: var(--font-primary);
+		background-color: var(--background-primary);
+		color: var(--foreground-primary);
+		margin: 0;
+		padding: 0;
+	}
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	code {
+		font-family: var(--font-monospace);
+	}
+</style>
