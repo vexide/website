@@ -86,17 +86,14 @@ const { title = "" } = Astro.props;
 		gap: 36px;
 	}
 
-	.navigation-inner > ul {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
+	.navigation-items {
 		display: flex;
 		align-items: center;
-	}
-
-	.navigation-items {
 		gap: 36px;
 		flex: 1 1 auto;
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
 	}
 
 	.navigation-actions {
@@ -206,7 +203,8 @@ const { title = "" } = Astro.props;
 	}
 
 	@media only screen and (max-width: 768px) {
-		.navigation-inner > ul {
+		.navigation-items,
+		.navigation-actions {
 			display: none;
 		}
 
