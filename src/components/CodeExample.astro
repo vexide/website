@@ -1,37 +1,76 @@
 ---
+import { Code } from "astro:components";
+
 interface Props {
 	filename: string;
-	lang?: string;
+	lang: string;
 	code: string;
-	[key: string]: any;
 }
 
 const {
-	element: Element = "section",
-	class: className,
-	...rest
-} = Astro.props as Props;
+	filename,
+	lang,
+	code,
+} = Astro.props;
 ---
 
-<Element class:list={["page-section", { className }]} {...rest}>
-	<div class="page-section-inner">
-		<slot />
+<div class="code-example">
+	<div class="code-example-header">
+		<strong>{filename}</strong>
+		{Astro.slots.has("actions") && (
+			<div class="code-example-actions">
+				<slot name="actions" />
+			</div>
+		)}
 	</div>
-	
-	<slot name="outer" />
-</Element>
+	<!-- @ts-ignore -->
+	<Code {lang} {code}></Code>
+</div>
 
 <style>
-	.page-section {
-		position: relative;
+	.code-example {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--background-secondary);
+		flex: 1 1 auto;
+		min-height: 0;
+		background: var(--background-primary);
 	}
 
-	.page-section-inner {
-		display: block;
+	.code-example-header {
+		user-select: none;
+		display: flex;
+		background: var(--background-secondary);
+		padding-inline: 12px;
+		padding-block: 8px;
+		justify-content: space-between;
 		position: relative;
-		box-sizing: border-box;
-		max-inline-size: 1280px;
-		padding-inline: 24px;
-		margin-inline: auto;
+		align-items: center;
+	}
+
+	.code-example-header strong {
+		font-weight: 600;
+		font-size: 1.4rem;
+	}
+
+	.code-example :global(pre) {
+		background-color: transparent !important;
+		padding: 12px;
+		margin: 0;
+		overflow: auto;
+	}
+
+	.code-example :global(code) {
+		line-height: 1.4;
+		counter-reset: step;
+		counter-increment: step 0;
+	}
+
+	.code-example :global(code .line::before) {
+		content: counter(step);
+		counter-increment: step;
+		display: inline-block;
+		margin-inline-end: 1.5rem;
+		color: var(--foreground-secondary);
 	}
 </style>

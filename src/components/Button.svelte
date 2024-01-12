@@ -33,7 +33,7 @@
 		font-family: inherit;
 		border-radius: 0;
 		font-family: var(--font-monospace);
-		font-size: 16px;
+		font-size: 1.6rem;
 		font-weight: 400;
 		padding-inline: 24px;
 		padding-block: 12px;
