@@ -1,18 +1,38 @@
 ---
+import { GITHUB_REPO_URL } from "~/config";
+
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import Card from "~/components/PageSection.astro";
+import Button from "~/components/Button.svelte";
 import PageSection from "~/components/PageSection.astro";
 ---
 
 <BaseLayout>
 	<main>
 		<PageSection id="hero">
-			<h1 class="title">
-				Open-source Rust tooling for VEX robots.
-			</h1>
-			<p class="subtext">
-				pros-rs provides opinionated bindings to the <a href="https://pros.cs.purdue.edu/" target="_blank" rel="noreferrer noopener">PROS kernel</a> and tooling for programming VEX V5 robots using the <a href="https://rust-lang.com/" target="_blank" rel="noreferrer noopener">Rust Programming Language</a>. 🦀
-			</p>
+			<div class="hero-left">
+				<div class="hero-lead">
+					<h1 class="title">
+						Open-source Rust tooling for VEX robots.
+					</h1>
+					<p class="subtext">
+						pros-rs provides opinionated bindings to the <a href="https://pros.cs.purdue.edu/" target="_blank" rel="noreferrer noopener">PROS kernel</a> and tooling for programming VEX V5 robots using the <a href="https://rust-lang.com/" target="_blank" rel="noreferrer noopener">Rust Programming Language</a>. 🦀
+					</p>
+				</div>
+				<div class="hero-buttons">
+					<Button variant="accent-yellow" href="#">Read The Book</Button>
+					<Button
+						variant="accent-red"
+						href={GITHUB_REPO_URL}
+						rel="noreferrer noopener"
+						target="_blank"
+					>
+						GitHub
+					</Button>
+				</div>
+			</div>
+			<div class="hero-right">
+
+			</div>
 			<div class="background-pattern" slot="outer"></div>
 		</PageSection>
 	</main>
@@ -21,9 +41,13 @@ import PageSection from "~/components/PageSection.astro";
 <style>
 	:global(#hero) {
 		z-index: 1;
+		overflow: hidden;
 	}
 
 	:global(#hero > .page-section-inner) {
+		display: flex;
+		gap: 84px;
+		min-block-size: 800px;
 		padding-block: 96px;
 	}
 
@@ -32,7 +56,7 @@ import PageSection from "~/components/PageSection.astro";
 		inline-size: 100%;
 		block-size: 100%;
 		inset: 0;
-		background-image: linear-gradient(hsl(228 12% 30% / 1), var(--background-secondary), transparent);
+		background-image: linear-gradient(hsl(var(--base-hue), 12%, 30%), var(--background-secondary), transparent);
 		mask: url("/images/pattern_circuits.svg");
 		z-index: -1;
 	}
@@ -50,5 +74,30 @@ import PageSection from "~/components/PageSection.astro";
 		font-weight: 400;
 		max-inline-size: 65ch;
 		color: var(--foreground-secondary);
+	}
+
+	.hero-left,
+	.hero-right {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hero-left {
+		flex: 1 1 60%;
+	}
+
+	.hero-right {
+		flex: 1 0 40%;
+		gap: 20px;
+	}
+
+	.hero-lead {
+		flex: 1 1 auto;
+	}
+
+	.hero-buttons {
+		flex: 0 0 auto;
+		display: flex;
+		gap: 16px;
 	}
 </style>
