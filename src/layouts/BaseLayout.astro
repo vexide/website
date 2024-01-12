@@ -27,7 +27,7 @@ const {
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- Favicon & Page Theme -->
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
         <meta name="color-scheme" content="dark" />
         <meta name="theme-color" content="#e54643" />
 
@@ -78,14 +78,16 @@ const {
 		--accent-red-hue: 1deg;
 		--accent-yellow-hue: 47deg;
 
-		--accent-red: hsl(var(--accent-red-hue), 76%, 58%);
-		--accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%);
-
+		
 		--background-primary: hsl(var(--base-hue), 12%, 16%);
 		--background-secondary: hsl(var(--base-hue), 12%, 24%);
+		--background-accent-red: hsl(var(--accent-red-hue), 76%, 58%);
+		--background-accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%);
 
 		--foreground-primary: hsl(var(--base-hue), 27%, 82%);
 		--foreground-secondary: hsl(var(--base-hue), 20%, 68%);
+		--foreground-accent-red: hsl(var(--accent-red-hue), 76%, 78%);
+		--foreground-accent-yellow: hsl(var(--accent-yellow-hue), 76%, 78%);
 
 		--font-monospace: "Iosevka", ui-monospace, Menlo, Monaco,
 			"Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
