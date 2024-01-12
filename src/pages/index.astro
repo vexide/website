@@ -4,10 +4,15 @@ import { GITHUB_REPO_URL, CRATE_NAME, EXAMPLES } from "~/constants";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import PageSection from "~/components/PageSection.astro";
 import CodeExample from "~/components/CodeExample.astro";
-import HeroCard from "~/components/HeroCard.astro";
+import BlogCard from "~/components/BlogCard.astro";
 
 import Button from "~/components/Button.svelte";
 import CircuitsPattern from "~/components/CircuitsPattern.svelte";
+
+const latestBlogPost = (await Astro.glob("./blog/posts/**.md"))
+	.sort((a, b) => (
+		new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime()
+	))[0];
 ---
 
 <BaseLayout>
@@ -49,9 +54,14 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 			</div>
 			<div class="hero-right">
 				<CodeExample lang="rust" filename="main.rs" code={EXAMPLES[0].code} />
-				<HeroCard
-					title="Something will eventually go here."
-					description="but not yet :^)"
+				<BlogCard
+					url={latestBlogPost.url ?? "#"}
+					title={latestBlogPost.frontmatter.title}
+					description={latestBlogPost.frontmatter.description}
+					author={latestBlogPost.frontmatter.author}
+					date={new Date(latestBlogPost.frontmatter.date)}
+					thumbnail={latestBlogPost.frontmatter.thumbnail}
+					thumbnail_alt={latestBlogPost.frontmatter.thumbnail}
 				/>
 			</div>
 			<Fragment slot="outer">
@@ -69,12 +79,12 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 		}
 	}
 
-	:global(#hero) {
+	#hero {
 		z-index: 1;
 		border-bottom: 1px solid var(--background-secondary);
 	}
 
-	:global(#hero > .page-section-inner) {
+	#hero > :global(.page-section-inner) {
 		display: flex;
 		gap: 84px;
 		min-block-size: 720px;

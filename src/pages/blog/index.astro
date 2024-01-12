@@ -1,0 +1,9 @@
+---
+import BaseLayout from "~/layouts/BaseLayout.astro";
+
+const blogPosts = await Astro.glob("./posts/**.md");
+---
+
+<BaseLayout>
+	{JSON.stringify(blogPosts)}
+</BaseLayout>
