@@ -1,5 +1,5 @@
 ---
-import Button from './Button.svelte';
+import Button from "./Button.svelte";
 
 interface Props {
 	title: string;
@@ -11,15 +11,8 @@ interface Props {
 	thumbnail_alt: string;
 }
 
-const {
-	title,
-	description,
-	author,
-	date,
-	url,
-	thumbnail,
-	thumbnail_alt
-} = Astro.props;
+const { title, description, author, date, url, thumbnail, thumbnail_alt } =
+	Astro.props;
 ---
 
 <div class="blog-card">
@@ -29,13 +22,20 @@ const {
 	</a>
 	<p class="blog-card-description">{description}</p>
 	<div class="blog-card-metadata">
-		<a class="blog-card-author" href={`httpss://github.com/${author}`} target="_blank" rel="noreferrer noopeners">
+		<a
+			class="blog-card-author"
+			href={`https://github.com/${author}`}
+			target="_blank"
+			rel="noreferrer noopeners"
+		>
 			<img src={`https://github.com/${author}.png`} alt="Profile Photo" />
 			<span>
 				<strong>{author}</strong> • {date.toLocaleDateString()}
 			</span>
 		</a>
-		<Button class="blog-card-button" variant="accent-yellow" href={url}>Read More</Button>
+		<Button class="blog-card-button" variant="accent-yellow" href={url}>
+			Read More
+		</Button>
 	</div>
 </div>
 
@@ -49,20 +49,32 @@ const {
 		padding: 24px;
 		border-radius: 8px;
 		background: var(--background-secondary);
-		box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02), 6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028), 12.5px 12.5px 10px rgba(0, 0, 0, 0.035), 22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042), 41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05), 100px 100px 80px rgba(0, 0, 0, 0.07);
+		box-shadow:
+			2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02),
+			6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028),
+			12.5px 12.5px 10px rgba(0, 0, 0, 0.035),
+			22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042),
+			41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05),
+			100px 100px 80px rgba(0, 0, 0, 0.07);
 		animation: slide-up 500ms backwards 650ms;
 		z-index: 1;
 	}
 
 	.blog-card-thumbnail {
+		user-select: none;
+		object-fit: cover;
 		inset: 0;
 		z-index: -1;
 		position: absolute;
 		inline-size: 100%;
 		block-size: 100%;
-		mask: radial-gradient(circle at top left, rgba(0, 0, 0, 0.025), rgba(0, 0, 0, 0.15));
+		mask: radial-gradient(
+			circle at top left,
+			rgba(0, 0, 0, 0.025),
+			rgba(0, 0, 0, 0.15)
+		);
 	}
-	
+
 	.blog-card-title {
 		text-decoration: none;
 		margin: 0;
@@ -108,7 +120,7 @@ const {
 		font-weight: 600;
 		color: var(--foreground-primary);
 	}
-	
+
 	.blog-card-author:hover strong {
 		border-color: currentColor;
 	}
@@ -119,7 +131,7 @@ const {
 		inline-size: 24px;
 		block-size: auto;
 	}
-	
+
 	.blog-card-button {
 		padding-block: 8px;
 	}

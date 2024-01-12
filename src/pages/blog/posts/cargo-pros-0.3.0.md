@@ -7,10 +7,11 @@ thumbnail_alt: "Thumbnail Image"
 date: 2024-01-08
 ---
 
-cargo-pros v0.3.0 📦
+# cargo-pros v0.3.0 📦
 
 Added
-- Added cargo pros sim command to easily simulate the current project. Cargo-pros will use Cargo's project metadata to provide a better simulator experience.
+
+-   Added cargo pros sim command to easily simulate the current project. Cargo-pros will use Cargo's project metadata to provide a better simulator experience.
 
 Full Changelog: https://github.com/pros-rs/cargo-pros/compare/v0.2.0...v0.3.0
 Update: `cargo install cargo-pros``

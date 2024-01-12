@@ -7,18 +7,18 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://pros-rs.pages.app/",
-  integrations: [sitemap(), svelte()],
-  output: "hybrid",
-  vite: {
-    build: {
-      sourcemap: true
-    },
-    resolve: {
-      alias: {
-        "~": path.resolve("./src")
-      }
-    }
-  },
-  adapter: cloudflare()
+	site: "https://pros-rs.pages.app/",
+	integrations: [sitemap(), svelte()],
+	output: "hybrid",
+	vite: {
+		build: {
+			sourcemap: true,
+		},
+		resolve: {
+			alias: {
+				"~": path.resolve("./src"),
+			},
+		},
+	},
+	adapter: cloudflare(),
 });
