@@ -2,8 +2,10 @@
 import { GITHUB_REPO_URL } from "~/config";
 
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import Button from "~/components/Button.svelte";
 import PageSection from "~/components/PageSection.astro";
+
+import Button from "~/components/Button.svelte";
+import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 ---
 
 <BaseLayout>
@@ -33,7 +35,9 @@ import PageSection from "~/components/PageSection.astro";
 			<div class="hero-right">
 
 			</div>
-			<div class="background-pattern" slot="outer"></div>
+			<Fragment slot="outer">
+				<CircuitsPattern client:load />
+			</Fragment>
 		</PageSection>
 	</main>
 </BaseLayout>
@@ -51,16 +55,6 @@ import PageSection from "~/components/PageSection.astro";
 		padding-block: 96px;
 	}
 
-	.background-pattern {
-		position: absolute;
-		inline-size: 100%;
-		block-size: 100%;
-		inset: 0;
-		background-image: linear-gradient(hsl(var(--base-hue), 12%, 30%), var(--background-secondary), transparent);
-		mask: url("/images/pattern_circuits.svg");
-		z-index: -1;
-	}
-
 	.title {
 		font-size: 7.2rem;
 		font-weight: 200;
@@ -74,6 +68,17 @@ import PageSection from "~/components/PageSection.astro";
 		font-weight: 400;
 		max-inline-size: 65ch;
 		color: var(--foreground-secondary);
+	}
+
+	.subtext a {
+		color: var(--foreground-accent-red);
+		text-decoration: none;
+		border-bottom: 1px solid currentColor;
+		transition: 250ms ease;
+	}
+
+	.subtext a:hover {
+		opacity: 0.8;
 	}
 
 	.hero-left,

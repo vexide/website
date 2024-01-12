@@ -38,7 +38,7 @@
 		padding-inline: 24px;
 		padding-block: 12px;
 		gap: 8px;
-		border: none;
+		outline: none;
 		/* text-transform: uppercase; */
 		transition: 0.15s ease;
 	}
@@ -56,6 +56,17 @@
 	.button.variant-accent-yellow {
 		background-color: var(--background-accent-yellow);
 		color: var(--background-primary);
+	}
+
+	.button.variant-accent-yellow:active,
+	.button.variant-accent-red:active {
+		background-color: #fff;
+		color: var(--background-primary);
+	}
+
+	.button:focus {
+		outline: 2px solid var(--foreground-secondary);
+		outline-offset: 2px;
 	}
 
 	.button.disabled {
