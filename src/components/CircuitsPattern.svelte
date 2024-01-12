@@ -57,4 +57,10 @@
 		block-size: 100vw;
 		border-radius: 50%;
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.circuits-pattern::after {
+			content: none;
+		}
+	}
 </style>

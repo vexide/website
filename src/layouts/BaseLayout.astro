@@ -60,8 +60,9 @@ const {
 	@font-face {
 		font-family: "Iosevka";
 		font-style: normal;
-		font-weight: 200;
-		src: url("/fonts/Iosevka-Fixed-Extralight-latin-ext.woff2") format("woff2");
+		font-weight: 200 400;
+		src: url("/fonts/Iosevka-Fixed-Extralight-latin-ext.woff2") format("woff2"),
+			url("/fonts/Iosevka-Fixed-latin-ext.woff2") format("woff2");
 		unicode-range: U+0000-00FF;
 	}
 
@@ -78,7 +79,6 @@ const {
 		--accent-red-hue: 1deg;
 		--accent-yellow-hue: 47deg;
 
-		
 		--background-primary: hsl(var(--base-hue), 12%, 16%);
 		--background-secondary: hsl(var(--base-hue), 12%, 24%);
 		--background-accent-red: hsl(var(--accent-red-hue), 76%, 58%);
@@ -126,6 +126,11 @@ const {
 	:focus-visible {
 		outline: 2px solid var(--foreground-secondary);
 		outline-offset: 2px;
+	}
+
+	::selection {
+		background-color: hsla(var(--base-hue), 20%, 68%, 80%);
+		color: var(--background-secondary);
 	}
 
 	code {

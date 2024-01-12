@@ -1,0 +1,37 @@
+---
+interface Props {
+	filename: string;
+	lang?: string;
+	code: string;
+	[key: string]: any;
+}
+
+const {
+	element: Element = "section",
+	class: className,
+	...rest
+} = Astro.props as Props;
+---
+
+<Element class:list={["page-section", { className }]} {...rest}>
+	<div class="page-section-inner">
+		<slot />
+	</div>
+	
+	<slot name="outer" />
+</Element>
+
+<style>
+	.page-section {
+		position: relative;
+	}
+
+	.page-section-inner {
+		display: block;
+		position: relative;
+		box-sizing: border-box;
+		max-inline-size: 1280px;
+		padding-inline: 24px;
+		margin-inline: auto;
+	}
+</style>
