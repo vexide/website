@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pros.rs/sitemap-index.xml

@@ -17,9 +17,9 @@ const { title = "" } = Astro.props;
 		</ul>
 		{
 			Astro.slots.has("actions") && (
-				<ul class="navigation-actions">
+				<div class="navigation-actions">
 					<slot name="actions" />
-				</ul>
+				</div>
 			)
 		}
 		<details class="mobile-navigation">
