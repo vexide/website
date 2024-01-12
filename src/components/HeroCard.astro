@@ -1,0 +1,59 @@
+---
+import { Code } from "astro:components";
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const {
+	title,
+	description
+} = Astro.props;
+---
+
+<div class="hero-card">
+	<h2 class="hero-card-title">{title}</h2>
+	<p class="hero-card-description">{description}</p>
+	{Astro.slots.has("footer") && (
+		<div class="hero-card-footer">
+			<slot name="footer" />
+		</div>
+	)}
+</div>
+
+<style>
+	.hero-card {
+		animation: slide-up 500ms backwards 650ms;
+		display: flex;
+		flex-direction: column;
+		flex: 0 0 auto;
+		max-height: 100%;
+		min-height: 0;
+		border-radius: 8px;
+		background: var(--background-secondary);
+		box-shadow: 2.8px 2.8px 2.2px rgba(0, 0, 0, 0.02), 6.7px 6.7px 5.3px rgba(0, 0, 0, 0.028), 12.5px 12.5px 10px rgba(0, 0, 0, 0.035), 22.3px 22.3px 17.9px rgba(0, 0, 0, 0.042), 41.8px 41.8px 33.4px rgba(0, 0, 0, 0.05), 100px 100px 80px rgba(0, 0, 0, 0.07);
+		padding: 24px;
+	}
+
+	.hero-card {
+		font-size: 2.4rem;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	.hero-card-title {
+		margin: 0;
+		margin-block-end: 8px;
+		font-weight: 400;
+		font-size: 1.8rem;
+		font-family: var(--font-monospace);
+		color: var(--foreground-primary);
+	}
+
+	.hero-card-description {
+		margin: 0;
+		color: var(--foreground-secondary);
+		font-size: 1.4rem;
+	}
+</style>
