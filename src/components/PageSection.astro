@@ -5,18 +5,14 @@ interface Props {
 	[key: string]: any;
 }
 
-const {
-	element: Element = "section",
-	class: className,
-	...rest
-} = Astro.props;
+const { element: Element = "section", class: className, ...rest } = Astro.props;
 ---
 
 <Element class:list={["page-section", { className }]} {...rest}>
 	<div class="page-section-inner">
 		<slot />
 	</div>
-	
+
 	<slot name="outer" />
 </Element>
 

@@ -7,24 +7,22 @@ interface Props {
 	code: string;
 }
 
-const {
-	filename,
-	lang,
-	code,
-} = Astro.props;
+const { filename, lang, code } = Astro.props;
 ---
 
 <div class="code-example">
 	<div class="code-example-header">
 		<strong>{filename}</strong>
-		{Astro.slots.has("actions") && (
-			<div class="code-example-actions">
-				<slot name="actions" />
-			</div>
-		)}
+		{
+			Astro.slots.has("actions") && (
+				<div class="code-example-actions">
+					<slot name="actions" />
+				</div>
+			)
+		}
 	</div>
 	<!-- @ts-ignore -->
-	<Code {lang} {code}></Code>
+	<Code {lang} {code} />
 </div>
 
 <style>

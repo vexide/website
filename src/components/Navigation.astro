@@ -24,15 +24,25 @@ const { title = "" } = Astro.props;
 		}
 		<details class="mobile-navigation">
 			<summary class="mobile-navigation-button">
-				<svg class="navigation-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                    <rect x="4" y="6" width="24" height="2" />
-                    <rect x="4" y="24" width="24" height="2" />
-                    <rect x="4" y="12" width="24" height="2" />
-                    <rect x="4" y="18" width="24"height="2" />
-                </svg>
-                <svg class="navigation-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                    <polygon points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16" />
-                </svg>
+				<svg
+					class="navigation-menu-icon"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 32 32"
+				>
+					<rect x="4" y="6" width="24" height="2"></rect>
+					<rect x="4" y="24" width="24" height="2"></rect>
+					<rect x="4" y="12" width="24" height="2"></rect>
+					<rect x="4" y="18" width="24" height="2"></rect>
+				</svg>
+				<svg
+					class="navigation-close-icon"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 32 32"
+				>
+					<polygon
+						points="17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16"
+					></polygon>
+				</svg>
 			</summary>
 			<ul class="mobile-navigation-items">
 				<slot />
