@@ -29,12 +29,12 @@ const {
 	</a>
 	<p class="blog-card-description">{description}</p>
 	<div class="blog-card-metadata">
-		<div class="blog-card-author">
+		<a class="blog-card-author" href={`httpss://github.com/${author}`} target="_blank" rel="noreferrer noopeners">
 			<img src={`https://github.com/${author}.png`} alt="Profile Photo" />
 			<span>
 				<strong>{author}</strong> • {date.toLocaleDateString()}
 			</span>
-		</div>
+		</a>
 		<Button class="blog-card-button" variant="accent-yellow" href={url}>Read More</Button>
 	</div>
 </div>
@@ -96,15 +96,21 @@ const {
 	}
 
 	.blog-card-author {
+		text-decoration: none;
 		display: flex;
 		align-items: center;
 		font-size: 1.4rem;
 		color: var(--foreground-secondary);
 	}
-	
+
 	.blog-card-author strong {
+		border-bottom: 1px solid transparent;
 		font-weight: 600;
 		color: var(--foreground-primary);
+	}
+	
+	.blog-card-author:hover strong {
+		border-color: currentColor;
 	}
 
 	.blog-card-author img {
