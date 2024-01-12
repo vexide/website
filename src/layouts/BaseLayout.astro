@@ -1,19 +1,53 @@
 ---
 interface Props {
-	title: string;
+	name?: string;
+	title?: string;
+	type?: string;
+	description?: string;
 }
 
-const { title } = Astro.props;
+const {
+    name = "pros-rs",
+    title = "pros-rs",
+	type = "website",
+    description = "Open-source Rust tooling for VEX robots."
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
+		<!-- You know the drill... -->
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		<!-- SEO Stuff -->
+		<link rel="canonical" href={Astro.url} />
+        <link rel="sitemap" href="/sitemap.xml" />
 		<meta name="generator" content={Astro.generator} />
+
+		<!-- Favicon & Page Theme -->
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="color-scheme" content="dark" />
+        <meta name="theme-color" content="#e54643" />
+
+		<!-- Preload Fonts -->
+        <link rel="preload" href="/fonts/Manrope-VariableFont_wght.woff2" as="font" crossorigin="anonymous">
+        <link rel="preload" href="/fonts/Iosevka-Fixed-Extralight-latin-ext.woff2" as="font" crossorigin="anonymous">
+		
+		<!-- OpenGraph Page Metadata -->
+		<meta property="og:site_name" content={name} />
+        <meta property="og:title" content={title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={Astro.url} />
+		<meta property="og:description" name="description" content={description} />
+		<!-- <meta property="og:image" content={image} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={imageAlt} />
+        <meta property="twitter:card" content="summary_large_image"> -->
+
 		<title>{title}</title>
 	</head>
 
@@ -23,19 +57,35 @@ const { title } = Astro.props;
 </html>
 
 <style is:global>
+	@font-face {
+		font-family: "Iosevka";
+		font-style: normal;
+		font-weight: 200;
+		src: url("/fonts/Iosevka-Fixed-Extralight-latin-ext.woff2") format("woff2");
+		unicode-range: U+0000-00FF;
+	}
+
+	@font-face {
+		font-family: "Manrope";
+		font-weight: 100 900;
+		font-style: normal;
+		font-display: swap;
+		src: url("/fonts/Manrope-VariableFont_wght.woff2") format("woff2");
+	}
+
 	:root {
 		--base-hue: 228deg;
 		--accent-red-hue: 1deg;
 		--accent-yellow-hue: 47deg;
 
-		--accent-red: hsl(var(--accent-red-hue), 76%, 58%), #e54643;
-		--accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%), #e6c85c;
+		--accent-red: hsl(var(--accent-red-hue), 76%, 58%);
+		--accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%);
 
-		--background-primary: hsl(var(--base-hue), 12%, 16%), #24262e;
-		--background-secondary: hsl(var(--base-hue), 12%, 24%), #363945;
+		--background-primary: hsl(var(--base-hue), 12%, 16%);
+		--background-secondary: hsl(var(--base-hue), 12%, 24%);
 
-		--foreground-primary: hsl(var(--base-hue), 27%, 82%), #c5cadd;
-		--foreground-secondary: hsl(var(--base-hue), 20%, 68%), #9da4be;
+		--foreground-primary: hsl(var(--base-hue), 27%, 82%);
+		--foreground-secondary: hsl(var(--base-hue), 20%, 68%);
 
 		--font-monospace: "Iosevka", ui-monospace, Menlo, Monaco,
 			"Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
@@ -45,6 +95,14 @@ const { title } = Astro.props;
 		--font-primary: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
 			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
+	}
+
+	html {
+		font-size: 62.5%;
+	}
+
+	body {
+		font-size: 1.4rem;
 	}
 
 	html,
