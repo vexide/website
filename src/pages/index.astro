@@ -49,9 +49,17 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 </BaseLayout>
 
 <style>
+	@keyframes slide-up {
+		from {
+			transform: translateY(8px);
+			opacity: 0;
+		}
+	}
+
 	:global(#hero) {
 		z-index: 1;
 		overflow: hidden;
+		border-bottom: 1px solid var(--background-secondary);
 	}
 
 	:global(#hero > .page-section-inner) {
@@ -116,13 +124,27 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 		flex: 1 1 auto;
 	}
 
+	.hero-lead .title {
+		animation: slide-up 500ms backwards 150ms;
+	}
+
+	.hero-lead .subtext {
+		animation: slide-up 500ms backwards 350ms;
+	}
+
 	.hero-buttons {
+		animation: slide-up 500ms backwards 450ms;
 		flex: 0 0 auto;
 		display: flex;
 		gap: 16px;
 	}
 
+	.hero-right :global(.code-example) {
+		animation: slide-up 500ms backwards 500ms;
+	}
+
 	.hero-card {
+		animation: slide-up 500ms backwards 650ms;
 		display: flex;
 		flex-direction: column;
 		flex: 0 0 auto;
