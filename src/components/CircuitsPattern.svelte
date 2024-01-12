@@ -50,7 +50,6 @@
 		left: var(--mouse-x);
 		top: var(--mouse-y);
 		transform: translate(-50%, -50%);
-		transition: 150ms ease;
 		opacity: 0.25;
 		background-image: radial-gradient(var(--foreground-secondary), transparent 50%);
 		inline-size: 100vw;

@@ -1,6 +1,7 @@
 ---
 import { GITHUB_REPO_URL, EXAMPLES } from "~/constants";
 
+import { Code } from "astro:components";
 
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import PageSection from "~/components/PageSection.astro";
@@ -35,7 +36,7 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 				</div>
 			</div>
 			<div class="hero-right">
-				<!-- <Code lang="rust" code={EXAMPLES[0].code} /> -->
+				<Code lang="rust" code={EXAMPLES[0].code} />
 			</div>
 			<Fragment slot="outer">
 				<CircuitsPattern client:load />
@@ -107,4 +108,4 @@ import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 		display: flex;
 		gap: 16px;
 	}
-</style>~/constants
+</style>
