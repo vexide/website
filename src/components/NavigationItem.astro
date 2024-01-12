@@ -1,0 +1,56 @@
+---
+const { selected } = Astro.props;
+---
+
+<li class={`navigation-item-wrapper ${selected ? "selected" : ""}`}>
+    <a class="navigation-item" {...Astro.props}>
+        <slot />
+    </a>
+</li>
+
+<style>
+	.navigation-item-wrapper {
+		display: flex;
+		list-style-type: none;
+	}
+
+	.navigation-item {
+		outline: none;
+		display: flex;
+		align-items: center;
+		position: relative;
+		flex: 1 1 auto;
+		box-sizing: border-box;
+		text-decoration: none;
+		color: var(--foreground-secondary);
+		font-size: 1.5rem;
+		font-weight: 600;
+		padding: 1px 4px;
+		transition: 150ms ease;
+	}
+
+	.navigation-item:hover {
+		color: var(--foreground-primary);
+	}
+
+	.navigation-item:focus {
+		outline: 2px solid var(--foreground-secondary);
+		outline-offset: 2px;
+	}
+
+	.mobile-navigation-items .navigation-item {
+		color: var(--foreground-secondary);
+		font-size: 1.3rem;
+		padding-inline: 12px;
+		padding-block: 6px;
+		border-radius: 4px;
+	}
+
+	.mobile-navigation-items .navigation-item:hover {
+		background-color: var(--background-primary);
+	}
+
+	.mobile-navigation-items .navigation-item:active {
+		background-color: var(--interactive-primary);
+	}
+</style>

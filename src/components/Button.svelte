@@ -38,6 +38,8 @@
 		padding-inline: 24px;
 		padding-block: 12px;
 		gap: 8px;
+		cursor: pointer;
+		border: none;
 		outline: none;
 		/* text-transform: uppercase; */
 		transition: 0.15s ease;

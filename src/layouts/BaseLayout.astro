@@ -1,4 +1,9 @@
 ---
+import Navigation from '~/components/Navigation.astro';
+import NavigationItem from '~/components/NavigationItem.astro';
+
+import Button from '~/components/Button.svelte';
+
 interface Props {
 	name?: string;
 	title?: string;
@@ -53,6 +58,22 @@ const {
 	</head>
 
 	<body>
+		<Navigation {title}>
+			<img
+				slot="logo"
+				width="36"
+				height="36"
+				src="/images/logo.svg"
+				alt="pros-rs Logo"
+			/>
+			<NavigationItem href="#">Learn</NavigationItem>
+			<NavigationItem href="#">Simulator</NavigationItem>
+			<NavigationItem href="#">Tooling</NavigationItem>
+			<Fragment slot="actions">
+				<Button href="#">Discord</Button>
+				<Button href="#">GitHub</Button>
+			</Fragment>
+		</Navigation>
 		<slot />
 	</body>
 </html>
@@ -105,6 +126,10 @@ const {
 		--font-primary: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
 			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
+		
+		--breakpoint-large: 1280px;
+		--breakpoint-medium: 1024px;
+		--breakpoint-small: 768px;
 	}
 
 	html {

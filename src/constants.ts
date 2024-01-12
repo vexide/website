@@ -1,3 +1,4 @@
+export const CRATE_NAME = `pros`;
 export const GITHUB_ORG_URL = `https://github.com/pros-rs`;
 export const GITHUB_REPO_URL = `${GITHUB_ORG_URL}/pros-rs`;
 
@@ -20,6 +21,7 @@ impl AsyncRobot for Robot {
 		Ok(())
 	}
 }
+
 async_robot!(Robot);`,
 	},
 ];
