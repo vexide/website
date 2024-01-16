@@ -1,9 +1,12 @@
 ---
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import PageSection from "~/components/PageSection.astro";
 
 const blogPosts = await Astro.glob("./posts/**.md");
 ---
 
 <BaseLayout>
-	{JSON.stringify(blogPosts)}
+	<PageSection>
+		{JSON.stringify(blogPosts)}
+	</PageSection>
 </BaseLayout>

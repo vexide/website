@@ -29,4 +29,40 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		padding-inline: 24px;
 		margin-inline: auto;
 	}
+
+	.page-section :global(.title) {
+		color: var(--foreground-primary);
+		font-family: var(--font-monospace);
+		font-weight: 200;
+		margin-block-start: 0;
+	}
+
+	.page-section :global(h1.title) {
+		font-size: 7.2rem;
+	}
+
+	.page-section :global(.subtext) {
+		font-size: 2.4rem;
+		line-height: 2;
+		font-weight: 400;
+		max-inline-size: 65ch;
+		color: var(--foreground-secondary);
+	}
+
+	.page-section :global(.subtext a) {
+		color: var(--foreground-accent-red);
+		text-decoration: none;
+		border-bottom: 1px solid currentColor;
+		transition: 250ms ease;
+	}
+
+	.page-section :global(.subtext a:hover) {
+		opacity: 0.8;
+	}
+
+	@media only screen and (max-width: 1024px) {
+		.page-section :global(h1.title) {
+			font-size: 6.4rem;
+		}
+	}
 </style>
