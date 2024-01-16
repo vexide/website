@@ -14,10 +14,11 @@ export interface Example {
 export const EXAMPLES: Example[] = [
 	{
 		name: "Basic",
-		code: `#[derive(Default)]
+		code: `use pros::prelude::*;
+
+#[derive(Default)]
 pub struct Robot;
 
-#[async_trait]
 impl AsyncRobot for Robot {
 	async fn opcontrol(&mut self) -> pros::Result {
 		println!("basic example");
@@ -25,7 +26,6 @@ impl AsyncRobot for Robot {
 		Ok(())
 	}
 }
-
 async_robot!(Robot);`,
 	},
 ];
