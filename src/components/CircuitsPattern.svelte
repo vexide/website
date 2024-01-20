@@ -42,6 +42,7 @@
 		block-size: 100%;
 		background-image: linear-gradient(hsl(var(--base-hue), 12%, 30%), var(--background-secondary), transparent);
 		mask: url("/images/pattern_circuits.svg");
+		-webkit-mask: url("/images/pattern_circuits.svg");
 	}
 
 	.circuits-pattern::after {
