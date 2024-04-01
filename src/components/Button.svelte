@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let variant: "default" | "accent-red" | "accent-yellow" = "default";
+	export let variant: "default" | "accent" | "outlined" = "default";
 	export let href = "";
 	export let disabled = false;
 
@@ -31,7 +31,7 @@
 		box-sizing: border-box;
 		text-align: center;
 		font-family: inherit;
-		border-radius: 0;
+		border-radius: 2px;
 		font-family: var(--font-monospace);
 		font-size: 1.6rem;
 		font-weight: 400;
@@ -50,18 +50,18 @@
 		color: var(--foreground-primary);
 	}
 
-	.button.variant-accent-red {
-		background-color: var(--background-accent-red);
-		color: #fff;
+	.button.variant-outlined {
+		background-color: transparent;
+		border: 1px solid currentColor;
+		color: var(--foreground-primary);
 	}
 
-	.button.variant-accent-yellow {
+	.button.variant-accent {
 		background-color: var(--background-accent-yellow);
 		color: var(--background-primary);
 	}
 
-	.button.variant-accent-yellow:active,
-	.button.variant-accent-red:active {
+	.button.variant-accent:active {
 		background-color: #fff;
 		color: var(--background-primary);
 	}

@@ -15,7 +15,7 @@ import { GITHUB_ORG_URL } from "~/constants";
 				<p class="subtext">
 					Easily simulate PROS user programs on your own computer without physical access to V5 hardware.
 				</p>
-				<Button href={`${GITHUB_ORG_URL}/pros-simulator-gui/releases/latest`} target="_blank" rel="noreferrer noopener" variant="accent-yellow">
+				<Button href={`${GITHUB_ORG_URL}/pros-simulator-gui/releases/latest`} target="_blank" rel="noreferrer noopener" variant="accent">
 					Download from GitHub
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -79,6 +79,10 @@ import { GITHUB_ORG_URL } from "~/constants";
 		overflow: hidden;
 		background-size: 20px 20px;
 		background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+	}
+
+	#sim-hero::after {
+
 	}
 
 	#sim-hero > :global(.page-section-inner) {

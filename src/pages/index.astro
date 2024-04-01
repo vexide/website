@@ -7,7 +7,6 @@ import CodeExample from "~/components/CodeExample.astro";
 import BlogCard from "~/components/BlogCard.astro";
 
 import Button from "~/components/Button.svelte";
-import CircuitsPattern from "~/components/CircuitsPattern.svelte";
 
 const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 	(a, b) =>
@@ -22,24 +21,20 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 			<div class="hero-left">
 				<div class="hero-lead">
 					<h1 class="title">
-						Open-source Rust tooling for VEX robots.
+						Open-source Rust runtime for VEX robots.
 					</h1>
 					<p class="subtext">
-						pros-rs provides opinionated bindings to the <a
-							href="https://pros.cs.purdue.edu/"
-							target="_blank"
-							rel="noreferrer noopener">PROS kernel</a
-						> and tooling for programming VEX V5 robots using the <a
-							href="https://rust-lang.com/"
-							target="_blank"
-							rel="noreferrer noopener"
-							>Rust Programming Language</a
-						>. 🦀
+						vexide provides a safe and efficient runtime and toolchain for writing VEX V5 programs in the <a
+						href="https://rust-lang.com/"
+						target="_blank"
+						rel="noreferrer noopener"
+						>Rust Programming Language</a
+					>. 🦀
 					</p>
 				</div>
 				<div class="hero-buttons">
 					<Button
-						variant="accent-yellow"
+						variant="accent"
 						href={`https://docs.rs/${CRATE_NAME}`}
 						rel="noreferrer noopener"
 						target="_blank"
@@ -58,7 +53,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 						</svg>
 					</Button>
 					<Button
-						variant="accent-red"
+						variant="default"
 						href={GITHUB_REPO_URL}
 						rel="noreferrer noopener"
 						target="_blank"
@@ -94,9 +89,6 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 					thumbnail_alt={latestBlogPost.frontmatter.thumbnail}
 				/>
 			</div>
-			<Fragment slot="outer">
-				<CircuitsPattern client:load />
-			</Fragment>
 		</PageSection>
 	</main>
 </BaseLayout>
@@ -111,7 +103,21 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 
 	#hero {
 		z-index: 1;
-		border-bottom: 1px solid var(--background-secondary);
+		border-bottom: 1px solid #6e59ff;
+		--grid-color: hsl(var(--base-hue), 12%, 18%);
+		background-size: 20px 20px;
+		background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+	}
+
+	#hero::before {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 50%;
+		opacity: 0.1;
+		background-image: linear-gradient(transparent, #223ca9, #6e59ff);
 	}
 
 	#hero > :global(.page-section-inner) {
@@ -120,7 +126,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 		min-block-size: 720px;
 		block-size: 90vh;
 		max-block-size: 1200px;
-		padding-block: 72px;
+		padding-block: 128px;
 	}
 
 	.hero-left,

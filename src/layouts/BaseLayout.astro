@@ -13,10 +13,10 @@ interface Props {
 }
 
 const {
-	name = "pros-rs",
-	title = "pros-rs",
+	name = "vexide",
+	title = "vexide",
 	type = "website",
-	description = "Open-source Rust tooling for VEX robots.",
+	description = "Open-source Rust runtime for VEX robots.",
 } = Astro.props;
 ---
 
@@ -92,6 +92,7 @@ const {
 			<NavigationItem href="/blog">Blog</NavigationItem>
 			<Fragment slot="actions">
 				<Button
+					variant="outlined"
 					href={DISCORD_INVITE_URL}
 					target="_blank"
 					rel="noreferrer noopener"
@@ -99,6 +100,7 @@ const {
 					Discord
 				</Button>
 				<Button
+					variant="outlined"
 					href={GITHUB_REPO_URL}
 					target="_blank"
 					rel="noreferrer noopener"
@@ -161,7 +163,7 @@ const {
 			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
 
-		--breakpoint-large: 1280px;
+		--breakpoint-large: 1380px;
 		--breakpoint-medium: 1024px;
 		--breakpoint-small: 768px;
 	}
@@ -203,6 +205,12 @@ const {
 	code {
 		/* tab-size: 4ch; */
 		font-family: var(--font-monospace);
+	}
+
+	.navigation-actions .button {
+		padding-block: 8px;
+		padding-inline: 24px;
+		font-size: 1.4rem;
 	}
 
 	.skip-to-content {
