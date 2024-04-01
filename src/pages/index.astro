@@ -24,12 +24,13 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 						Open-source Rust runtime for VEX robots.
 					</h1>
 					<p class="subtext">
-						vexide provides a safe and efficient runtime and toolchain for writing VEX V5 programs in the <a
-						href="https://rust-lang.com/"
-						target="_blank"
-						rel="noreferrer noopener"
-						>Rust Programming Language</a
-					>. 🦀
+						vexide provides a safe and efficient runtime and
+						toolchain for writing VEX V5 programs in the <a
+							href="https://rust-lang.com/"
+							target="_blank"
+							rel="noreferrer noopener"
+							>Rust Programming Language</a
+						>. 🦀
 					</p>
 				</div>
 				<div class="hero-buttons">
@@ -106,7 +107,12 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
 		border-bottom: 1px solid #6e59ff;
 		--grid-color: hsl(var(--base-hue), 12%, 18%);
 		background-size: 20px 20px;
-		background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+		background-image: linear-gradient(
+				to right,
+				var(--grid-color) 1px,
+				transparent 1px
+			),
+			linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
 	}
 
 	#hero::before {
