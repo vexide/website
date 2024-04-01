@@ -14,18 +14,25 @@ export interface Example {
 export const EXAMPLES: Example[] = [
 	{
 		name: "Basic",
-		code: `use pros::prelude::*;
+		code: `struct Robot {
+	motor: Motor,
+}
 
-#[derive(Default)]
-pub struct Robot;
-
-impl AsyncRobot for Robot {
-	async fn opcontrol(&mut self) -> pros::Result {
-		println!("basic example");
-
+impl CompetitionRobot for Robot {
+	async fn opcontrol(&mut self) -> Result {
+		self.motor.set_voltage(10.0)?;
+		
 		Ok(())
 	}
 }
-async_robot!(Robot);`,
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+	let my_robot = Robot {
+		motor: Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward)?,
+	};
+
+	Competition::new(my_robot).await;
+}`,
 	},
 ];
