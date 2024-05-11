@@ -78,6 +78,7 @@ const blogPosts = await Astro.glob("./posts/**.md");
 	}
 
 	.search-menu {
+		z-index: 100;
 		display: flex;
 		flex-direction: row;
 		gap: 12px;
@@ -85,6 +86,16 @@ const blogPosts = await Astro.glob("./posts/**.md");
 		border-radius: 5px;
 		background-color: var(--background-secondary);
 		width: 100%;
+		position: sticky;
+		top: 30px;
+		box-shadow:
+			0px 2px 5.5px rgba(0, 0, 0, 0.072),
+			0px 6.1px 11px rgba(0, 0, 0, 0.103),
+			0px 13.2px 16.4px rgba(0, 0, 0, 0.119),
+			0px 24.7px 22.4px rgba(0, 0, 0, 0.127),
+			0px 43.4px 30.1px rgba(0, 0, 0, 0.133),
+			0px 77.6px 43.7px rgba(0, 0, 0, 0.142),
+			0px 135px 88px rgba(0, 0, 0, 0.18);
 	}
 	.input {
 		display: flex;
