@@ -9,13 +9,14 @@ interface Props {
 	url: string;
 	thumbnail: string;
 	thumbnail_alt: string;
+	style?: string;
 }
 
-const { title, description, author, date, url, thumbnail, thumbnail_alt } =
+const { title, description, author, date, url, thumbnail, thumbnail_alt, style } =
 	Astro.props;
 ---
 
-<div class="blog-card">
+<div class="blog-card" style={style}>
 	<img class="blog-card-thumbnail" src={thumbnail} alt={thumbnail_alt} />
 	<a class="blog-card-title" href={url}>
 		<span>{title}</span>
