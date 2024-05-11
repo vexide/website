@@ -90,6 +90,11 @@ const blogPosts = await Astro.glob("./posts/**.md");
 		gap: 30px;
 		padding-block: 128px;
 	}
+	@media only screen and (max-width: 800px) {
+		#blogs > :global(.page-section-inner) {
+			width: 100%;
+		}
+	}
 	#sim-hero::after {
 	}
 
