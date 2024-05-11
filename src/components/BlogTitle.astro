@@ -1,0 +1,81 @@
+---
+interface Props {
+	title: string;
+	date: Date;
+	author: string;
+	tag: "release" | "blog";
+}
+
+const { title, date, author, tag } = Astro.props;
+---
+
+<div class="blog-tile-container">
+	<h1 class="title">{title}</h1>
+	<br />
+	<div id="subtext-container">
+		<h2 class="text">{date.toDateString()}</h2>
+		<h2 class="text">•</h2>
+		<h2 class="text">by {author}</h2>
+		<h2 class="text">•</h2>
+		<h2 class="text">{tag}</h2>
+	</div>
+</div>
+
+<style>
+	.blog-tile-container {
+		--grid-color: var(--background-secondary);
+		min-height: 20rem;
+		padding: 3rem;
+		padding-left: 6rem;
+
+		box-shadow:
+			inset 0px 0px 23.9px -9px rgba(0, 0, 0, 0.136),
+			inset 0px 0px 34px -9px rgba(0, 0, 0, 0.178),
+			inset 0px 0px 39.6px -9px rgba(0, 0, 0, 0.199),
+			inset 0px 0px 44.3px -9px rgba(0, 0, 0, 0.213),
+			inset 0px 0px 52px -9px rgba(0, 0, 0, 0.232),
+			inset 0px 0px 80px -9px rgba(0, 0, 0, 0.3);
+
+		background-image: repeating-linear-gradient(
+				45deg,
+				transparent,
+				transparent 40px,
+				var(--grid-color) 40px,
+				var(--grid-color) 41px
+			),
+			repeating-linear-gradient(
+				-45deg,
+				transparent,
+				transparent 40px,
+				var(--grid-color) 40px,
+				var(--grid-color) 41px
+			);
+	}
+
+	#subtext-container {
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+	}
+
+	.text {
+		color: var(--foreground-primary);
+		font-family: var(--font-primary);
+		font-weight: 400;
+	}
+	h2.text {
+		font-size: 2rem;
+		margin: 0;
+	}
+
+	.title {
+		color: var(--foreground-primary);
+		font-family: var(--font-monospace);
+		font-weight: 200;
+		margin-block-start: 0;
+	}
+	h1.title {
+		font-size: 6.4rem;
+		margin: 0;
+	}
+</style>
