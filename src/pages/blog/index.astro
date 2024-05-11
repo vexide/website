@@ -29,6 +29,7 @@ const blogPosts = await Astro.glob("./posts/**.md");
 						}
 					);
 				})
+				.sort((a, b) => b.date.getTime() - a.date.getTime())
 		}/>
 		<div class="blogs-grid">
 			
