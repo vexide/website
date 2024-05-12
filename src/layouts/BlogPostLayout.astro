@@ -122,6 +122,17 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 		text-wrap: pretty;
 	}
 
+	#blog-content :global(sup > a) {
+		font-size: 1.3rem;
+	}
+
+
+	#blog-content :global(code) {
+		background-color: var(--background-secondary);
+		border-radius: 5px;
+		padding-inline: 3px;
+	}
+
 	#blog-content :global(a) {
 		color: var(--foreground-accent-red);
 		text-decoration: none;
