@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import Button from "./Button.svelte";
     import Chip from "./Chip.svelte";
     import fuzzysort from "fuzzysort";
@@ -22,6 +23,14 @@
 
     export let blogs: Blog[] = [];
 
+    onMount(() => {
+        blogs.map((blog, n) => {
+            setTimeout(() => {
+                blog.style = "";
+            }, n * 0.1 + 0.3);
+        });
+    });
+
     let filteredBlogs: Blog[] = blogs;
 
     $: {
@@ -35,7 +44,9 @@
                 keys: ["title", "description", "author"],
             });
             console.log(results);
-            filteredBlogs = results.toSorted((a, b) => a.score - b.score).map((result) => result.obj);
+            filteredBlogs = results
+                .toSorted((a, b) => a.score - b.score)
+                .map((r) => r.obj);
         }
     }
 </script>
