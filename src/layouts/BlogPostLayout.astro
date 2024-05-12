@@ -126,11 +126,23 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 		font-size: 1.3rem;
 	}
 
+	:global(code) {
+		font-family: var(--font-monospace);
+	}
 
 	#blog-content :global(code) {
-		background-color: var(--background-secondary);
 		border-radius: 5px;
 		padding-inline: 3px;
+		background-color: var(--background-secondary);
+	}
+
+	#blog-content :global(pre.astro-code) {
+		border-radius: 5px;
+		padding: 10px;
+	}
+	#blog-content :global(pre.astro-code > code) {
+		background-color: transparent;
+		padding: 0px;
 	}
 
 	#blog-content :global(a) {
