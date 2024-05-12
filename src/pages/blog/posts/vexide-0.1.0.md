@@ -26,3 +26,15 @@ vexide doesn't depend on any external C libraries (even libv5rt).
 This means that anyone can build and contribute to vexide with ease.
 It is impossible to contribute to VEXCode and you very rarely see anyone outside of Purdue contribute to PROS for a good reason.
 It's almost impossible to contribute to a project that you literally cannot build.
+
+# How does it work
+
+vexide is a very complicated project and it has taken over a year to fully implement.
+For this reason, I can't really explain every aspect of how it functions without telling pretty much the whole development story...
+
+So thats exactly what I'm going to do.
+
+## Origins
+
+vexide started development under the name pros-rs and linked to libpros for most of its low level functionality.
+pros-rs was pretty much just a high level API wrapping freeRTOS, libv5rt, and PROS.
