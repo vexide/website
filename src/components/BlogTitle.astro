@@ -13,11 +13,11 @@ const { title, date, author, tag } = Astro.props;
 	<h1 class="title">{title}</h1>
 	<br />
 	<div id="subtext-container">
-		<h2 class="text">{date.toDateString()}</h2>
-		<h2 class="text">•</h2>
-		<h2 class="text">by {author}</h2>
-		<h2 class="text">•</h2>
-		<h2 class="text">{tag}</h2>
+		<p class="text">{date.toDateString()}</p>
+		<p class="text">•</p>
+		<p class="text">{author}</p>
+		<p class="text nonesential">•</p>
+		<p class="text nonesential">{tag}</p>
 	</div>
 </div>
 
@@ -63,7 +63,7 @@ const { title, date, author, tag } = Astro.props;
 		font-family: var(--font-primary);
 		font-weight: 400;
 	}
-	h2.text {
+	p.text {
 		font-size: 2rem;
 		margin: 0;
 	}
@@ -77,5 +77,22 @@ const { title, date, author, tag } = Astro.props;
 	h1.title {
 		font-size: 6.4rem;
 		margin: 0;
+	}
+
+	@media only screen and (max-width: 800px) {
+		h1.title {
+			font-size: 5.8rem;
+		}
+
+		.blog-tile-container {
+			padding: 2rem;
+			flex-direction: column;
+		}
+
+		.nonesential {
+			width: 0;
+			visibility: hidden;
+			position:absolute;
+		}
 	}
 </style>

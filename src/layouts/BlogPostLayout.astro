@@ -7,10 +7,16 @@ import NavigationItem from "~/components/NavigationItem.astro";
 import PageMetadata from "~/components/PageMetadata.astro";
 import PageSection from "~/components/PageSection.astro";
 import { DISCORD_INVITE_URL, GITHUB_REPO_URL } from "~/constants";
-const { title, author, date, description, thumbnail, thumbnail_alt, tag } = Astro.props.frontmatter;
+const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
+	Astro.props.frontmatter;
 ---
 
-<PageMetadata name="vexide" title="vexide ‒ blog post" type="website" {description}>
+<PageMetadata
+	name="vexide"
+	title="vexide ‒ blog post"
+	type="website"
+	{description}
+>
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
 	<Navigation title="vexide">
 		<img
@@ -42,9 +48,72 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } = Astr
 			</Button>
 		</Fragment>
 	</Navigation>
-    <BlogTitle {title} {author} {author} {tag} date = {new Date(date)} />
-    <PageSection>
-        <slot />
-    </PageSection>
+	<BlogTitle {title} {author} {author} {tag} date={new Date(date)} />
+	<PageSection id="blog-content">
+		<slot />
+	</PageSection>
 </PageMetadata>
 <GlobalStyles />
+
+<style>
+	#blog-content {
+		min-height: 100vh;
+		z-index: 1;
+		/* border-bottom: 1px solid #6e59ff; */
+		--grid-color: hsl(var(--base-hue), 12%, 18%);
+		background-size: 20px 20px;
+		background-image: linear-gradient(
+				to right,
+				var(--grid-color) 1px,
+				transparent 1px
+			),
+			linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+	}
+	#blog-content::after {}
+	#blog-content::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 50%;
+		opacity: 0.07;
+		background-image: linear-gradient(to top, transparent, #223ca9, #6e59ff);
+	}
+
+	#blog-content > :global(.page-section-inner) {
+		width: 80rem;
+		padding-block: 128px;
+	}
+	@media only screen and (max-width: 800px) {
+		#blog-content > :global(.page-section-inner) {
+			width: 100%;
+		}
+	}
+
+	#blog-content :global(h1, h2, h3, h4, h5, h6) {
+		font-family: var(--font-monospace) !important;
+		font-weight: 200;
+		text-decoration: underline var(--background-accent-yellow);
+	}
+
+	#blog-content :global(h1) {
+		font-size: 4.4rem;
+	}
+	#blog-content :global(h2) {
+		font-size: 3.3rem;
+	}
+	#blog-content :global(h3) {
+		font-size: 2.5rem;
+	}
+
+	#blog-content :global(*) {
+		font-family: var(--font-primary);
+		color: var(--foreground-primary);
+		font-size: 1.8rem;
+	}
+
+	#blog-content :global(p) {
+		text-wrap: pretty;
+	}
+</style>
