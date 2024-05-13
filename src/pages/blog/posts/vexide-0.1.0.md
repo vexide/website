@@ -77,6 +77,14 @@ motor.set_voltage(0.0).ok();
 
 # Should you use vexide
 
+## If you have been using pros-rs
+
+Yes!
+You should switch away from pros-rs in favour of vexide.
+vexide is the successor to pros-rs and has many improvements over it.
+
+## For everyone else 
+
 Like any library vexide has pros and cons.
 I've gone over a lot of the pros already, but not any of the cons.
 vexide has one major con: a lack of hardware testing.
