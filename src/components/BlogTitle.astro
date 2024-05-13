@@ -15,7 +15,7 @@ const { title, date, author, tag } = Astro.props;
 		<h1 class="title">{title}</h1>
 		<br />
 		<div id="subtext-container">
-			<p class="text">{date.toDateString()}</p>
+			<p class="text">{date.toLocaleDateString()}</p>
 			<p class="text">•</p>
 			<p class="text">{author}</p>
 			<p class="text nonesential">•</p>

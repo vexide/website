@@ -9,6 +9,7 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(post => !post.front
 <BaseLayout>
 	<PageSection id="blogs">
 		<h1 class="title" style="align-self: center;">Blogs</h1>
+		<a id="content" />
 		<BlogsSearch client:load blogs={
 			blogPosts
 				.map((post, n) => {

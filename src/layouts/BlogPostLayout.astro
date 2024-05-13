@@ -50,6 +50,7 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 	</Navigation>
 	<BlogTitle {title} {author} {author} {tag} date={new Date(date)} />
 	<PageSection id="blog-content">
+		<a id="content" />
 		<slot />
 	</PageSection>
 </PageMetadata>
