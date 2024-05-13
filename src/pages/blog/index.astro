@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import PageSection from "~/components/PageSection.astro";
-import BlogCard from "~/components/BlogCard.astro";
-import Chip from "~/components/Chip.svelte";
 import BlogsSearch from "~/components/BlogsSearch.svelte";
 
-const blogPosts = await Astro.glob("./posts/**.md");
+const blogPosts = (await Astro.glob("./posts/**.md")).filter(post => !post.frontmatter.draft);
 ---
 
 <BaseLayout>

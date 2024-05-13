@@ -8,7 +8,7 @@ import BlogCard from "~/components/BlogCard.astro";
 
 import Button from "~/components/Button.svelte";
 
-const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).sort(
+const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !post.frontmatter.draft).sort(
 	(a, b) =>
 		new Date(b.frontmatter.date).getTime() -
 		new Date(a.frontmatter.date).getTime(),
