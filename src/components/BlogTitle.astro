@@ -1,4 +1,5 @@
 ---
+import PageSection from './PageSection.astro';
 interface Props {
 	title: string;
 	date: Date;
@@ -10,23 +11,24 @@ const { title, date, author, tag } = Astro.props;
 ---
 
 <div class="blog-tile-container">
-	<h1 class="title">{title}</h1>
-	<br />
-	<div id="subtext-container">
-		<p class="text">{date.toDateString()}</p>
-		<p class="text">•</p>
-		<p class="text">{author}</p>
-		<p class="text nonesential">•</p>
-		<p class="text nonesential">{tag}</p>
-	</div>
+	<PageSection>
+		<h1 class="title">{title}</h1>
+		<br />
+		<div id="subtext-container">
+			<p class="text">{date.toLocaleDateString()}</p>
+			<p class="text">•</p>
+			<p class="text">{author}</p>
+			<p class="text nonesential">•</p>
+			<p class="text nonesential">{tag}</p>
+		</div>
+	</PageSection>
 </div>
 
 <style>
 	.blog-tile-container {
 		--grid-color: var(--background-secondary);
 		min-height: 20rem;
-		padding: 3rem;
-		padding-left: 6rem;
+		padding-top: 3rem;
 
 		box-shadow:
 			inset 0px 0px 23.9px -9px rgba(0, 0, 0, 0.136),
