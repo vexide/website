@@ -43,15 +43,16 @@ Here is a quick example showing a working program using the ``CompetitionRobot``
 ```rust
 #![no_main]
 #![no_std]
+#![feature(never_type)]
 
 use vexide::prelude::*;
 
 struct Robot;
 
 impl CompetitionRobot for Robot {
-    type Error = ();
-    async fn driver(&mut self) -> Result<(), ()> {
-        println!("Driver");
+    type Error = !;
+    async fn driver(&mut self) -> Result<(), !> {
+        println!("Driver control started!");
         Ok(())
     }
 }
