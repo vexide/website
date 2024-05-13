@@ -90,6 +90,7 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 	#blog-content > :global(.page-section-inner) {
 		width: 80rem;
 		padding-block: 128px;
+		font-family: var(--font-primary);
 	}
 	@media only screen and (max-width: 800px) {
 		#blog-content > :global(.page-section-inner) {
@@ -113,7 +114,7 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 	}
 
 	#blog-content :global(*) {
-		font-family: var(--font-primary);
+		font-family: inherit;
 		color: var(--foreground-primary);
 		font-size: 1.8rem;
 	}
@@ -126,14 +127,11 @@ const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
 		font-size: 1.3rem;
 	}
 
-	:global(code) {
-		font-family: var(--font-monospace);
-	}
-
 	#blog-content :global(code) {
 		border-radius: 5px;
 		padding-inline: 3px;
 		background-color: var(--background-secondary);
+		font-family: var(--font-monospace);
 	}
 
 	#blog-content :global(pre.astro-code) {

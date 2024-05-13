@@ -71,7 +71,7 @@ let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forwar
 // Set the voltage or return early if there is an error.
 motor.set_voltage(12.0)?;
 // Set the voltage and ignore any error.
-motor.set_voltage(0.0).ok();
+let _ = motor.set_voltage(0.0);
 
 ```
 
