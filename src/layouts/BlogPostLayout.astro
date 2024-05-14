@@ -7,7 +7,7 @@ import NavigationItem from "~/components/NavigationItem.astro";
 import PageMetadata from "~/components/PageMetadata.astro";
 import PageSection from "~/components/PageSection.astro";
 import { DISCORD_INVITE_URL, GITHUB_REPO_URL } from "~/constants";
-const { title, author, date, description, thumbnail, thumbnailAlt, thumbnailType="image/webp", tag } =
+const { title, author, date, description, tag } =
 	Astro.props.frontmatter;
 ---
 
@@ -16,9 +16,6 @@ const { title, author, date, description, thumbnail, thumbnailAlt, thumbnailType
 	title=`vexide blog post ‒ ${title}`
 	type="website"
 	{description}
-	image={thumbnail}
-	imageAlt={thumbnailAlt}
-	imageType={thumbnailType}
 >
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
 	<Navigation title="vexide">
