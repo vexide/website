@@ -7,7 +7,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://pros-rs.pages.app/",
+	site: "https://pros-rs.pages.dev/",
 	integrations: [sitemap(), svelte()],
 	output: "hybrid",
 	vite: {
