@@ -6,7 +6,7 @@ import BlogsSearch from "~/components/BlogsSearch.svelte";
 const blogPosts = (await Astro.glob("./posts/**.md")).filter(post => !post.frontmatter.draft);
 ---
 
-<BaseLayout>
+<BaseLayout title="vexide blogs">
 	<PageSection id="blogs">
 		<h1 class="title" style="align-self: center;">Blogs</h1>
 		<a id="content" />
