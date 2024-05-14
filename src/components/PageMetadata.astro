@@ -1,5 +1,5 @@
 ---
-const { name, title, description, image="/images/logo.svg", imageAlt="vexide logo", imageType="image/svg" } = Astro.props;
+const { name, title, description } = Astro.props;
 ---
 
 <!doctype html>
@@ -45,9 +45,9 @@ const { name, title, description, image="/images/logo.svg", imageAlt="vexide log
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={image} />
-        <meta property="og:image:type" content={imageType} />
-		<meta property="og:image:alt" content={imageAlt} />
+		<meta property="og:image" content="/images/logo.svg" />
+        <meta property="og:image:type" content="mime/svg+xml" />
+		<meta property="og:image:alt" content="vexide-logo" />
         <!-- <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="twitter:card" content="summary_large_image"> -->
