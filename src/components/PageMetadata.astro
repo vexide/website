@@ -44,16 +44,12 @@ const { name, title, description } = Astro.props;
 		<meta property="og:title" content={title} />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
-		<meta
-			property="og:description"
-			name="description"
-			content={description}
-		/>
-		<!-- <meta property="og:image" content={image} />
-        <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="1200" />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL("/images/logo.svg", Astro.url)} />
+        <meta property="og:image:type" content="mime/svg+xml" />
+		<meta property="og:image:alt" content="vexide-logo" />
+        <!-- <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={imageAlt} />
         <meta property="twitter:card" content="summary_large_image"> -->
 
 		<title>{title}</title>

@@ -7,13 +7,13 @@ import NavigationItem from "~/components/NavigationItem.astro";
 import PageMetadata from "~/components/PageMetadata.astro";
 import PageSection from "~/components/PageSection.astro";
 import { DISCORD_INVITE_URL, GITHUB_REPO_URL } from "~/constants";
-const { title, author, date, description, thumbnail, thumbnail_alt, tag } =
+const { title, author, date, description, tag } =
 	Astro.props.frontmatter;
 ---
 
 <PageMetadata
 	name="vexide"
-	title="vexide ‒ blog post"
+	title=`vexide blog post ‒ ${title}`
 	type="website"
 	{description}
 >
