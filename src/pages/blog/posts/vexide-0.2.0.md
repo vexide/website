@@ -6,7 +6,7 @@ author: gavin-niederman
 thumbnail: "/images/thumbnails/rotated_grid.webp"
 thumbnail_alt: "Thumbnail Image"
 tag: release
-date: 2024-05-11
+date: 2024-05-17
 ---
 
 vexide version 0.2.0 has been released!
