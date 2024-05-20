@@ -1,6 +1,6 @@
 ---
 layout: ../../../layouts/BlogPostLayout.astro
-title: vexide v0.2.0
+title: vexide v0.2.1
 description: vexide 0.2.1 released
 author: gavin-niederman
 thumbnail: "/images/thumbnails/rotated_grid.webp"
