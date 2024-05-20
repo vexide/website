@@ -15,7 +15,7 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 		<BlogsSearch
 			client:load
 			blogs={blogPosts
-				.sort((a, b) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime() )
+				.sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime() )
 				.map((post, n) => {
 					const animationDelay = `${n * 0.1 + 0.3}s`;
 					return {
