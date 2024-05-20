@@ -3,36 +3,35 @@ import BaseLayout from "~/layouts/BaseLayout.astro";
 import PageSection from "~/components/PageSection.astro";
 import BlogsSearch from "~/components/BlogsSearch.svelte";
 
-const blogPosts = (await Astro.glob("./posts/**.md")).filter(post => !post.frontmatter.draft);
+const blogPosts = (await Astro.glob("./posts/**.md")).filter(
+	(post) => !post.frontmatter.draft,
+);
 ---
 
 <BaseLayout title="vexide blogs">
 	<PageSection id="blogs">
 		<h1 class="title" style="align-self: center;">Blogs</h1>
-		<a id="content" />
-		<BlogsSearch client:load blogs={
-			blogPosts
+		<a id="content"></a>
+		<BlogsSearch
+			client:load
+			blogs={blogPosts
+				.sort((a, b) => new Date(a.frontmatter.date).getTime() - new Date(b.frontmatter.date).getTime() )
 				.map((post, n) => {
 					const animationDelay = `${n * 0.1 + 0.3}s`;
-					return (
-						{
-							url: post.url ?? "#",
-							title: post.frontmatter.title,
-							description: post.frontmatter.description,
-							author: post.frontmatter.author,
-							date: new Date(post.frontmatter.date),
-							thumbnail: post.frontmatter.thumbnail,
-							thumbnail_alt: post.frontmatter.thumbnail,
-							tag: post.frontmatter.tag,
-							style: `animation: slide-up-blog 500ms backwards ${animationDelay};`
-						}
-					);
-				})
-				.sort((a, b) => b.date.getTime() - a.date.getTime())
-		}/>
-		<div class="blogs-grid">
-			
-		</div>
+					return {
+						url: post.url ?? "#",
+						title: post.frontmatter.title,
+						description: post.frontmatter.description,
+						author: post.frontmatter.author,
+						date: new Date(post.frontmatter.date),
+						thumbnail: post.frontmatter.thumbnail,
+						thumbnail_alt: post.frontmatter.thumbnail,
+						tag: post.frontmatter.tag,
+						style: `animation: slide-up-blog 500ms backwards ${animationDelay};`,
+					};
+				})}
+		/>
+		<div class="blogs-grid"></div>
 	</PageSection>
 </BaseLayout>
 
