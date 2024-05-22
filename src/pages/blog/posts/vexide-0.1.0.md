@@ -22,16 +22,15 @@ vexide is a brand new library for programming V5 Brains.
 Unlike the two major V5 Brain libraries (VEXCode and PROS), vexide is written in Rust instead of C and C++.
 For this reason vexide has many advantages over PROS and VEXCode.
 - vexide uses Rust async/await instead of an RTOS.
-- vexide binaries are small, like, *really small* compared to PROS.
+- vexide binaries are small, like, *really small* compared to PROS monoliths.
 - All device errors need to be explicitly handled or ignored.
 - vexide gives you complete control over what runs in your programs. Don't want a banner to print on startup? Disable the feature.
 - vexide programs are built and linked with LLVM instead of the bulky ARM GNU Toolchain. 
-- vexide is frequently updated. VEXCode will always get new features first, but vexide will almost certainly get them before PROS.
+- vexide is frequently updated. VEXCode will always get new features first, unfortunately.
 
 Every single line of code in vexide is open source and 100% Rust. 
 vexide doesn't depend on any external C libraries (even libv5rt).
 This means that anyone can build and contribute to vexide with ease.
-It is impossible to contribute to VEXCode and you very rarely see anyone outside of Purdue contribute to PROS for a good reason.
 
 
 # In practice
