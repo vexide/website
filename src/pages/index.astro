@@ -1,12 +1,12 @@
 ---
-import { GITHUB_REPO_URL, CRATE_NAME, EXAMPLES } from "~/constants";
+import { GITHUB_REPO_URL, CRATE_NAME, EXAMPLES } from "config";
 
-import BaseLayout from "~/layouts/BaseLayout.astro";
-import PageSection from "~/components/PageSection.astro";
-import CodeExample from "~/components/CodeExample.astro";
-import BlogCard from "~/components/BlogCard.astro";
+import BaseLayout from "layouts/BaseLayout.astro";
+import PageSection from "components/PageSection.astro";
+import CodeExample from "components/CodeExample.astro";
+import BlogCard from "components/BlogCard.svelte";
 
-import Button from "~/components/Button.svelte";
+import Button from "components/Button.svelte";
 
 const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !post.frontmatter.draft).sort(
 	(a, b) =>
@@ -87,7 +87,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 					author={latestBlogPost.frontmatter.author}
 					date={new Date(latestBlogPost.frontmatter.date)}
 					thumbnail={latestBlogPost.frontmatter.thumbnail}
-					thumbnail_alt={latestBlogPost.frontmatter.thumbnail}
+					thumbnailAlt={latestBlogPost.frontmatter.thumbnail}
 				/>
 			</div>
 		</PageSection>
@@ -132,7 +132,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 		min-block-size: 720px;
 		block-size: 90vh;
 		max-block-size: 1200px;
-		padding-block: 128px;
+		padding-block: 108px;
 	}
 
 	.hero-left,
@@ -175,8 +175,8 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 	}
 
 	@media only screen and (max-width: 1024px) {
-		:global(#hero > .page-section-inner) {
-			padding-block: 48px;
+		#hero > :global(.page-section-inner) {
+			padding-block: 72px;
 			flex-direction: column;
 			max-height: unset;
 			height: unset;

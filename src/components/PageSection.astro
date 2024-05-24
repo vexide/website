@@ -26,7 +26,7 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		position: relative;
 		box-sizing: border-box;
 		max-inline-size: 1380px;
-		padding-inline: 24px;
+		padding-inline: 48px;
 		margin-inline: auto;
 	}
 
@@ -64,6 +64,12 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 	@media only screen and (max-width: 1024px) {
 		.page-section :global(h1.title) {
 			font-size: 6.4rem;
+		}
+	}
+	
+	@media only screen and (max-width: 768px) {
+		.page-section-inner {
+			padding-inline: 24px;
 		}
 	}
 </style>

@@ -1,23 +1,18 @@
----
-import Button from "./Button.svelte";
+<script lang="ts">
+	import Button from "components/Button.svelte";
 
-interface Props {
-	title: string;
-	description: string;
-	author: string;
-	date: Date;
-	url: string;
-	thumbnail: string;
-	thumbnail_alt: string;
-	style?: string;
-}
+	export let title: string;
+	export let description: string;
+	export let author: string;
+	export let date: Date;
+	export let url: string;
+	export let thumbnail: string;
+	export let thumbnailAlt: string;
+	export let style: string = "";
+</script>
 
-const { title, description, author, date, url, thumbnail, thumbnail_alt, style } =
-	Astro.props;
----
-
-<div class="blog-card" style={style}>
-	<img class="blog-card-thumbnail" src={thumbnail} alt={thumbnail_alt} />
+<div class="blog-card" {style}>
+	<img class="blog-card-thumbnail" src={thumbnail} alt={thumbnailAlt} />
 	<a class="blog-card-title" href={url}>
 		<span>{title}</span>
 	</a>
@@ -29,7 +24,7 @@ const { title, description, author, date, url, thumbnail, thumbnail_alt, style }
 			target="_blank"
 			rel="noreferrer noopeners"
 		>
-			<img src={`https://github.com/${author}.png`} alt="Profile Photo" />
+			<img src={`https://github.com/${author}.png`} alt="Author Profile" />
 			<span>
 				<strong>{author}</strong> • {date.toLocaleDateString()}
 			</span>
@@ -133,7 +128,7 @@ const { title, description, author, date, url, thumbnail, thumbnail_alt, style }
 		block-size: auto;
 	}
 
-	.blog-card-button {
+	.blog-card :global(.blog-card-button) {
 		padding-block: 8px;
 		white-space: nowrap;
 	}

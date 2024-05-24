@@ -1,28 +1,28 @@
 ---
-import BaseLayout from "~/layouts/BaseLayout.astro";
-import PageSection from "~/components/PageSection.astro";
+import BaseLayout from "layouts/BaseLayout.astro";
+import PageSection from "components/PageSection.astro";
 
-import Button from "~/components/Button.svelte";
+import Button from "components/Button.svelte";
 
-import { GITHUB_ORG_URL } from "~/constants";
+import { GITHUB_ORG_URL } from "config";
 ---
 
 <BaseLayout title="vexide simulator">
 	<main id="content">
 		<PageSection id="sim-hero">
 			<div class="hero-top">
-				<h1 class="title">pros-rs Simulator</h1>
+				<h1 class="title">vexide Simulator</h1>
 				<p class="subtext">
-					Easily simulate PROS user programs on your own computer
+					Easily simulate vexide user programs on your own computer
 					without physical access to V5 hardware.
 				</p>
 				<Button
-					href={`${GITHUB_ORG_URL}/pros-simulator-gui/releases/latest`}
+					href={`${GITHUB_ORG_URL}/vex-sdk-sim/releases/latest`}
 					target="_blank"
 					rel="noreferrer noopener"
 					variant="accent"
 				>
-					Download from GitHub
+					Source Code on GitHub
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="18"
@@ -61,7 +61,7 @@ import { GITHUB_ORG_URL } from "~/constants";
 						<div class="feature-card-content">
 							<h2>Great for Testing</h2>
 							<p>
-								Allows easy local testing of pros-rs user
+								Allows easy local testing of vexide user
 								programs from your computer in a WASM
 								environment. No uploads needed!
 							</p>
@@ -105,10 +105,9 @@ import { GITHUB_ORG_URL } from "~/constants";
 							>
 						</div>
 						<div class="feature-card-content">
-							<h2>LLEMU Support</h2>
+							<h2>Full Display Emulation</h2>
 							<p>
-								Simulate brain display contents through PROS'
-								Legacy LCD Emulator (LLEMU) functions.
+								Simulate the brain's display graphics to test UIs or auton selectors without uploading every time.
 							</p>
 						</div>
 					</div>

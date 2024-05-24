@@ -4,7 +4,7 @@ title: vexide v0.1.0
 description: All about the first version of vexide
 author: gavin-niederman
 thumbnail: "/images/thumbnails/rotated_grid.webp"
-thumbnail_alt: "Thumbnail Image"
+thumbnailAlt: "Thumbnail Image"
 tag: release
 date: 2024-05-11
 ---

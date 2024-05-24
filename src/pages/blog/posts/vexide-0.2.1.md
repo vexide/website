@@ -4,7 +4,7 @@ title: vexide v0.2.1
 description: vexide 0.2.1 released
 author: gavin-niederman
 thumbnail: "/images/thumbnails/rotated_grid.webp"
-thumbnail_alt: "Thumbnail Image"
+thumbnailAlt: "Thumbnail Image"
 tag: release
 date: 2024-05-19
 ---

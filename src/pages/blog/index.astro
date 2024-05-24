@@ -1,7 +1,7 @@
 ---
-import BaseLayout from "~/layouts/BaseLayout.astro";
-import PageSection from "~/components/PageSection.astro";
-import BlogsSearch from "~/components/BlogsSearch.svelte";
+import BaseLayout from "layouts/BaseLayout.astro";
+import PageSection from "components/PageSection.astro";
+import BlogsSearch from "components/BlogsSearch.svelte";
 
 const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 	(post) => !post.frontmatter.draft,
@@ -25,7 +25,7 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 						author: post.frontmatter.author,
 						date: new Date(post.frontmatter.date),
 						thumbnail: post.frontmatter.thumbnail,
-						thumbnail_alt: post.frontmatter.thumbnail,
+						thumbnailAlt: post.frontmatter.thumbnail,
 						tag: post.frontmatter.tag,
 						style: `animation: slide-up-blog 500ms backwards ${animationDelay};`,
 					};

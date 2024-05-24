@@ -1,11 +1,11 @@
 ---
-import Navigation from "~/components/Navigation.astro";
-import NavigationItem from "~/components/NavigationItem.astro";
+import Navigation from "components/Navigation.astro";
+import NavigationItem from "components/NavigationItem.astro";
 
-import Button from "~/components/Button.svelte";
-import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "~/constants";
-import GlobalStyles from "~/components/GlobalStyles.astro";
-import PageMetadata from "~/components/PageMetadata.astro";
+import Button from "components/Button.svelte";
+import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "config";
+import GlobalStyles from "components/GlobalStyles.astro";
+import PageMetadata from "components/PageMetadata.astro";
 
 interface Props {
 	name?: string;
@@ -30,7 +30,7 @@ const {
 			width="36"
 			height="36"
 			src="/images/logo.svg"
-			alt="pros-rs Logo"
+			alt="vexide Logo"
 		/>
 		<NavigationItem href="#">Learn</NavigationItem>
 		<NavigationItem href="/simulator">Simulator</NavigationItem>

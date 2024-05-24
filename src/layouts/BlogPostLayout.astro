@@ -1,59 +1,20 @@
 ---
-import BlogTitle from "~/components/BlogTitle.astro";
-import Button from "~/components/Button.svelte";
-import GlobalStyles from "~/components/GlobalStyles.astro";
-import Navigation from "~/components/Navigation.astro";
-import NavigationItem from "~/components/NavigationItem.astro";
-import PageMetadata from "~/components/PageMetadata.astro";
-import PageSection from "~/components/PageSection.astro";
-import { DISCORD_INVITE_URL, GITHUB_REPO_URL } from "~/constants";
+import BlogTitle from "components/BlogTitle.astro";
+import GlobalStyles from "components/GlobalStyles.astro";
+import PageSection from "components/PageSection.astro";
+import BaseLayout from "./BaseLayout.astro";
 const { title, author, date, description, tag } =
 	Astro.props.frontmatter;
 ---
 
-<PageMetadata
-	name="vexide"
-	title=`vexide blog post ‒ ${title}`
-	type="website"
-	{description}
->
-	<Button class="skip-to-content" href="#content">Skip to content</Button>
-	<Navigation title="vexide">
-		<img
-			slot="logo"
-			width="36"
-			height="36"
-			src="/images/logo.svg"
-			alt="pros-rs Logo"
-		/>
-		<NavigationItem href="#">Learn</NavigationItem>
-		<NavigationItem href="/simulator">Simulator</NavigationItem>
-		<NavigationItem href="/blog">Blog</NavigationItem>
-		<Fragment slot="actions">
-			<Button
-				variant="outlined"
-				href={DISCORD_INVITE_URL}
-				target="_blank"
-				rel="noreferrer noopener"
-			>
-				Discord
-			</Button>
-			<Button
-				variant="outlined"
-				href={GITHUB_REPO_URL}
-				target="_blank"
-				rel="noreferrer noopener"
-			>
-				GitHub
-			</Button>
-		</Fragment>
-	</Navigation>
+<BaseLayout name="vexide" {title} {description} />
 	<BlogTitle {title} {author} {author} {tag} date={new Date(date)} />
 	<PageSection id="blog-content">
 		<a id="content" />
 		<slot />
 	</PageSection>
-</PageMetadata>
+</BaseLayout>
+
 <GlobalStyles />
 
 <style>
@@ -99,7 +60,12 @@ const { title, author, date, description, tag } =
 		}
 	}
 
-	#blog-content :global(h1, h2, h3, h4, h5, h6) {
+	#blog-content :global(h1),
+	#blog-content :global(h2),
+	#blog-content :global(h3),
+	#blog-content :global(h4),
+	#blog-content :global(h5),
+	#blog-content :global(h6) {
 		font-family: var(--font-monospace) !important;
 		font-weight: 200;
 		text-decoration: underline var(--background-accent-yellow);

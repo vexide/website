@@ -4,7 +4,7 @@ title: The Development of vexide
 description: The story of vexide's development
 author: gavin-niederman
 thumbnail: "https://images.unsplash.com/photo-1704895390342-b52a2f45786c?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-thumbnail_alt: "Thumbnail Image"
+thumbnailAlt: "Thumbnail Image"
 tag: blog
 date: 2024-05-12
 draft: true
