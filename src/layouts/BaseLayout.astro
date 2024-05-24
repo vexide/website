@@ -1,59 +1,199 @@
 ---
-import Navigation from "components/Navigation.astro";
-import NavigationItem from "components/NavigationItem.astro";
-
-import Button from "components/Button.svelte";
-import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "config";
-import GlobalStyles from "components/GlobalStyles.astro";
-import PageMetadata from "components/PageMetadata.astro";
-
-interface Props {
-	name?: string;
-	title?: string;
-	type?: string;
-	description?: string;
-}
-
-const {
-	name = "vexide",
-	title = "vexide",
-	type = "website",
-	description = "Open-source Rust runtime for VEX robots.",
-} = Astro.props;
+const { name, title, description } = Astro.props;
 ---
 
-<PageMetadata {name} {title} {type} {description}>
-	<Button class="skip-to-content" href="#content">Skip to content</Button>
-	<Navigation title="vexide">
-		<img
-			slot="logo"
-			width="36"
-			height="36"
-			src="/images/logo.svg"
-			alt="vexide Logo"
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- You know the drill... -->
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+
+		<!-- SEO Stuff -->
+		<link rel="canonical" href={Astro.url} />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- Favicon & Page Theme -->
+		<link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+		<meta name="color-scheme" content="dark" />
+		<meta name="theme-color" content="#e54643" />
+
+		<!-- Preload Fonts -->
+		<link
+			rel="preload"
+			href="/fonts/Manrope-VariableFont_wght.woff2"
+			as="font"
+			crossorigin="anonymous"
 		/>
-		<NavigationItem href="#">Learn</NavigationItem>
-		<NavigationItem href="/simulator">Simulator</NavigationItem>
-		<NavigationItem href="/blog">Blog</NavigationItem>
-		<Fragment slot="actions">
-			<Button
-				variant="outlined"
-				href={DISCORD_INVITE_URL}
-				target="_blank"
-				rel="noreferrer noopener"
-			>
-				Discord
-			</Button>
-			<Button
-				variant="outlined"
-				href={GITHUB_REPO_URL}
-				target="_blank"
-				rel="noreferrer noopener"
-			>
-				GitHub
-			</Button>
-		</Fragment>
-	</Navigation>
-	<slot />
-</PageMetadata>
-<GlobalStyles />
+		<link
+			rel="preload"
+			href="/fonts/iosevka-fixed_latin-ext.woff2"
+			as="font"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/fonts/iosevka-fixed-extralight_latin-ext.woff2"
+			as="font"
+			crossorigin="anonymous"
+		/>
+
+		<!-- OpenGraph Page Metadata -->
+		<meta property="og:site_name" content={name} />
+		<meta property="og:title" content={title} />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL("/images/logo.svg", Astro.url)} />
+        <meta property="og:image:type" content="mime/svg+xml" />
+		<meta property="og:image:alt" content="vexide-logo" />
+        <!-- <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="twitter:card" content="summary_large_image"> -->
+
+		<title>{title}</title>
+	</head>
+
+	<body>
+        <slot />
+    </body>
+</html>
+
+<style is:global>
+	@font-face {
+		font-family: "Iosevka";
+		font-style: ultralight;
+		font-weight: 200;
+		src: url("/fonts/iosevka-fixed-extralight_latin-ext.woff2")
+			format("woff2");
+		unicode-range: U+0000-00FF;
+	}
+
+	@font-face {
+		font-family: "Iosevka";
+		font-style: normal;
+		font-weight: normal;
+		src: url("/fonts/iosevka-fixed_latin-ext.woff2") format("woff2");
+		unicode-range: U+0000-00FF;
+	}
+
+	@font-face {
+		font-family: "Manrope";
+		font-weight: 200 800;
+		font-style: normal;
+		font-display: swap;
+		src: url("/fonts/Manrope-VariableFont_wght.woff2") format("woff2");
+	}
+
+	:root {
+		--base-hue: 228deg;
+		--accent-red-hue: 1deg;
+		--accent-yellow-hue: 47deg;
+
+		--background-primary: hsl(var(--base-hue), 12%, 16%);
+		--background-secondary: hsl(var(--base-hue), 12%, 24%);
+		--background-accent-red: hsl(var(--accent-red-hue), 76%, 58%);
+		--background-accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%);
+
+		--foreground-primary: hsl(var(--base-hue), 27%, 88%);
+		--foreground-secondary: hsl(var(--base-hue), 20%, 68%);
+		--foreground-accent-red: hsl(var(--accent-red-hue), 76%, 78%);
+		--foreground-accent-yellow: hsl(var(--accent-yellow-hue), 76%, 78%);
+
+		--font-monospace: "Iosevka", ui-monospace, Menlo, Monaco,
+			"Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
+			"Ubuntu Monospace", "Source Code Pro", "Fira Mono",
+			"Droid Sans Mono", "Courier New", monospace;
+
+		--font-primary: "Manrope", system-ui, -apple-system, BlinkMacSystemFont,
+			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
+
+		--breakpoint-large: 1380px;
+		--breakpoint-medium: 1024px;
+		--breakpoint-small: 768px;
+	}
+
+	html {
+		font-size: 62.5%;
+	}
+
+	body {
+		font-size: 1.4rem;
+	}
+
+	html,
+	body {
+		color-scheme: dark;
+		font-family: var(--font-primary);
+		background-color: var(--background-primary);
+		color: var(--foreground-primary);
+		margin: 0;
+		padding: 0;
+	}
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--foreground-secondary);
+		outline-offset: 2px;
+	}
+
+	::selection {
+		background-color: hsla(var(--base-hue), 20%, 68%, 80%);
+		color: var(--background-secondary);
+	}
+
+	::-webkit-scrollbar {
+		inline-size: 12px;
+		block-size: 12px;
+		background-color: var(--background-primary);
+	}
+
+	::-webkit-scrollbar-thumb {
+		border-radius: 8px;
+		border: 3.5px solid var(--background-primary);
+		background-color: var(--background-secondary);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background-color: var(--foreground-secondary);
+	}
+
+	::-webkit-scrollbar-thumb:active {
+		background-color: var(--foreground-primary);
+	}
+
+	::-webkit-scrollbar-corner {
+		appearance: none;
+	}
+
+	code {
+		/* tab-size: 4ch; */
+		font-family: var(--font-monospace);
+	}
+
+	.navigation-actions .button {
+		padding-block: 8px !important;
+		padding-inline: 24px !important;
+		font-size: 1.4rem !important;
+	}
+
+	.skip-to-content {
+		transition: none;
+		z-index: 9999;
+		position: fixed;
+		inset-inline-start: 0;
+		inset-block-start: 0;
+		transform: translateY(-100%);
+	}
+
+	.skip-to-content:focus-visible {
+		transform: none;
+	}
+</style>

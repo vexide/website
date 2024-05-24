@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "layouts/BaseLayout.astro";
+import PageLayout from "layouts/PageLayout.astro";
 import PageSection from "components/PageSection.astro";
 import BlogsSearch from "components/BlogsSearch.svelte";
 
@@ -8,7 +8,7 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 );
 ---
 
-<BaseLayout title="vexide blogs">
+<PageLayout title="vexide blogs">
 	<PageSection id="blogs">
 		<h1 class="title" style="align-self: center;">Blogs</h1>
 		<a id="content"></a>
@@ -33,7 +33,7 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 		/>
 		<div class="blogs-grid"></div>
 	</PageSection>
-</BaseLayout>
+</PageLayout>
 
 <style>
 	@keyframes slide-up-blog {

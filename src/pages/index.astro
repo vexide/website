@@ -1,7 +1,7 @@
 ---
 import { GITHUB_REPO_URL, CRATE_NAME, EXAMPLES } from "config";
 
-import BaseLayout from "layouts/BaseLayout.astro";
+import PageLayout from "layouts/PageLayout.astro";
 import PageSection from "components/PageSection.astro";
 import CodeExample from "components/CodeExample.astro";
 import BlogCard from "components/BlogCard.svelte";
@@ -15,7 +15,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 )[0];
 ---
 
-<BaseLayout>
+<PageLayout>
 	<main id="content">
 		<PageSection id="hero">
 			<div class="hero-left">
@@ -92,7 +92,7 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 			</div>
 		</PageSection>
 	</main>
-</BaseLayout>
+</PageLayout>
 
 <style>
 	@keyframes slide-up {

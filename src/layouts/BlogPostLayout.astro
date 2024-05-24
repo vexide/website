@@ -1,21 +1,18 @@
 ---
 import BlogTitle from "components/BlogTitle.astro";
-import GlobalStyles from "components/GlobalStyles.astro";
 import PageSection from "components/PageSection.astro";
-import BaseLayout from "./BaseLayout.astro";
+import PageLayout from "./PageLayout.astro";
 const { title, author, date, description, tag } =
 	Astro.props.frontmatter;
 ---
 
-<BaseLayout name="vexide" {title} {description} />
+<PageLayout name="vexide" {title} {description} />
 	<BlogTitle {title} {author} {author} {tag} date={new Date(date)} />
 	<PageSection id="blog-content">
 		<a id="content" />
 		<slot />
 	</PageSection>
-</BaseLayout>
-
-<GlobalStyles />
+</PageLayout>
 
 <style>
 	#blog-content {
