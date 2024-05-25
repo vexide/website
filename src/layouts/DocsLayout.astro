@@ -6,22 +6,134 @@ import Button from "components/Button.svelte";
 import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "config";
 import BaseLayout from "./BaseLayout.astro";
 
-interface Props {
-	name?: string;
-	title?: string;
-	type?: string;
-	description?: string;
-}
+const { frontmatter } = Astro.props;
 
-const {
-	name = "vexide",
-	title = "vexide",
-	type = "website",
-	description = "Open-source Rust runtime for VEX robots.",
-} = Astro.props;
+const categorize = (array, fn) =>
+	array.reduce(
+		(r, v, i, a, k = fn(v)) => ((r[k] || (r[k] = [])).push(v), r),
+		{},
+	);
+const categories = categorize(
+	await Astro.glob("../pages/docs/**.md"),
+	(page) => page.frontmatter.category,
+);
 ---
 
-<BaseLayout {name} {title} {type} {description}>
+<BaseLayout name="vexide Docs" title={frontmatter.title}>
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
-	<slot />
-<BaseLayout />
+	<Navigation title="vexide">
+		<img
+			slot="logo"
+			width="36"
+			height="36"
+			src="/images/logo.svg"
+			alt="vexide Logo"
+		/>
+		<span slot="title" class="navigation-docs-chip">Docs</span>
+	</Navigation>
+	<main class="docs-layout">
+		<aside class="docs-sidebar">
+			{
+				Object.keys(categories).map((category) => (
+					<strong class="category-label">{category}</strong>
+					<ul class="category-items">
+						{categories[category]
+							.sort(
+								(a, b) =>
+									a.frontmatter.page - b.frontmatter.page,
+							)
+							.map((page) => {
+								const currentPage =
+									"/" +
+									(
+										new URL(
+											Astro.request.url,
+										).pathname.split("/docs/")[1] || ""
+									).split("/")[0];
+								const path =
+									page.url.split("/docs")[1] || "/";
+
+								return (
+									<li
+										class:list={[
+											"docs-sidebar-item",
+											{
+												selected:
+													currentPage === path,
+											},
+										]}
+									>
+										<a href={page.url}>
+											{page.frontmatter.title}
+										</a>
+									</li>
+								);
+							})}
+					</ul>
+				))
+			}
+		</aside>
+		<div class="docs-page">
+			<header>
+				<h1>{frontmatter.title}</h1>
+			</header>
+			<article class="markdown-body" id="content">
+				<slot />
+			</article>
+		</div>
+	</main>
+	<BaseLayout />
+
+	<style>
+		.navigation-docs-chip {
+			align-self: center;
+			font-size: 1.2rem;
+			text-transform: uppercase;
+			color: var(--foreground-accent-yellow);
+			border: 1px solid var(--background-accent-yellow);
+			border-radius: 50px;
+			padding-inline: 8px;
+			padding-block: 1px;
+		}
+
+		:global(.navigation .navigation-inner) {
+			max-inline-size: unset;
+		}
+
+		:global(.navigation) {
+			position: sticky !important;
+			top: 0;
+		}
+
+		.docs-layout {
+			display: flex;
+			position: relative;
+		}
+
+		.docs-sidebar {
+			width: 280px;
+			height: calc(100vh - 48px);
+			flex: 0 0 auto;
+			position: sticky;
+			top: 48px;
+		}
+
+		.docs-page {
+			flex: 1 1 auto;
+			flex-direction: column;
+		}
+
+		.docs-page header,
+		.docs-page article {
+			padding: 48px;
+		}
+
+		.docs-page header {
+			background-color: #262831;
+		}
+
+		.docs-sidebar {
+			background-color: #282b33;
+		}
+	</style>
+</BaseLayout>

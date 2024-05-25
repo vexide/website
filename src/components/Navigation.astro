@@ -9,6 +9,7 @@ const { title = "" } = Astro.props;
 				<a href="/" class="navigation-title">
 					<slot name="logo" />
 					<span>{title}</span>
+					<slot name="title" />
 				</a>
 			)
 		}
