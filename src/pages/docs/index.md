@@ -1,8 +1,8 @@
 ---
-title: Advanced Movement
-category: Library
-layout: ~/layouts/DocsLayout.astro
-page: 4
+title: Example
+category: hi
+layout: layouts/DocsLayout.astro
+page: 1
 ---
 
 # Advanced Movement

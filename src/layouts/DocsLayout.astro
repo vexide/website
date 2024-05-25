@@ -3,7 +3,7 @@ import Navigation from "components/Navigation.astro";
 import NavigationItem from "components/NavigationItem.astro";
 
 import Button from "components/Button.svelte";
-import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "config";
+import { GITHUB_ORG_URL, DISCORD_INVITE_URL } from "config";
 import BaseLayout from "./BaseLayout.astro";
 
 const { frontmatter } = Astro.props;
@@ -13,10 +13,14 @@ const categorize = (array, fn) =>
 		(r, v, i, a, k = fn(v)) => ((r[k] || (r[k] = [])).push(v), r),
 		{},
 	);
-const categories = categorize(
-	await Astro.glob("../pages/docs/**.md"),
-	(page) => page.frontmatter.category,
+const glob = await Astro.glob("../pages/docs/**.md");
+const categories = categorize(glob, (page) => page.frontmatter.category);
+
+const currentPage = glob.find(
+	(page) => new URL(Astro.request.url).pathname === page.url,
 );
+const prevPage = glob[glob.indexOf(currentPage) - 1];
+const nextPage = glob[glob.indexOf(currentPage) + 1];
 ---
 
 <BaseLayout name="vexide Docs" title={frontmatter.title}>
@@ -35,50 +39,113 @@ const categories = categorize(
 		<aside class="docs-sidebar">
 			{
 				Object.keys(categories).map((category) => (
-					<strong class="docs-category-label">{category}</strong>
-					<ul class="docs-category">
-						{categories[category]
-							.sort(
-								(a, b) =>
-									a.frontmatter.page - b.frontmatter.page,
-							)
-							.map((page) => {
-								const currentPage =
-									"/" +
-									(
-										new URL(
-											Astro.request.url,
-										).pathname.split("/docs/")[1] || ""
-									).split("/")[0];
-								const path =
-									page.url.split("/docs")[1] || "/";
-
-								return (
-									<li
-										class:list={[
-											"docs-sidebar-item",
-											{
-												selected:
-													currentPage === path,
-											},
-										]}
-									>
-										<a href={page.url}>
-											{page.frontmatter.title}
-										</a>
-									</li>
-								);
-							})}
-					</ul>
+					<>
+						<strong class="docs-category-label">{category}</strong>
+						<ul class="docs-category">
+							{categories[category]
+								.sort(
+									(a, b) =>
+										a.frontmatter.page - b.frontmatter.page,
+								)
+								.map((page) => {
+									return (
+										<li
+											class:list={[
+												"docs-sidebar-item",
+												{
+													selected:
+														page.url ===
+														currentPage.url,
+												},
+											]}
+										>
+											<a href={page.url}>
+												{page.frontmatter.title}
+											</a>
+										</li>
+									);
+								})}
+						</ul>
+					</>
 				))
 			}
 		</aside>
 		<div class="docs-page">
 			<header>
 				<h1>{frontmatter.title}</h1>
+				<a
+					class="edit-on-github"
+					href={`${GITHUB_ORG_URL}/website/tree/main/src/pages/docs/${
+						frontmatter.url.split("/docs")[1] || "index.md"
+					}`}
+				>
+					Edit this page on GitHub
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						viewBox="0 0 32 32"
+					>
+						<path
+							fill="currentColor"
+							d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
+						></path>
+					</svg>
+				</a>
 			</header>
 			<article class="markdown-body" id="content">
 				<slot />
+				{(prevPage || nextPage) && (
+
+					<nav class="docs-page-actions">
+						{
+							prevPage && (
+								<a
+									class="page-action prev-page"
+									href={prevPage.url}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24"
+										width="24"
+										height="24"
+									>
+										<path d="M15.28 5.22a.75.75 0 0 1 0 1.06L9.56 12l5.72 5.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-6.25-6.25a.75.75 0 0 1 0-1.06l6.25-6.25a.75.75 0 0 1 1.06 0Z" />
+									</svg>
+									<div class="page-action-contents">
+										Previous
+										<strong>
+											{prevPage.frontmatter.title}
+										</strong>
+									</div>
+								</a>
+							)
+						}
+						{
+							nextPage && (
+								<a
+									class="page-action next-page"
+									href={nextPage.url}
+								>
+									<div class="page-action-contents">
+										Next
+										<strong>
+											{nextPage.frontmatter.title}
+										</strong>
+									</div>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24"
+										width="24"
+										height="24"
+									>
+										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
+									</svg>
+								</a>
+							)
+						}
+					</nav>
+				)}
 			</article>
 		</div>
 	</main>
@@ -132,17 +199,29 @@ const categories = categorize(
 		.docs-page header {
 			background-color: #262831;
 			border-bottom: 1px solid var(--background-secondary);
+			--grid-color: hsl(var(--base-hue), 12%, 18%);
+			background-size: 20px 20px;
+			background-image: linear-gradient(
+					to right,
+					var(--grid-color) 1px,
+					transparent 1px
+				),
+				linear-gradient(
+					to bottom,
+					var(--grid-color) 1px,
+					transparent 1px
+				);
 		}
 
 		.docs-page header h1 {
 			font-family: var(--font-monospace);
 			font-weight: 300;
-			font-size: 36px;
+			font-size: 4.8rem;
 			margin: 0;
 		}
 
 		.docs-sidebar {
-			background-color: #282b33;
+			background-color: #282a34;
 			border-right: 1px solid var(--background-secondary);
 		}
 
@@ -179,6 +258,10 @@ const categories = categorize(
 			padding: 8px 16px;
 		}
 
+		.docs-sidebar-item:not(.selected) a:hover {
+			text-decoration: underline;
+		}
+
 		.docs-sidebar-item.selected a {
 			font-weight: 600;
 			color: var(--foreground-primary);
@@ -202,11 +285,104 @@ const categories = categorize(
 			font-weight: 300;
 		}
 
+		.markdown-body :global(:first-child) {
+			margin-top: 0;
+		}
+
+		.markdown-body :global(:last-child) {
+			margin-bottom: 0;
+		}
+
+		.markdown-body :global(h1) {
+			font-size: 3.6rem;
+		}
+
 		.markdown-body :global(pre) {
-			padding: 16px;
+			margin-block: 24px;
+			padding: 24px;
 			border: 1px solid var(--background-secondary);
 			background-color: var(--background-primary) !important;
 			border-radius: 4px;
+			line-height: 1.5;
+		}
+
+		.markdown-body :global(blockquote) {
+			padding: 16px;
+			color: var(--foreground-primary);
+			background-color: var(--background-secondary);
+			border-radius: 4px;
+			margin: 0;
+		}
+
+		.markdown-body :global(li) {
+			list-style-type: square;
+		}
+
+		.markdown-body :global(a),
+		.edit-on-github {
+			color: var(--foreground-accent-red);
+			text-decoration: none;
+			border-bottom: 1px solid currentColor;
+			transition: 0.25s ease;
+		}
+
+		.markdown-body :global(a:hover),
+		.edit-on-github:hover {
+			opacity: 0.8;
+		}
+
+		.edit-on-github {
+			display: inline-block;
+			margin-block-start: 16px;
+			font-size: 1.6rem;
+		}
+
+		.docs-page-actions {
+			display: flex;
+			justify-content: space-between;
+			gap: 16px;
+			border-top: 1px solid var(--background-secondary);
+			padding-top: 48px;
+			margin-top: 48px;
+		}
+
+		.docs-page-actions .page-action {
+			display: flex;
+			align-items: center;
+			gap: 24px;
+			text-decoration: none;
+			border: 1px solid var(--foreground-secondary);
+			border-radius: 4px;
+			padding: 24px;
+			inline-size: 400px;
+			color: var(--foreground-secondary);
+			text-transform: uppercase;
+			font-size: 12px;
+			font-weight: 700;
+			line-height: normal;
+		}
+
+		.page-action strong {
+			color: var(--foreground-primary);
+			font-family: var(--font-monospace);
+			font-size: 24px;
+			margin-block-start: 8px;
+			font-weight: 400;
+		}
+
+		.next-page {
+			margin-left: auto;
+		}
+
+		.page-action-contents {
+			display: flex;
+			flex-direction: column;
+			flex: 1 1 auto;
+		}
+
+		.page-action svg {
+			flex: 0 0 auto;
+			fill: currentColor;
 		}
 	</style>
 </BaseLayout>
