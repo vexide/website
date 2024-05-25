@@ -7,7 +7,7 @@ const { name, title, description } = Astro.props;
 	<head>
 		<!-- You know the drill... -->
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<!-- SEO Stuff -->
 		<link rel="canonical" href={Astro.url} />
@@ -45,10 +45,13 @@ const { name, title, description } = Astro.props;
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:description" content={description} />
-		<meta property="og:image" content={new URL("/images/logo.svg", Astro.url)} />
-        <meta property="og:image:type" content="mime/svg+xml" />
+		<meta
+			property="og:image"
+			content={new URL("/images/logo.svg", Astro.url)}
+		/>
+		<meta property="og:image:type" content="mime/svg+xml" />
 		<meta property="og:image:alt" content="vexide-logo" />
-        <!-- <meta property="og:image:width" content="1200" />
+		<!-- <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="twitter:card" content="summary_large_image"> -->
 
@@ -56,8 +59,8 @@ const { name, title, description } = Astro.props;
 	</head>
 
 	<body>
-        <slot />
-    </body>
+		<slot />
+	</body>
 </html>
 
 <style is:global>

@@ -187,6 +187,12 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			top: 48px;
 		}
 
+		@media only screen and (max-width: 768px) {
+			.docs-sidebar {
+				display: none;
+			}
+		}
+
 		.docs-page {
 			flex: 1 1 auto;
 			flex-direction: column;
