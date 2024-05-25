@@ -17,7 +17,9 @@ const categorize = (array: any[], fn: (arg: any) => any) =>
 const glob = await Astro.glob("../pages/docs/**.md");
 const categories = categorize(glob, (page: Page) => page.frontmatter.category);
 
-const currentPage = glob[0];
+const currentPage = glob.find(
+	(page) => Astro.url.pathname === page.url,
+);
 const prevPage = glob[glob.indexOf(currentPage!) - 1];
 const nextPage = glob[glob.indexOf(currentPage!) + 1];
 ---
@@ -52,13 +54,11 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 											class:list={[
 												"docs-sidebar-item",
 												{
-													selected:
-														(page.url || "/docs") ===
-														currentPage!.url,
+													selected: page.url === currentPage!.url,
 												},
 											]}
 										>
-											<a href={page.url || "/docs"}>
+											<a href={page.url}>
 												{page.frontmatter.title}
 											</a>
 										</li>
