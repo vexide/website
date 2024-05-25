@@ -17,9 +17,7 @@ const categorize = (array: any[], fn: (arg: any) => any) =>
 const glob = await Astro.glob("../pages/docs/**.md");
 const categories = categorize(glob, (page: Page) => page.frontmatter.category);
 
-const currentPage = glob.find(
-	(page) => new URL(Astro.request.url).pathname === page.url,
-);
+const currentPage = glob[0];
 const prevPage = glob[glob.indexOf(currentPage!) - 1];
 const nextPage = glob[glob.indexOf(currentPage!) + 1];
 ---
@@ -55,12 +53,12 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 												"docs-sidebar-item",
 												{
 													selected:
-														page.url ===
+														(page.url || "/docs") ===
 														currentPage!.url,
 												},
 											]}
 										>
-											<a href={page.url}>
+											<a href={page.url || "/docs"}>
 												{page.frontmatter.title}
 											</a>
 										</li>
@@ -72,27 +70,29 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			}
 		</aside>
 		<div class="docs-page">
-			<header>
-				<h1>{frontmatter.title}</h1>
-				<a
-					class="edit-on-github"
-					href={`${GITHUB_ORG_URL}/website/tree/main/src/pages/docs/${
-						frontmatter.url.split("/docs")[1] || "index.md"
-					}`}
-				>
-					Edit this page on GitHub
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="16"
-						height="16"
-						viewBox="0 0 32 32"
+			<header class="docs-header">
+				<div class="docs-header-inner">
+					<h1>{frontmatter.title}</h1>
+					<a
+						class="edit-on-github"
+						href={`${GITHUB_ORG_URL}/website/tree/main/src/pages/docs/${
+							frontmatter.url.split("/docs")[1] || "index.md"
+						}`}
 					>
-						<path
-							fill="currentColor"
-							d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
-						></path>
-					</svg>
-				</a>
+						Edit this page on GitHub
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 32 32"
+						>
+							<path
+								fill="currentColor"
+								d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
+							></path>
+						</svg>
+					</a>
+				</div>
 			</header>
 			<article class="markdown-body" id="content">
 				<slot />
@@ -192,33 +192,26 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			flex-direction: column;
 		}
 
-		.docs-page header,
+		.docs-header,
 		.docs-page article {
 			padding: 48px;
 		}
 
-		.docs-page header {
-			background-color: #262831;
+		.docs-header {
+			background-image: url("data:image/svg+xml,%3Csvg width='1400' height='500' viewBox='0 0 1400 500' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1400' height='500' fill='%23262831'/%3E%3Cline x1='151' y1='-0.00399997' x2='153' y2='499.996' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1400' y1='376' x2='3.04249e-09' y2='376' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1400' y1='126' x2='3.04249e-09' y2='126' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1249' y1='-0.00399997' x2='1251' y2='499.996' stroke='%232C2F3A' stroke-width='2'/%3E%3Cpath d='M401 125C401 193.48 345.263 249 276.5 249C207.737 249 152 193.48 152 125C152 56.5205 207.737 1 276.5 1C345.263 1 401 56.5205 401 125Z' stroke='%232C2F3A' stroke-width='2'/%3E%3Cpath d='M1247 375C1247 443.48 1191.26 499 1122.5 499C1053.74 499 998 443.48 998 375C998 306.52 1053.74 251 1122.5 251C1191.26 251 1247 306.52 1247 375Z' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='278' y1='125' x2='278' y2='500' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1124' x2='1124' y2='375' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='277' y1='249' x2='1123' y2='249' stroke='%232C2F3A' stroke-width='2'/%3E%3Ccircle cx='699.5' cy='312.5' r='61.5' stroke='%232C2F3A' stroke-width='2'/%3E%3Ccircle cx='699.5' cy='187.5' r='61.5' stroke='%232C2F3A' stroke-width='2'/%3E%3C/svg%3E%0A");
+			background-size: 800px;
 			border-bottom: 1px solid var(--background-secondary);
-			--grid-color: hsl(var(--base-hue), 12%, 18%);
-			background-size: 20px 20px;
-			background-image: linear-gradient(
-					to right,
-					var(--grid-color) 1px,
-					transparent 1px
-				),
-				linear-gradient(
-					to bottom,
-					var(--grid-color) 1px,
-					transparent 1px
-				);
 		}
 
-		.docs-page header h1 {
-			font-family: var(--font-monospace);
-			font-weight: 300;
+		.docs-header h1 {
+			font-weight: 400;
 			font-size: 4.8rem;
 			margin: 0;
+		}
+
+		.docs-header-inner {
+			max-inline-size: 1200px;
+			margin: 0 auto;
 		}
 
 		.docs-sidebar {
@@ -270,6 +263,8 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 		}
 
 		.markdown-body {
+			max-inline-size: 1296px;
+			margin: 0 auto;
 			color: var(--foreground-secondary);
 			font-size: 1.6rem;
 			line-height: 2;

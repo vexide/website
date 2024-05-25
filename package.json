@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro check && astro build",
+		"build": "astro check --root ./src && astro build",
 		"format": "prettier . --write",
 		"preview": "astro preview",
 		"astro": "astro"
@@ -14,15 +14,14 @@
 	"dependencies": {
 		"@astrojs/check": "^0.4.1",
 		"@astrojs/cloudflare": "^8.1.0",
-		"@astrojs/sitemap": "^3.0.4",
-		"@astrojs/svelte": "^5.0.3",
-		"astro": "^4.1.2",
+		"@astrojs/sitemap": "^3.1.5",
+		"@astrojs/svelte": "^5.4.0",
+		"astro": "^4.9.1",
 		"fuzzysort": "^2.0.4",
-		"prettier": "^3.1.1",
+		"prettier": "^3.2.5",
 		"prettier-plugin-astro": "^0.12.3",
-		"prettier-plugin-svelte": "^3.1.2",
-		"shiki": "^0.14.7",
-		"svelte": "^4.2.8",
-		"typescript": "^5.3.3"
+		"prettier-plugin-svelte": "^3.2.3",
+		"svelte": "^4.2.17",
+		"typescript": "^5.4.5"
 	}
 }
