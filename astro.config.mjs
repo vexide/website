@@ -7,6 +7,7 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://pros-rs.pages.dev/",
+	trailingSlash: "always",
 	integrations: [sitemap(), svelte()],
 	output: "hybrid",
 	adapter: cloudflare(),
