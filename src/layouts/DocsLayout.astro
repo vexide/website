@@ -35,8 +35,8 @@ const categories = categorize(
 		<aside class="docs-sidebar">
 			{
 				Object.keys(categories).map((category) => (
-					<strong class="category-label">{category}</strong>
-					<ul class="category-items">
+					<strong class="docs-category-label">{category}</strong>
+					<ul class="docs-category">
 						{categories[category]
 							.sort(
 								(a, b) =>
@@ -98,6 +98,7 @@ const categories = categorize(
 
 		:global(.navigation .navigation-inner) {
 			max-inline-size: unset;
+			padding-inline: 16px;
 		}
 
 		:global(.navigation) {
@@ -130,10 +131,82 @@ const categories = categorize(
 
 		.docs-page header {
 			background-color: #262831;
+			border-bottom: 1px solid var(--background-secondary);
+		}
+
+		.docs-page header h1 {
+			font-family: var(--font-monospace);
+			font-weight: 300;
+			font-size: 36px;
+			margin: 0;
 		}
 
 		.docs-sidebar {
 			background-color: #282b33;
+			border-right: 1px solid var(--background-secondary);
+		}
+
+		.docs-category-label {
+			font-size: 16px;
+			color: var(--foreground-primary);
+			font-family: var(--font-monospace);
+			font-weight: normal;
+			padding: 16px;
+			display: flex;
+			border-bottom: 1px solid var(--background-secondary);
+		}
+
+		.docs-category-label:not(:first-of-type) {
+			margin-top: 48px;
+		}
+
+		.docs-category {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.docs-sidebar-item a {
+			display: flex;
+			align-items: center;
+			border-bottom: 1px solid var(--background-secondary);
+			border-left: 2px solid transparent;
+			font-size: 1.4rem;
+			text-decoration: none;
+			color: var(--foreground-secondary);
+			padding: 8px 16px;
+		}
+
+		.docs-sidebar-item.selected a {
+			font-weight: 600;
+			color: var(--foreground-primary);
+			border-left-color: var(--background-accent-yellow);
+		}
+
+		.markdown-body {
+			color: var(--foreground-secondary);
+			font-size: 1.6rem;
+			line-height: 2;
+		}
+
+		.markdown-body :global(h1),
+		.markdown-body :global(h2),
+		.markdown-body :global(h3),
+		.markdown-body :global(h4),
+		.markdown-body :global(h5),
+		.markdown-body :global(h6) {
+			color: var(--foreground-primary);
+			font-family: var(--font-monospace);
+			font-weight: 300;
+		}
+
+		.markdown-body :global(pre) {
+			padding: 16px;
+			border: 1px solid var(--background-secondary);
+			background-color: var(--background-primary) !important;
+			border-radius: 4px;
 		}
 	</style>
 </BaseLayout>
