@@ -26,7 +26,7 @@ cargo install cargo-pros cargo-binutils
 
 # Installing pros-cli
 
-At this time of this tutorial being written, vexide's tooling currently relies in the [PROS CLI](https://github.com/purduesigbots/pros-cli/releases). You'll need that installed on your system in order to upload to the brain.
+At this time of this tutorial being written, vexide's tooling currently relies on the [PROS CLI](https://github.com/purduesigbots/pros-cli/releases). You'll need that installed on your system in order to upload to the brain.
 
 ## Windows
 
