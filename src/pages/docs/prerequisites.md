@@ -39,7 +39,7 @@ git clone https://github.com/vexide/vexide-template
 
 This will leave you with a folder containing a barebones vexide project. Open that folder in an editor of your choice (if you aren't sure what to use, it's hard to go wrong with [VSCode](https://code.visualstudio.com/)).
 
-![vexide-template folder structure](https://i.imgur.com/PE5eKtc.png)
+![vexide-template folder structure](/docs/vexide-template-structure.png)
 
 If you've worked in a rust project before, this folder structure should be somewhat familiar to you. If not, that's okay too! There are two files of relevance we'll worry about right now:
 - The contents of `src` contain your project's actual source code. All of the program you will write will be in this folder. In this case `main.rs` is your program's main source file.
