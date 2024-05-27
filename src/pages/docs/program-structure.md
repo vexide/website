@@ -37,7 +37,7 @@ Both of these are necessary for programs to run on the V5's embedded hardware. R
 use vexide::prelude::*;
 ```
 
-This piece of code brings vexide's *prelude* module into scope. All that this does is import a bunch of commonly used types for you, so you don't have to type their full name every time. For example, you can simply use `Motor` rather than `vexide::devices::smart::Motor`.
+This piece of code brings vexide's *prelude* module into scope. All that this does is import a bunch of commonly used types for you, so you don't have to type their full name every time. For example, you can simply use `Motor` rather than `vexide::devices::smart::motor::Motor`.
 
 # The Program Entrypoint
 

@@ -275,6 +275,10 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			font-size: 1.6rem;
 			line-height: 2;
 		}
+		
+		.markdown-body :global(code) {
+			background: var(--background-secondary);
+		}
 
 		.markdown-body :global(h1),
 		.markdown-body :global(h2),
@@ -306,6 +310,10 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			background-color: var(--background-primary) !important;
 			border-radius: 4px;
 			line-height: 1.5;
+		}
+
+		.markdown-body :global(pre code) {
+			background-color: transparent;
 		}
 
 		.markdown-body :global(blockquote) {
