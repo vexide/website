@@ -50,7 +50,33 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-There are a few things you might notice that are slightly different from a typical rust project:
-- `main` is an `async fn`.
-- `main` takes a `peripherals` argument.
-- `main` is annotated with `#[vexide::main]`.
+You'll see three key differences in this version of the `main` function compared to a normal `main` function in Rust:
+1. `main` is an `async fn`. vexide ships with its own async runtime that serves as the basis for its multitasking features. In order to run other async functions, `main` itself must also be async.
+2. `main` takes a `peripherals` argument. This is an instance of the [`Peripherals` struct](https://docs.rs/vexide-devices/latest/vexide_devices/peripherals/struct.Peripherals.html) that allows you to create devices and interact with hardware. You can read more about that [here](../peripherals/).
+3. `main` is annotated with `#[vexide::main]`. This is actually a macro that sets up the real program entry. Behind the scenes, it starts up vexide's async executor and handles the [startup process](https://github.com/vexide/vexide/blob/main/packages/vexide-startup/src/lib.rs#L62) before running your code.
+
+# Returning Errors from `main`
+
+vexide's `main` functions can also return certain types for error handling purposes:
+
+```rs
+// Typical main functions
+async fn main(peripherals: Peripherals) { ... }
+async fn main(peripherals: Peripherals) -> () { ... }
+
+// Main can never return
+async fn main(peripherals: Peripherals) -> ! { ... }
+async fn main(peripherals: Peripherals) -> core::convert::Infallible { ... }
+
+// Main returns a [`Result`] type
+async fn main(peripherals: Peripherals) -> Result<(), E> {
+	...
+	Ok(())
+}
+```
+
+> NOTE: The valid return types for `main` are dictated by `vexide_core`'s [`Termination`](https://docs.rs/vexide-core/latest/vexide_core/program/trait.Termination.html) trait.
+
+All of these forms of `main` technically do the same thing. The only difference at runtime is that entries returning `Result` will print out an error message if the `Result::Err` variant is returned.
+
+In practice though, being able to return an error from `main` can be useful due to allowing the [`?` operator](https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-question-mark-operator) to be used with `Result` directly in `main` for more concise error handling.
