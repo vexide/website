@@ -52,5 +52,5 @@ async fn main(peripherals: Peripherals) {
 
 There are a few things you might notice that are slightly different from a typical rust project:
 - `main` is an `async fn`.
-- `main` takes a `pripherals` argument.
+- `main` takes a `peripherals` argument.
 - `main` is annotated with `#[vexide::main]`.

@@ -32,7 +32,7 @@ async fn main(peripherals: Peripherals) {
 		motor: Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward)?,
 	};
 
-	Competition::new(my_robot).await;
+	my_robot.compete().await.unwrap();
 }`,
 	},
 ];
