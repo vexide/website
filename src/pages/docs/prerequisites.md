@@ -41,6 +41,6 @@ This will leave you with a folder containing a barebones vexide project. Open th
 
 ![vexide-template folder structure](https://i.imgur.com/PE5eKtc.png)
 
-If you've worked in a rust project before, this folder structure should be somewhat familiar to you. If not, that's okay too! There are two files of relevance we'll worry about fight now:
+If you've worked in a rust project before, this folder structure should be somewhat familiar to you. If not, that's okay too! There are two files of relevance we'll worry about right now:
 - The contents of `src` contain your project's actual source code. All of the program you will write will be in this folder. In this case `main.rs` is your program's main source file.
 - `Cargo.toml` contains your project's package information, including its dependencies.
