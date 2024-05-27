@@ -106,7 +106,7 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 				{
 					(prevPage || nextPage) && (
 						<nav class="docs-page-actions">
-							{prevPage && (
+							{prevPage ? (
 								<a
 									class="page-action prev-page"
 									href={prevPage.url}
@@ -126,8 +126,8 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 										</strong>
 									</div>
 								</a>
-							)}
-							{nextPage && (
+							) : <div></div>}
+							{nextPage ? (
 								<a
 									class="page-action next-page"
 									href={nextPage.url}
@@ -147,7 +147,7 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
 									</svg>
 								</a>
-							)}
+							) : <div></div>}
 						</nav>
 					)
 				}
@@ -354,10 +354,15 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 		.docs-page-actions {
 			display: flex;
 			justify-content: space-between;
-			gap: 16px;
+			flex-wrap: wrap;
+			gap: 16px 48px;
 			border-top: 1px solid var(--background-secondary);
 			padding-top: 48px;
 			margin-top: 48px;
+		}
+
+		.docs-page-actions > * {
+			flex: 1 1 auto;
 		}
 
 		.docs-page-actions .page-action {
@@ -368,12 +373,12 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			border: 1px solid var(--foreground-secondary);
 			border-radius: 4px;
 			padding: 24px;
-			inline-size: 400px;
 			color: var(--foreground-secondary);
 			text-transform: uppercase;
 			font-size: 12px;
 			font-weight: 700;
 			line-height: normal;
+			min-width: 300px;
 		}
 
 		.page-action strong {
@@ -382,10 +387,6 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			font-size: 24px;
 			margin-block-start: 8px;
 			font-weight: 400;
-		}
-
-		.next-page {
-			margin-left: auto;
 		}
 
 		.page-action-contents {
