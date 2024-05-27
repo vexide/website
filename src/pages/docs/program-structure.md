@@ -2,7 +2,7 @@
 title: Program Structure
 category: 01. Getting Started
 layout: layouts/DocsLayout.astro
-page: 2
+page: 3
 ---
 
 # Hello World!

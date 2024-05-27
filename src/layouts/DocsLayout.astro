@@ -17,9 +17,7 @@ const categorize = (array: any[], fn: (arg: any) => any) =>
 const glob = await Astro.glob("../pages/docs/**.md");
 const categories = categorize(glob, (page: Page) => page.frontmatter.category);
 
-const currentPage = glob.find(
-	(page) => Astro.url.pathname === page?.url,
-);
+const currentPage = glob.find((page) => Astro.url.pathname === page?.url);
 const prevPage = glob[glob.indexOf(currentPage!) - 1];
 const nextPage = glob[glob.indexOf(currentPage!) + 1];
 ---
@@ -39,34 +37,41 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 	<main class="docs-layout">
 		<aside class="docs-sidebar">
 			{
-				Object.keys(categories).map((category) => (
-					<>
-						<strong class="docs-category-label">{category}</strong>
-						<ul class="docs-category">
-							{categories[category]
-								.sort(
-									(a: Page, b: Page) =>
-										a.frontmatter.page - b.frontmatter.page,
-								)
-								.map((page: Page) => {
-									return (
-										<li
-											class:list={[
-												"docs-sidebar-item",
-												{
-													selected: page.url === currentPage!.url,
-												},
-											]}
-										>
-											<a href={page.url}>
-												{page.frontmatter.title}
-											</a>
-										</li>
-									);
-								})}
-						</ul>
-					</>
-				))
+				Object.keys(categories)
+					.sort((a: string, b: string) => a.localeCompare(b))
+					.map((category) => (
+						<>
+							<strong class="docs-category-label">
+								{category}
+							</strong>
+							<ul class="docs-category">
+								{categories[category]
+									.sort(
+										(a: Page, b: Page) =>
+											a.frontmatter.page -
+											b.frontmatter.page,
+									)
+									.map((page: Page) => {
+										return (
+											<li
+												class:list={[
+													"docs-sidebar-item",
+													{
+														selected:
+															page.url ===
+															currentPage!.url,
+													},
+												]}
+											>
+												<a href={page.url}>
+													{page.frontmatter.title}
+												</a>
+											</li>
+										);
+									})}
+							</ul>
+						</>
+					))
 			}
 		</aside>
 		<div class="docs-page">
@@ -96,11 +101,10 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			</header>
 			<article class="markdown-body" id="content">
 				<slot />
-				{(prevPage || nextPage) && (
-
-					<nav class="docs-page-actions">
-						{
-							prevPage && (
+				{
+					(prevPage || nextPage) && (
+						<nav class="docs-page-actions">
+							{prevPage && (
 								<a
 									class="page-action prev-page"
 									href={prevPage.url}
@@ -120,10 +124,8 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 										</strong>
 									</div>
 								</a>
-							)
-						}
-						{
-							nextPage && (
+							)}
+							{nextPage && (
 								<a
 									class="page-action next-page"
 									href={nextPage.url}
@@ -143,10 +145,10 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
 									</svg>
 								</a>
-							)
-						}
-					</nav>
-				)}
+							)}
+						</nav>
+					)
+				}
 			</article>
 		</div>
 	</main>
@@ -275,7 +277,7 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 			font-size: 1.6rem;
 			line-height: 2;
 		}
-		
+
 		.markdown-body :global(code) {
 			background: var(--background-secondary);
 		}
