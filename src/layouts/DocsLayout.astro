@@ -14,7 +14,9 @@ const categorize = (array: any[], fn: (arg: any) => any) =>
 		(r, v, _i, _a, k = fn(v)) => ((r[k] || (r[k] = [])).push(v), r),
 		{},
 	);
-const glob = await Astro.glob("../pages/docs/**.md");
+const glob = await Astro.glob("../pages/docs/**.md").then((pages) =>
+	pages.sort((a, b) => a.frontmatter.page - b.frontmatter.page),
+);
 const categories = categorize(glob, (page: Page) => page.frontmatter.category);
 
 const currentPage = glob.find((page) => Astro.url.pathname === page?.url);
