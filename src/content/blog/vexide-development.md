@@ -1,5 +1,4 @@
 ---
-layout: ../../../layouts/BlogPostLayout.astro
 title: The Development of vexide
 description: The story of vexide's development
 author: gavin-niederman
