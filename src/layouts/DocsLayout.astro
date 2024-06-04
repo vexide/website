@@ -63,8 +63,8 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 													},
 												]}
 											>
-												<a href={page.url}>
-													{page.frontmatter.title}
+												<a href={page.slug == "index" ? "/docs/" : `/docs/${page.slug }/`}>
+													{page.data.title}
 												</a>
 											</li>
 										);
@@ -107,7 +107,7 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 							{prevPage && (
 								<a
 									class="page-action prev-page"
-									href={prevPage.url}
+									href={prevPage.slug == "index" ? "/docs/" : `/docs/${prevPage.slug}/`}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +128,7 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 							{nextPage && (
 								<a
 									class="page-action next-page"
-									href={nextPage.url}
+									href={nextPage.slug == "index" ? "/docs/" : `/docs/${nextPage.slug}/`}
 								>
 									<div class="page-action-contents">
 										Next
