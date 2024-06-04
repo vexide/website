@@ -1,5 +1,7 @@
 ---
-import { GITHUB_REPO_URL, CRATE_NAME, EXAMPLES } from "config";
+import { GITHUB_REPO_URL, EXAMPLES } from "config";
+
+import { getCollection } from "astro:content";
 
 import PageLayout from "layouts/PageLayout.astro";
 import PageSection from "components/PageSection.astro";
@@ -8,10 +10,10 @@ import BlogCard from "components/BlogCard.svelte";
 
 import Button from "components/Button.svelte";
 
-const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !post.frontmatter.draft).sort(
+const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft)).sort(
 	(a, b) =>
-		new Date(b.frontmatter.date).getTime() -
-		new Date(a.frontmatter.date).getTime(),
+		new Date(b.data.date).getTime() -
+		new Date(a.data.date).getTime(),
 )[0];
 ---
 
@@ -36,22 +38,9 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 				<div class="hero-buttons">
 					<Button
 						variant="accent"
-						href={`https://docs.rs/${CRATE_NAME}`}
-						rel="noreferrer noopener"
-						target="_blank"
+						href="/docs/"
 					>
-						API Documentation
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="18"
-							height="18"
-							viewBox="0 0 32 32"
-						>
-							<path
-								fill="currentColor"
-								d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
-							></path>
-						</svg>
+						Learn More
 					</Button>
 					<Button
 						variant="default"
@@ -81,13 +70,13 @@ const latestBlogPost = (await Astro.glob("./blog/posts/**.md")).filter(post => !
 					code={EXAMPLES[0].code}
 				/>
 				<BlogCard
-					url={latestBlogPost.url ?? "#"}
-					title={latestBlogPost.frontmatter.title}
-					description={latestBlogPost.frontmatter.description}
-					author={latestBlogPost.frontmatter.author}
-					date={new Date(latestBlogPost.frontmatter.date)}
-					thumbnail={latestBlogPost.frontmatter.thumbnail}
-					thumbnailAlt={latestBlogPost.frontmatter.thumbnail}
+					url={`/blog/posts/${latestBlogPost.slug}/`}
+					title={latestBlogPost.data.title}
+					description={latestBlogPost.data.description}
+					author={latestBlogPost.data.author}
+					date={new Date(latestBlogPost.data.date)}
+					thumbnail={latestBlogPost.data.thumbnail?.url}
+					thumbnailAlt={latestBlogPost.data.thumbnail?.alt}
 				/>
 			</div>
 		</PageSection>

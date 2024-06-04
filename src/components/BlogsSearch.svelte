@@ -16,8 +16,8 @@
         author: string;
         date: Date;
         url: string;
-        thumbnail: string;
-        thumbnailAlt: string;
+        thumbnail?: string;
+        thumbnailAlt?: string;
         tag: "blog" | "release";
         style?: string;
     }

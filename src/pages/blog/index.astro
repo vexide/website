@@ -1,11 +1,11 @@
 ---
+import { getCollection } from "astro:content";
+
 import PageLayout from "layouts/PageLayout.astro";
 import PageSection from "components/PageSection.astro";
 import BlogsSearch from "components/BlogsSearch.svelte";
 
-const blogPosts = (await Astro.glob("./posts/**.md")).filter(
-	(post) => !post.frontmatter.draft,
-);
+const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 ---
 
 <PageLayout title="vexide blogs">
@@ -15,18 +15,18 @@ const blogPosts = (await Astro.glob("./posts/**.md")).filter(
 		<BlogsSearch
 			client:load
 			blogs={blogPosts
-				.sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime() )
+				.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 				.map((post, n) => {
 					const animationDelay = `${n * 0.1 + 0.3}s`;
 					return {
-						url: post.url ?? "#",
-						title: post.frontmatter.title,
-						description: post.frontmatter.description,
-						author: post.frontmatter.author,
-						date: new Date(post.frontmatter.date),
-						thumbnail: post.frontmatter.thumbnail,
-						thumbnailAlt: post.frontmatter.thumbnail,
-						tag: post.frontmatter.tag,
+						url: `/blog/posts/${post.slug}/`,
+						title: post.data.title,
+						description: post.data.description,
+						author: post.data.author,
+						date: new Date(post.data.date),
+						thumbnail: post.data.thumbnail?.url,
+						thumbnailAlt: post.data.thumbnail?.alt,
+						tag: post.data.tags[0],
 						style: `animation: slide-up-blog 500ms backwards ${animationDelay};`,
 					};
 				})}
