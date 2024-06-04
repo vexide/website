@@ -70,13 +70,13 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 					code={EXAMPLES[0].code}
 				/>
 				<BlogCard
-					url={latestBlogPost.slug ?? "#"}
+					url={`/blog/posts/${latestBlogPost.slug}/`}
 					title={latestBlogPost.data.title}
 					description={latestBlogPost.data.description}
 					author={latestBlogPost.data.author}
 					date={new Date(latestBlogPost.data.date)}
-					thumbnail={latestBlogPost.data.thumbnail.url}
-					thumbnailAlt={latestBlogPost.data.thumbnail.alt}
+					thumbnail={latestBlogPost.data.thumbnail?.url}
+					thumbnailAlt={latestBlogPost.data.thumbnail?.alt}
 				/>
 			</div>
 		</PageSection>

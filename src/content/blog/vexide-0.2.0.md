@@ -2,10 +2,6 @@
 title: vexide v0.2.0
 description: vexide 0.2.0 released
 author: gavin-niederman
-thumbnail: {
-	url: "/images/placeholder_pattern.svg",
-	alt: "Thumbnail Image",
-}
 tags: ["release"]
 date: 2024-05-17
 ---
