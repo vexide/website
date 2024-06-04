@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "astro dev",
 		"start": "astro dev",
-		"build": "astro check --root && astro build",
+		"build": "astro check && astro build",
 		"format": "prettier . --write",
 		"preview": "astro preview",
 		"astro": "astro"

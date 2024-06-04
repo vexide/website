@@ -13,6 +13,3 @@ The easiest way to send some data to the terminal in a vexide program is through
 ```rs
 println!("Hello World!");
 ```
-
-# Viewing Terminal Output
-
