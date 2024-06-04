@@ -24,8 +24,8 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 						description: post.data.description,
 						author: post.data.author,
 						date: new Date(post.data.date),
-						thumbnail: post.data.thumbnail,
-						thumbnailAlt: post.data.thumbnail,
+						thumbnail: post.data.thumbnail?.url,
+						thumbnailAlt: post.data.thumbnail?.alt,
 						tag: post.data.tags[0],
 						style: `animation: slide-up-blog 500ms backwards ${animationDelay};`,
 					};
