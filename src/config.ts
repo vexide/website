@@ -19,9 +19,11 @@ export const EXAMPLES: Example[] = [
 }
 
 impl CompetitionRobot for Robot {
-	async fn opcontrol(&mut self) -> Result {
+	type Error = !;
+
+	async fn driver(&mut self) -> Result<() !> {
 		self.motor.set_voltage(10.0)?;
-		
+
 		Ok(())
 	}
 }

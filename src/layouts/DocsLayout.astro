@@ -19,8 +19,8 @@ const pages = (await getCollection("docs"))
 	.sort((a: any, b: any) => a.data.page - b.data.page);
 const categories = categorize(pages, (page: any) => page.data.category);
 
-const prevPage = pages[pages.findIndex(page => page.id === currentPage.id) - 1];
-const nextPage = pages[pages.findIndex(page => page.id === currentPage.id) + 1];
+const prevPage = pages[pages.findIndex((page: any) => page.id === currentPage.id) - 1];
+const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id) + 1];
 ---
 
 <BaseLayout name="vexide Docs" title={currentPage.data.title}>
