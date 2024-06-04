@@ -1,7 +1,6 @@
 ---
 title: Prerequisites
 category: 01. Getting Started
-layout: layouts/DocsLayout.astro
 page: 2
 ---
 

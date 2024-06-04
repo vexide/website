@@ -1,7 +1,6 @@
 ---
 title: Program Structure
 category: 01. Getting Started
-layout: layouts/DocsLayout.astro
 page: 3
 ---
 

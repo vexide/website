@@ -1,7 +1,6 @@
 ---
 title: Creating Devices
 category: 02. Devices
-layout: layouts/DocsLayout.astro
 page: 9
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: Screen and Graphics
 category: 02. Devices
-layout: layouts/DocsLayout.astro
 page: 10
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: Introduction
 category: 01. Getting Started
-layout: layouts/DocsLayout.astro
 page: 1
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: Building & Uploading
 category: 01. Getting Started
-layout: layouts/DocsLayout.astro
 page: 4
 ---
 
