@@ -2,27 +2,28 @@
 import Navigation from "components/Navigation.astro";
 
 import Button from "components/Button.svelte";
+import MarkdownStyles from "components/MarkdownStyles.astro";
 import { GITHUB_ORG_URL } from "config";
 import BaseLayout from "./BaseLayout.astro";
+import { getCollection } from "astro:content";
 
-const { frontmatter } = Astro.props;
-
-type Page = import("astro").MarkdownInstance<Record<string, any>>;
+const { page: currentPage } = Astro.props;
 
 const categorize = (array: any[], fn: (arg: any) => any) =>
 	array.reduce(
 		(r, v, _i, _a, k = fn(v)) => ((r[k] || (r[k] = [])).push(v), r),
 		{},
 	);
-const glob = await Astro.glob("../pages/docs/**.md");
-const categories = categorize(glob, (page: Page) => page.frontmatter.category);
 
-const currentPage = glob.find((page) => Astro.url.pathname === page?.url);
-const prevPage = glob[glob.indexOf(currentPage!) - 1];
-const nextPage = glob[glob.indexOf(currentPage!) + 1];
+const pages = (await getCollection("docs"))
+	.sort((a: any, b: any) => a.data.page - b.data.page);
+const categories = categorize(pages, (page: any) => page.data.category);
+
+const prevPage = pages[pages.findIndex(page => page.id === currentPage.id) - 1];
+const nextPage = pages[pages.findIndex(page => page.id === currentPage.id) + 1];
 ---
 
-<BaseLayout name="vexide Docs" title={frontmatter.title}>
+<BaseLayout name="vexide Docs" title={currentPage.data.title}>
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
 	<Navigation title="vexide">
 		<img
@@ -46,25 +47,17 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 							</strong>
 							<ul class="docs-category">
 								{categories[category]
-									.sort(
-										(a: Page, b: Page) =>
-											a.frontmatter.page -
-											b.frontmatter.page,
-									)
-									.map((page: Page) => {
+									.sort((a: any, b: any) => a.data.page - b.data.page)
+									.map((page: any) => {
 										return (
 											<li
 												class:list={[
 													"docs-sidebar-item",
-													{
-														selected:
-															page.url ===
-															currentPage!.url,
-													},
+													{ selected: page.slug === currentPage.slug },
 												]}
 											>
-												<a href={page.url}>
-													{page.frontmatter.title}
+												<a href={`/docs/${page.slug}/`}>
+													{page.data.title}
 												</a>
 											</li>
 										);
@@ -77,12 +70,10 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 		<div class="docs-page">
 			<header class="docs-header">
 				<div class="docs-header-inner">
-					<h1>{frontmatter.title}</h1>
+					<h1>{currentPage.data.title}</h1>
 					<a
 						class="edit-on-github"
-						href={`${GITHUB_ORG_URL}/website/tree/main/src/pages/docs/${
-							frontmatter.url.split("/docs")[1] || "index.md"
-						}`}
+						href={`${GITHUB_ORG_URL}/website/tree/main/src/content/docs/${currentPage.id}`}
 					>
 						Edit this page on GitHub
 						<svg
@@ -99,15 +90,15 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 					</a>
 				</div>
 			</header>
-			<article class="markdown-body" id="content">
+			<MarkdownStyles element="article" id="content">
 				<slot />
 				{
 					(prevPage || nextPage) && (
 						<nav class="docs-page-actions">
-							{prevPage && (
+							{prevPage ? (
 								<a
 									class="page-action prev-page"
-									href={prevPage.url}
+									href={`/docs/${prevPage.slug}/`}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -120,20 +111,20 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 									<div class="page-action-contents">
 										Previous
 										<strong>
-											{prevPage.frontmatter.title}
+											{prevPage.data.title}
 										</strong>
 									</div>
 								</a>
-							)}
-							{nextPage && (
+							) : <div></div>}
+							{nextPage ? (
 								<a
 									class="page-action next-page"
-									href={nextPage.url}
+									href={`/docs/${nextPage.slug}/`}
 								>
 									<div class="page-action-contents">
 										Next
 										<strong>
-											{nextPage.frontmatter.title}
+											{nextPage.data.title}
 										</strong>
 									</div>
 									<svg
@@ -145,256 +136,203 @@ const nextPage = glob[glob.indexOf(currentPage!) + 1];
 										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
 									</svg>
 								</a>
-							)}
+							) : <div></div>}
 						</nav>
 					)
 				}
-			</article>
+			</MarkdownStyles>
 		</div>
 	</main>
-	<BaseLayout />
-
-	<style>
-		.navigation-docs-chip {
-			align-self: center;
-			font-size: 1.2rem;
-			text-transform: uppercase;
-			color: var(--foreground-accent-yellow);
-			border: 1px solid var(--background-accent-yellow);
-			border-radius: 50px;
-			padding-inline: 8px;
-			padding-block: 1px;
-		}
-
-		:global(.navigation .navigation-inner) {
-			max-inline-size: unset;
-			padding-inline: 16px;
-		}
-
-		:global(.navigation) {
-			position: sticky !important;
-			top: 0;
-		}
-
-		.docs-layout {
-			display: flex;
-			position: relative;
-		}
-
-		.docs-sidebar {
-			width: 280px;
-			height: calc(100vh - 48px);
-			flex: 0 0 auto;
-			position: sticky;
-			top: 48px;
-		}
-
-		@media only screen and (max-width: 768px) {
-			.docs-sidebar {
-				display: none;
-			}
-		}
-
-		.docs-page {
-			flex: 1 1 auto;
-			flex-direction: column;
-		}
-
-		.docs-header,
-		.docs-page article {
-			padding: 48px;
-		}
-
-		.docs-header {
-			background-image: url("data:image/svg+xml,%3Csvg width='1400' height='500' viewBox='0 0 1400 500' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1400' height='500' fill='%23262831'/%3E%3Cline x1='151' y1='-0.00399997' x2='153' y2='499.996' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1400' y1='376' x2='3.04249e-09' y2='376' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1400' y1='126' x2='3.04249e-09' y2='126' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1249' y1='-0.00399997' x2='1251' y2='499.996' stroke='%232C2F3A' stroke-width='2'/%3E%3Cpath d='M401 125C401 193.48 345.263 249 276.5 249C207.737 249 152 193.48 152 125C152 56.5205 207.737 1 276.5 1C345.263 1 401 56.5205 401 125Z' stroke='%232C2F3A' stroke-width='2'/%3E%3Cpath d='M1247 375C1247 443.48 1191.26 499 1122.5 499C1053.74 499 998 443.48 998 375C998 306.52 1053.74 251 1122.5 251C1191.26 251 1247 306.52 1247 375Z' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='278' y1='125' x2='278' y2='500' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='1124' x2='1124' y2='375' stroke='%232C2F3A' stroke-width='2'/%3E%3Cline x1='277' y1='249' x2='1123' y2='249' stroke='%232C2F3A' stroke-width='2'/%3E%3Ccircle cx='699.5' cy='312.5' r='61.5' stroke='%232C2F3A' stroke-width='2'/%3E%3Ccircle cx='699.5' cy='187.5' r='61.5' stroke='%232C2F3A' stroke-width='2'/%3E%3C/svg%3E%0A");
-			background-size: 800px;
-			border-bottom: 1px solid var(--background-secondary);
-		}
-
-		.docs-header h1 {
-			font-weight: 400;
-			font-size: 4.8rem;
-			margin: 0;
-		}
-
-		.docs-header-inner {
-			max-inline-size: 1024px;
-			margin: 0 auto;
-		}
-
-		.docs-sidebar {
-			background-color: #282a34;
-			border-right: 1px solid var(--background-secondary);
-		}
-
-		.docs-category-label {
-			font-size: 16px;
-			color: var(--foreground-primary);
-			font-family: var(--font-monospace);
-			font-weight: normal;
-			padding: 16px;
-			display: flex;
-			border-bottom: 1px solid var(--background-secondary);
-		}
-
-		.docs-category-label:not(:first-of-type) {
-			margin-top: 48px;
-		}
-
-		.docs-category {
-			margin: 0;
-			padding: 0;
-			list-style: none;
-			display: flex;
-			flex-direction: column;
-		}
-
-		.docs-sidebar-item a {
-			display: flex;
-			align-items: center;
-			border-bottom: 1px solid var(--background-secondary);
-			border-left: 2px solid transparent;
-			font-size: 1.4rem;
-			text-decoration: none;
-			color: var(--foreground-secondary);
-			padding: 8px 16px;
-		}
-
-		.docs-sidebar-item:not(.selected) a:hover {
-			text-decoration: underline;
-		}
-
-		.docs-sidebar-item.selected a {
-			font-weight: 600;
-			color: var(--foreground-primary);
-			border-left-color: var(--background-accent-yellow);
-		}
-
-		.markdown-body {
-			max-inline-size: 1120px;
-			margin: 0 auto;
-			color: var(--foreground-secondary);
-			font-size: 1.6rem;
-			line-height: 2;
-		}
-
-		.markdown-body :global(code) {
-			background: var(--background-secondary);
-		}
-
-		.markdown-body :global(h1),
-		.markdown-body :global(h2),
-		.markdown-body :global(h3),
-		.markdown-body :global(h4),
-		.markdown-body :global(h5),
-		.markdown-body :global(h6) {
-			color: var(--foreground-primary);
-			font-family: var(--font-monospace);
-			font-weight: 300;
-		}
-
-		.markdown-body :global(:first-child) {
-			margin-top: 0;
-		}
-
-		.markdown-body :global(:last-child) {
-			margin-bottom: 0;
-		}
-
-		.markdown-body :global(h1) {
-			font-size: 3.6rem;
-		}
-
-		.markdown-body :global(pre) {
-			margin-block: 24px;
-			padding: 24px;
-			border: 1px solid var(--background-secondary);
-			background-color: var(--background-primary) !important;
-			border-radius: 4px;
-			line-height: 1.5;
-		}
-
-		.markdown-body :global(pre code) {
-			background-color: transparent;
-		}
-
-		.markdown-body :global(blockquote) {
-			padding: 16px;
-			color: var(--foreground-primary);
-			background-color: var(--background-secondary);
-			border-radius: 4px;
-			margin: 0;
-		}
-
-		.markdown-body :global(li) {
-			list-style-type: square;
-		}
-
-		.markdown-body :global(a),
-		.edit-on-github {
-			color: var(--foreground-accent-red);
-			text-decoration: none;
-			border-bottom: 1px solid currentColor;
-			transition: 0.25s ease;
-		}
-
-		.markdown-body :global(a:hover),
-		.edit-on-github:hover {
-			opacity: 0.8;
-		}
-
-		.edit-on-github {
-			display: inline-block;
-			margin-block-start: 16px;
-			font-size: 1.6rem;
-		}
-
-		.docs-page-actions {
-			display: flex;
-			justify-content: space-between;
-			gap: 16px;
-			border-top: 1px solid var(--background-secondary);
-			padding-top: 48px;
-			margin-top: 48px;
-		}
-
-		.docs-page-actions .page-action {
-			display: flex;
-			align-items: center;
-			gap: 24px;
-			text-decoration: none;
-			border: 1px solid var(--foreground-secondary);
-			border-radius: 4px;
-			padding: 24px;
-			inline-size: 400px;
-			color: var(--foreground-secondary);
-			text-transform: uppercase;
-			font-size: 12px;
-			font-weight: 700;
-			line-height: normal;
-		}
-
-		.page-action strong {
-			color: var(--foreground-primary);
-			font-family: var(--font-monospace);
-			font-size: 24px;
-			margin-block-start: 8px;
-			font-weight: 400;
-		}
-
-		.next-page {
-			margin-left: auto;
-		}
-
-		.page-action-contents {
-			display: flex;
-			flex-direction: column;
-			flex: 1 1 auto;
-		}
-
-		.page-action svg {
-			flex: 0 0 auto;
-			fill: currentColor;
-		}
-	</style>
 </BaseLayout>
+
+<style>
+	.navigation-docs-chip {
+		align-self: center;
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		color: var(--foreground-accent-yellow);
+		border: 1px solid var(--background-accent-yellow);
+		border-radius: 50px;
+		padding-inline: 8px;
+		padding-block: 1px;
+	}
+
+	:global(.navigation .navigation-inner) {
+		max-inline-size: unset;
+		padding-inline: 16px;
+	}
+
+	:global(.navigation) {
+		position: sticky !important;
+		top: 0;
+	}
+
+	.docs-layout {
+		display: flex;
+		position: relative;
+	}
+
+	.docs-sidebar {
+		width: 280px;
+		height: calc(100vh - 48px);
+		flex: 0 0 auto;
+		position: sticky;
+		top: 48px;
+	}
+
+	@media only screen and (max-width: 768px) {
+		.docs-sidebar {
+			display: none;
+		}
+	}
+
+	.docs-page {
+		flex: 1 1 auto;
+		flex-direction: column;
+	}
+
+	.docs-header,
+	.docs-page #content {
+		padding: 48px;
+	}
+
+	.docs-page #content {
+		max-inline-size: 1120px;
+		margin: 0 auto;
+	}
+
+	.docs-header {
+		background-image: url("/images/placeholder_pattern.svg");
+		background-size: 800px;
+		border-bottom: 1px solid var(--background-secondary);
+	}
+
+	.docs-header h1 {
+		font-weight: 400;
+		font-size: 4.8rem;
+		margin: 0;
+	}
+
+	.docs-header-inner {
+		max-inline-size: 1024px;
+		margin: 0 auto;
+	}
+
+	.docs-sidebar {
+		background-color: #282a34;
+		border-right: 1px solid var(--background-secondary);
+	}
+
+	.docs-category-label {
+		font-size: 16px;
+		color: var(--foreground-primary);
+		font-family: var(--font-monospace);
+		font-weight: normal;
+		padding: 16px;
+		display: flex;
+		border-bottom: 1px solid var(--background-secondary);
+	}
+
+	.docs-category-label:not(:first-of-type) {
+		margin-top: 24px;
+	}
+
+	.docs-category {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.docs-sidebar-item a {
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid var(--background-secondary);
+		border-left: 2px solid transparent;
+		font-size: 1.4rem;
+		text-decoration: none;
+		color: var(--foreground-secondary);
+		padding: 8px 16px;
+	}
+
+	.docs-sidebar-item:not(.selected) a:hover {
+		text-decoration: underline;
+	}
+
+	.docs-sidebar-item.selected a {
+		font-weight: 600;
+		color: var(--foreground-primary);
+		border-left-color: var(--background-accent-yellow);
+	}
+
+	.edit-on-github {
+		color: var(--foreground-accent-red);
+		text-decoration: none;
+		border-bottom: 1px solid currentColor;
+		transition: 0.25s ease;
+	}
+
+	.edit-on-github:hover {
+		opacity: 0.8;
+	}
+
+	.edit-on-github {
+		display: inline-block;
+		margin-block-start: 16px;
+		font-size: 1.6rem;
+	}
+
+	.docs-page-actions {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 16px 48px;
+		border-top: 1px solid var(--background-secondary);
+		padding-top: 48px;
+		margin-top: 48px;
+	}
+
+	.docs-page-actions > * {
+		flex: 1;
+		min-inline-size: 300px;
+	}
+
+	.page-action.next-page {
+		text-align: right;
+	}
+
+	.docs-page-actions .page-action {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		text-decoration: none;
+		border: 1px solid var(--foreground-secondary);
+		border-radius: 4px;
+		padding: 24px;
+		color: var(--foreground-secondary);
+		text-transform: uppercase;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: normal;
+	}
+
+	.page-action strong {
+		color: var(--foreground-primary);
+		font-family: var(--font-monospace);
+		font-size: 24px;
+		margin-block-start: 8px;
+		font-weight: 400;
+	}
+
+	.page-action-contents {
+		display: flex;
+		flex-direction: column;
+		flex: 1 1 auto;
+	}
+
+	.page-action svg {
+		flex: 0 0 auto;
+		fill: currentColor;
+	}
+</style>

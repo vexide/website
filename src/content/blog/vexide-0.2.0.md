@@ -1,11 +1,8 @@
 ---
-layout: ../../../layouts/BlogPostLayout.astro
 title: vexide v0.2.0
 description: vexide 0.2.0 released
 author: gavin-niederman
-thumbnail: "/images/thumbnails/rotated_grid.webp"
-thumbnailAlt: "Thumbnail Image"
-tag: release
+tags: ["release"]
 date: 2024-05-17
 ---
 

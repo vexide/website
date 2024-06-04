@@ -6,13 +6,15 @@
 	export let author: string;
 	export let date: Date;
 	export let url: string;
-	export let thumbnail: string;
-	export let thumbnailAlt: string;
+	export let thumbnail: string | undefined = undefined;
+	export let thumbnailAlt: string | undefined = undefined;
 	export let style: string = "";
 </script>
 
 <div class="blog-card" {style}>
-	<img class="blog-card-thumbnail" src={thumbnail} alt={thumbnailAlt} />
+	{#if thumbnail}
+		<img class="blog-card-thumbnail" src={thumbnail} alt={thumbnailAlt} />
+	{/if}
 	<a class="blog-card-title" href={url}>
 		<span>{title}</span>
 	</a>

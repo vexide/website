@@ -1,116 +1,119 @@
 ---
-import BlogTitle from "components/BlogTitle.astro";
+import MarkdownStyles from "components/MarkdownStyles.astro";
 import PageSection from "components/PageSection.astro";
 import PageLayout from "./PageLayout.astro";
-const { title, author, date, description, tag } =
-	Astro.props.frontmatter;
+const { title, author, date, description, tags, thumbnail } =
+	Astro.props.page.data;
 ---
 
-<PageLayout name="vexide" {title} {description} />
-	<BlogTitle {title} {author} {author} {tag} date={new Date(date)} />
+<PageLayout name="vexide" {title} {description}>
 	<PageSection id="blog-content">
-		<a id="content" />
-		<slot />
+		{thumbnail && (
+			<div
+				class="post-backdrop"
+				style={`--thumbnail: url(${thumbnail.url})`}
+				slot="outer"
+			>
+			</div>
+		)}
+		<h1 class="post-title">{title}</h1>
+		<div class="post-metadata">
+			<a
+				class="metadata-author"
+				href={`https://github.com/${author}`}
+				target="_blank"
+				rel="noreferrer noopeners"
+			>
+				<img
+					src={`https://github.com/${author}.png`}
+					alt={`${author}'s Avatar`}
+				/>
+				<span>
+					<strong>{author}</strong> • {
+						new Date(date).toLocaleDateString()
+					}
+				</span>
+			</a>
+		</div>
+		<hr class="blog-post-separator" />
+		{thumbnail && (
+			<img class="post-thumbnail" src={thumbnail.url} alt={thumbnail.alt} />
+		)}
+		<MarkdownStyles element="article" id="content">
+			<slot />
+		</MarkdownStyles>
 	</PageSection>
 </PageLayout>
 
 <style>
-	#blog-content {
-		min-height: 100vh;
-		z-index: 1;
-		/* border-bottom: 1px solid #6e59ff; */
-		--grid-color: hsl(var(--base-hue), 12%, 18%);
-		background-size: 20px 20px;
-		background-image: linear-gradient(
-				to right,
-				var(--grid-color) 1px,
-				transparent 1px
-			),
-			linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-	}
-	#blog-content::after {
-	}
-	#blog-content::before {
-		content: "";
+	.post-backdrop {
 		position: absolute;
-		top: 0;
-		left: 0;
+		background: var(--thumbnail) center/cover no-repeat;
+		mask: linear-gradient(black, transparent);
 		width: 100%;
-		height: 50%;
-		opacity: 0.07;
-		background-image: linear-gradient(
-			to top,
-			transparent,
-			#223ca9,
-			#6e59ff
-		);
+		height: 650px;
+		inset: 0;
+		z-index: 0;
+		opacity: 0.1;
 	}
 
 	#blog-content > :global(.page-section-inner) {
-		width: 80rem;
-		padding-block: 128px;
-		font-family: var(--font-primary);
-	}
-	@media only screen and (max-width: 800px) {
-		#blog-content > :global(.page-section-inner) {
-			width: 100%;
-		}
+		position: relative;
+		z-index: 1;
+		padding-block: 48px;
+		max-inline-size: 1024px;
 	}
 
-	#blog-content :global(h1),
-	#blog-content :global(h2),
-	#blog-content :global(h3),
-	#blog-content :global(h4),
-	#blog-content :global(h5),
-	#blog-content :global(h6) {
-		font-family: var(--font-monospace) !important;
-		font-weight: 200;
-		text-decoration: underline var(--background-accent-yellow);
-	}
-	#blog-content :global(h1) {
-		font-size: 4.4rem;
-	}
-	#blog-content :global(h2) {
-		font-size: 3.3rem;
-	}
-	#blog-content :global(h3) {
-		font-size: 2.5rem;
+	.blog-post-separator {
+		margin-block: 24px;
+		border: none;
+		border-bottom: 1px solid var(--background-secondary);
 	}
 
-	#blog-content :global(*) {
-		font-family: inherit;
-		color: var(--foreground-primary);
-		font-size: 1.8rem;
+	.post-title {
+		font-size: 48px;
+		font-weight: 300;
+		margin: 0;
+		margin-block-end: 16px;
 	}
 
-	#blog-content :global(p) {
-		text-wrap: pretty;
+	.post-thumbnail {
+		inline-size: 100%;
+		object-fit: cover;
+		border-radius: 4px;
+		border: 1px solid var(--background-secondary);
+		margin-block-end: 48px;
 	}
 
-	#blog-content :global(sup > a) {
-		font-size: 1.3rem;
+	.post-metadata {
+		display: flex;
+		gap: 24px;
+		justify-content: space-between;
+		align-items: flex-end;
 	}
 
-	#blog-content :global(code) {
-		border-radius: 5px;
-		padding-inline: 3px;
-		background-color: var(--background-secondary);
-		font-family: var(--font-monospace);
-	}
-
-	#blog-content :global(pre.astro-code) {
-		border-radius: 5px;
-		padding: 10px;
-	}
-	#blog-content :global(pre.astro-code > code) {
-		background-color: transparent;
-		padding: 0px;
-	}
-
-	#blog-content :global(a) {
-		color: var(--foreground-accent-red);
+	.metadata-author {
 		text-decoration: none;
-		border-bottom: 1px solid currentColor;
-		transition: 0.25s ease;
+		display: flex;
+		align-items: center;
+		font-size: 1.4rem;
+		color: var(--foreground-secondary);
+	}
+
+	.metadata-author strong {
+		border-bottom: 1px solid transparent;
+		font-weight: 600;
+		color: var(--foreground-primary);
+	}
+
+	.metadata-author:hover strong {
+		border-color: currentColor;
+	}
+
+	.metadata-author img {
+		border-radius: 50%;
+		margin-inline-end: 8px;
+		inline-size: 24px;
+		block-size: auto;
 	}
 </style>
