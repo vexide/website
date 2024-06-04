@@ -20,7 +20,6 @@ export const EXAMPLES: Example[] = [
 
 impl CompetitionRobot for Robot {
 	type Error = !;
-
 	async fn driver(&mut self) -> Result<() !> {
 		self.motor.set_voltage(10.0)?;
 

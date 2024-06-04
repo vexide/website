@@ -61,7 +61,6 @@ impl CompetitionRobot for Robot {
 async fn main(_peripherals: Peripherals) {
     Robot.compete().await.unwrap();
 }
-
 ```
 
 Most device types can be constructed infallibly, but all methods called after the fact return ``Result``s.
@@ -73,7 +72,6 @@ let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forwar
 motor.set_voltage(12.0)?;
 // Set the voltage and ignore any error.
 let _ = motor.set_voltage(0.0);
-
 ```
 
 # Should you use vexide
