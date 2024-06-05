@@ -5,14 +5,18 @@ page: 12
 ---
 
 Async tasks are what allow you to run code... asynchronously!
-More specifically, tasks allow you to execute multiple peices of code concurrently.
-<!-- TODO: give common use cases for tasks e.g. "This is useful for ..." -->
+In other words, tasks allow you to execute multiple pieces of code concurrently.
+This is useful for many things including, but not limited to:
+- Motor control daemons.
+- Display driver daemons.
+- Running blocking operations in the background.
+
 The most important thing to remember about async tasks is that they **voluntarily** give up execution.
 What this means is that you cannot have a tight loop (a loop that never yields to the async executor with a `.await`) because it will starve other tasks of execution time.
 
 # Creating Tasks
 
-In vexide, tasks can be created through the `spawn` function. `spawn` takes a `Future<Output = T>` as an argument and returns a `Task<T>`. When awaited, the `Task` will wait until the task has completed and then return the output of the future. `spawn` is re-exported by the prelude module so you don't have to worry about importing it. From now on `Task`s will be refered to as task handles for clarity.
+In vexide, tasks can be created through the `spawn` function. `spawn` takes any type implementing `Future<Output = T>` as an argument and returns a `Task<T>`. When awaited, the `Task` will wait until the task has completed and then return the output of the future. `spawn` is re-exported by the prelude module so you don't have to worry about importing it. From now on `Task`s will be referred to as task handles for clarity.
 Let's look at an example.
 ```rust
 let handle = spawn(async {
@@ -27,11 +31,11 @@ let result = handle.await;
 ``` 
 In this simple example, we spawn an async task that prints to the terminal and then returns a `bool`.
 In order to make sure that the task runs to completion and also get the returned value, we await the task handle.
-This forces the async executor to not let our task resume until the spawned task completes.
+This forces the async executor to not let our parent task resume until the spawned task completes.
 
 # Detached Tasks
 
-Sometimes it's useful to allow tasks to run in the background indefinetly and by default you can't do that. Fortunately, task handles have a `detach` function which allows them to run in the background indefinetly.
+Sometimes it's useful to allow tasks to run in the background indefinitely, and by default you can't do that. Fortunately, task handles have a `detach` function which allows them to run in the background forever.
 ```rust
 spawn(async {
     println!("Hello, Detached Tasks!");
