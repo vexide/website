@@ -5,6 +5,8 @@ page: 12
 ---
 
 Async tasks are what allow you to run code... asynchronously!
+More specifically, tasks allow you to execute multiple peices of code concurrently.
+<!-- TODO: give common use cases for tasks e.g. "This is useful for ..." -->
 The most important thing to remember about async tasks is that they **voluntarily** give up execution.
 What this means is that you cannot have a tight loop (a loop that never yields to the async executor with a `.await`) because it will starve other tasks of execution time.
 
