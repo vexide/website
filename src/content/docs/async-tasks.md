@@ -29,7 +29,7 @@ This forces the async executor to not let our task resume until the spawned task
 
 # Detached Tasks
 
-Sometimes it's useful to allow tasks to run in the background and by default you can't do that. Fortunately, task handles have a `detach` function which allows them to run in the background indefinetly.
+Sometimes it's useful to allow tasks to run in the background indefinetly and by default you can't do that. Fortunately, task handles have a `detach` function which allows them to run in the background indefinetly.
 ```rust
 spawn(async {
     println!("Hello, Detached Tasks!");
