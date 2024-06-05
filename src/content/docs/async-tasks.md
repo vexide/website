@@ -10,7 +10,7 @@ What this means is that you cannot have a tight loop (a loop that never yields t
 
 # Creating Tasks
 
-In vexide, tasks can be created through the `spawn` function. `spawn` takes a `Future<Output = T>` as an argument and returns a `Task<T>`. When awaited, the `Task` will wait until the task has completed and then return the output of the future. `spawn` is re-exported by the prelude module so you don't have to worry about importing it. From now on I will refer to `Task`s as task handles for clarity.
+In vexide, tasks can be created through the `spawn` function. `spawn` takes a `Future<Output = T>` as an argument and returns a `Task<T>`. When awaited, the `Task` will wait until the task has completed and then return the output of the future. `spawn` is re-exported by the prelude module so you don't have to worry about importing it. From now on `Task`s will be refered to as task handles for clarity.
 Let's look at an example.
 ```rust
 let handle = spawn(async {
@@ -41,7 +41,7 @@ You may notice that we don't keep a task handle in this code. This is because `d
 
 # Tight Loops and Cooperation
 
-As I said earlier, tasks have to give up execution on their own by awaiting a future. This is called cooperative multitasking. One side effect of this is that you cannot have infinite tight loops. Let's break down this broken code:
+As said earlier, tasks have to give up execution on their own by awaiting a future. This is called cooperative multitasking. One side effect of this is that you cannot have infinite tight loops. Let's break down this broken code:
 ```rust
 spawn(async {
     loop {
