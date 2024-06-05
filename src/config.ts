@@ -18,22 +18,19 @@ export const EXAMPLES: Example[] = [
 	motor: Motor,
 }
 
-impl CompetitionRobot for Robot {
-	type Error = !;
-	async fn driver(&mut self) -> Result<() !> {
-		self.motor.set_voltage(10.0)?;
-
-		Ok(())
+impl Competition for Robot {
+	async fn driver(&mut self) {
+		self.motor.set_voltage(10.0).unwrap();
 	}
 }
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
 	let my_robot = Robot {
-		motor: Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward)?,
+		motor: Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward),
 	};
 
-	my_robot.compete().await.unwrap();
+	my_robot.compete().await;
 }`,
 	},
 ];
