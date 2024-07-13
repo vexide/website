@@ -81,4 +81,28 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(a:hover) {
 		opacity: 0.8;
 	}
+
+	.markdown-body :global(img),
+	.markdown-body :global(video) {
+		border-radius: 4px;
+	}
+
+	.markdown-body :global(.code-split) {
+		display: flex;
+		flex-wrap: wrap;
+		flex-basis: content;
+		margin-block: 24px;
+		background: var(--background-secondary);
+		border: 1px solid var(--background-secondary);
+		gap: 1px;
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.markdown-body :global(.code-split pre) {
+		border: 0;
+		margin-block: 0;
+		flex: 1 1 auto;
+		border-radius: 0;
+	}
 </style>

@@ -20,11 +20,9 @@ rustup default nightly
 We also need some additional build tooling in order to properly build/upload to the V5's platform target. You can install those components with the following terminal commands:
 
 ```sh
-rustup component add rust-src llvm-tools
-cargo install cargo-pros cargo-binutils
+rustup component add rust-src
+cargo install cargo-v5
 ```
-
-At this time of this tutorial being written, vexide's tooling relies on the [PROS CLI](https://github.com/purduesigbots/pros-cli/releases) for uploading binaries. You'll need that installed on your system and in `PATH` in order to upload to the brain.
 
 # Setting up a Project
 

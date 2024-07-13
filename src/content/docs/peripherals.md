@@ -1,6 +1,6 @@
 ---
 title: Creating Devices
-category: 02. Devices
+category: 02. Peripherals
 page: 9
 ---
 
