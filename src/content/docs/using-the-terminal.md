@@ -70,7 +70,7 @@ The brain communicates with your computer through two buffers: [`Stdin`](https:/
 
 ## Example: Printing Without Macros
 
-To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, which will give us exclusive access to the buffer until we release the lock.
+To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, which will give us exclusive access to the buffer until we release the lock (either by explicitly `drop`ping it or having it fall out of scope). This ensures that we won't get interrupted by another print attempt while we are writing to our buffer.
 
 ```rs
 use vexide::core::io::stdout;
