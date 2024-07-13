@@ -56,7 +56,7 @@ println!("Hello world!");
 ```rs
 {
     use ::vexide::core::io::{Write, stdout};
-    if let Err(e) = stdout().write_fmt(format_args!("Hello world!") {
+    if let Err(e) = stdout().write_fmt(format_args!("Hello world!")) {
         panic!("failed printing to stdout: {e}");
     }
 }
