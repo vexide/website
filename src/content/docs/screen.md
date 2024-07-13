@@ -1,6 +1,6 @@
 ---
 title: Screen and Graphics
-category: 02. Devices
+category: 02. Peripherals
 page: 10
 ---
 
