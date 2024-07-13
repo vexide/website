@@ -11,7 +11,7 @@ One of the most useful debugging tools available to you is the terminal, which a
 The easiest way to send some data to the terminal in a vexide program is through the `print` family of macros. You might recall `println` from our "Hello World" example:
 
 ```rs
-println!("Hello World!");
+println!("Hello World!"); // same thing as print!("Hello World!\n");
 ```
 
 Simply running this code with no connection to a computer won't visibly do anything, so let's change that.
