@@ -15,9 +15,9 @@ It's been a solid minute since the [initial release of vexide](/blog/posts/vexid
 
 # Growing Pains & `pros-cli`
 
-Since this project started, we have always relied on [pros-cli](https://github.com/purduesigbots/pros-cli) for uploading programs to the brain. This worked great for a while, but as the scope of things grew and we to branched further from dependence on the PROS kernel, pros-cli became a less suitable fit.
+Since this project started, we have always relied on [pros-cli](https://github.com/purduesigbots/pros-cli) for uploading programs to the brain. This worked great for a while, but as the scope of things grew and we branched further from dependence on the PROS kernel, pros-cli became a less suitable fit.
 
-The breaking point for us happened a few months back when I wrote some tutorials on setting up a project and realized that almost *half of the installation instructions* had to do with packaging and troubleshooting for pros-cli across various operating systems. When it comes to Linux distributions in particular **(i'm looking at you, nixos)**, things can get very messy.
+The breaking point for us happened a few months back when I wrote some tutorials on setting up a project and realized that almost *half of the installation instructions* had to do with packaging and troubleshooting pros-cli across various operating systems. When it comes to Linux distributions in particular **(not nixos though)**, things can get very messy.
 
 This isn't to fault the PROS project or anything, their CLI works great for them where everything is packaged with a VSCode extension by default, but we are working primarily with Rust tooling here and having users install an entire python toolchain to upload programs seems a little unreasonable.
 
@@ -146,10 +146,17 @@ For the time being, vexide now [provides its own implementation](https://github.
 
 These functions are actually **more performant** than the ones you'll find in PROS or VEXcode due to using a more optimized build of libm, with trig performance being nearly **63 times faster**.
 
-Here's a (crude) benchmark of us running 10,000 iterations of `f64::sin(35)` on a V5 brain:
+Here's a (crude) benchmark of us running 10,000 iterations of `f64::sin(35.0)` on a V5 brain:
 
 | [rust-lang/libm](https://github.com/rust-lang/libm/) | newlib libm | [PROS libm](https://github.com/purduesigbots/pros/blob/develop/firmware/libm.a) |
 | -- | -- | -- |
 | `6.809ms` | `3.699ms` | `383.284ms` |
 
 We've passed this more optimized version of libm to the PROS developers, so you can expect to see similar improvements on their end soon as well!
+
+# Future Plans
+
+We still have a lot of plans for the rest of the summer!
+Here is a list of our major plans:
+- Evian: Evian is a work in progress controls library for vexide. You can think of it as similar to a template like LemLib for PROS. This library will make it much easier for beginners to use vexide. We hope that Evian will be in a usable state by the end of summer. You can find the repository [here](https://github.com/vexide/evian)
+- QEMU Simulator: For a very long time now we have been working on our simulators. The holy grail of simulators is the QEMU simulator backend which will allow any program for a V5 Brain written in any language to be simulated perfectly. This will allow for incredibly easy debugging. You can view the QEMU simulator backend code [here](https://github.com/vexide/vex-v5-sim). Unfortunately, this is a really hard project to create. We hope that this project will be finished by the end of summer, but it might not end up happening. For a more in-depth look at simulators, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
