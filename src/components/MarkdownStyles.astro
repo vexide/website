@@ -44,6 +44,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 
 	.markdown-body :global(h1) {
 		font-size: 3.6rem;
+		margin-block-start: 72px;
 	}
 
 	.markdown-body :global(pre) {
@@ -85,6 +86,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(img),
 	.markdown-body :global(video) {
 		border-radius: 4px;
+		max-width: 100%;
 	}
 
 	.markdown-body :global(.code-split) {
