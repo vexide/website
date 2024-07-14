@@ -9,7 +9,7 @@ date: 2024-07-13
 This is the first major vexide update this summer! To read about our summer plans, take a look at [our blog post on that subject](/blog/posts/summer-update-24/).
 
 We are releasing vexide 0.3.0 along side two new vexide projects: [`vex-v5-serial`](https://github.com/vexide/vex-v5-serial) and [`cargo-v5`](https://github.com/vexide/cargo-v5).
-`cargo-v5` is our new build tooling. Unlike `cargo-pros`, `cargo-v5` doesn't depend on pros-cli, the ARM GNU Toolchain, or `cargo-binutils`. It is highly recommended to switch to `cargo-v5`. You can learn more about both `cargo-v5` and `vex-v5-serial` in [this blog post](/blog/posts/uhh-todo).
+`cargo-v5` is our new build tooling. Unlike `cargo-pros`, `cargo-v5` doesn't depend on pros-cli, the ARM GNU Toolchain, or `cargo-binutils`. It is highly recommended to switch to `cargo-v5`. You can learn more about both `cargo-v5` and `vex-v5-serial` in [this blog post](/blog/posts/serial-release).
 
 Now for the vexide changes!
 
