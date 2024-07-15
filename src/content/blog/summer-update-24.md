@@ -27,7 +27,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 <a href="https://github.com/vexide/v5-serial-protocol-rust" target="_blank" rel="noreferrer noopener">
 
-![serial experiments vex](https://private-user-images.githubusercontent.com/42101043/342184335-6eea71ca-cc28-4f87-82fb-7b476a0becd3.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjA5ODA0NTMsIm5iZiI6MTcyMDk4MDE1MywicGF0aCI6Ii80MjEwMTA0My8zNDIxODQzMzUtNmVlYTcxY2EtY2MyOC00Zjg3LTgyZmItN2I0NzZhMGJlY2QzLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MTQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzE0VDE4MDIzM1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWY5OTFhYmJiNDM5OTgwYTgxZDA2MTI5YmUzOTYzNjQyM2Q2MDlhN2M1ODc5MWQyZTM2YjNkYmIzY2ZiZDE5MGMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.I9gzeILXceCTdekGEZDFCTfsB3Y_qQKBpYWy0y0fb-w)
+![vex-v5-serial banner](/blog/serial-experiments-vex.png)
 
 </a>
 
