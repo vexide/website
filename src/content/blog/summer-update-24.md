@@ -1,5 +1,5 @@
 ---
-title: "Summer Updates: Announcing cargo-v5 and vexide 0.3"
+title: "Summer Updates: Announcing cargo-v5 and vexide 0.3.0"
 description: Important project updates for Summer 2024!
 author: tropix126
 tags: ["blog"]
@@ -11,19 +11,19 @@ thumbnail: {
 # draft: true
 ---
 
-It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-010/) back in May, but we've been busy with development this summer and finally have some important announcements!
+Happy summer everyone! It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-010/) back in May, but we've been busy with development and (finally) have some important announcements!
 
 # Growing Pains & `pros-cli`
 
-Since this project started, we have always relied on [pros-cli](https://github.com/purduesigbots/pros-cli) for uploading programs to the brain. This worked great for a while, but as the scope of things grew and we branched further from dependence on the PROS kernel, pros-cli became a less suitable fit.
+Since this project started, we've always relied on [pros-cli](https://github.com/purduesigbots/pros-cli) for uploading programs to the brain. This worked great for a while, but as the scope of things grew and we branched further from dependence on the PROS kernel, pros-cli became a less suitable fit.
 
-The breaking point for us happened a few months back when I wrote some tutorials on setting up a project and realized that almost *half of the installation instructions* had to do with packaging and troubleshooting pros-cli across various operating systems. When it comes to Linux distributions in particular **(not nixos though)**, things can get very messy.
+The breaking point for us happened a few months back when I wrote some tutorials on setting up a project and realized that almost *half of the installation instructions* had to do with packaging and troubleshooting pros-cli across various operating systems. When it comes to Linux distributions in particular, things can get very messy due to differences in packaging.
 
-This isn't to fault the PROS project or anything, their CLI works great for them where everything is packaged with a VSCode extension by default, but we are working primarily with Rust tooling here and having users install an entire python toolchain to upload programs seems a little unreasonable.
+This isn't to fault the PROS project or anything, their CLI works great for them where everything is included with a VSCode extension by default, but we're working with Rust tooling here and instructing users install an entire python toolchain to upload programs became a little unreasonable.
 
 ## Implementing VEX's Serial Protocol in Rust
 
-Since as early as [January of this year](/blog/protocol-plans.png), we had plans to do USB communication in Rust so that we could perform our own direct uploads without any external programs. Well, last month those efforts finally became a reality with the [`vex-v5-serial` crate](https://crates.io/crates/vex-v5-serial).
+Since as early as [January of this year](/blog/protocol-plans.png), we had plans to do our own USB communication in Rust to run direct uploads without any external programs. Last month those efforts finally became a reality with the [`vex-v5-serial` crate](https://crates.io/crates/vex-v5-serial).
 
 <a href="https://github.com/vexide/v5-serial-protocol-rust" target="_blank" rel="noreferrer noopener">
 
@@ -35,7 +35,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 ## `cargo-pros` is dead. Long live `cargo-v5`! 🦀
 
-Shortly after our new serial crate became usable, we began putting efforts towards improving vexide's tooling. So yeah, we now have a new command-line tool, [cargo-v5](https://github.com/vexide/cargo-v5)! Now you'll no longer need to install `cargo-binutils` or PROS CLI to use vexide.
+Shortly after our new serial crate became usable, we began putting efforts towards improving vexide's tooling. So yeah, we now have a new command-line tool called [cargo-v5](https://github.com/vexide/cargo-v5)! You'll no longer need to install `cargo-binutils` or `pros-cli` to use vexide.
 
 <div style="margin-block-start: 16px; text-align: center">
   <video width="600" controls>
@@ -64,7 +64,7 @@ icon = "cool-x"
 compress = true
 ```
 
-# Releasing vexide 0.3
+# Releasing vexide 0.3.0
 
 Along with the new tooling improvements, we've also released vexide version 0.3.0 which includes a bunch of useful feature improvements. I'll try to cover the important stuff, but you can view the full changelog for that [here](https://github.com/vexide/vexide/blob/main/CHANGELOG.md).
 
@@ -106,7 +106,7 @@ An important change here is that competition functions are now *infallible*, mea
 
 ## Floating-point Math Support
 
-Embedded Rust is a little weird. If you're coming from a typical Rust `std` project, you may find many things that just *aren't there* in a `no_std` enviornment. One of those things is math support for floating-point numbers.
+Embedded Rust is a little weird. If you're coming from a typical Rust project with the standard library, you may find many things just *missing* in a `no_std` enviornment. One of those things is support for math on floating-point numbers.
 
 <div class="code-split">
 
@@ -133,30 +133,89 @@ fn main() {
 
 </div>
 
-This is because of the fact that Rust's standard library uses a combination of your platform's native `libm` library and certain LLVM intrinisics that just aren't available on our target. There's currently progress being made to [fix this](https://github.com/rust-lang/rfcs/issues/2505) in upstream Rust, but we aren't quite there yet.
+This is because Rust's standard library uses a combination of your platform's `libm` library and certain LLVM intrinisics that just aren't available for our target. There's active proposals being made to [fix this](https://github.com/rust-lang/rfcs/issues/2505) in upstream Rust, but we aren't quite there yet.
 
-For the time being, vexide now [provides its own implementation](https://github.com/vexide/vexide/blob/main/packages/vexide-core/src/float/mod.rs) of these floating-point math functions. We actually use two different libraries for this, depending on the target you're compiling to:
+For the time being, vexide now [has its own implementation](https://github.com/vexide/vexide/blob/main/packages/vexide-core/src/float/mod.rs) of these floating-point math functions.
 
-- If you are compiling for the native `armv7a-vex-v5` target (a brain) then we use [newlib's libm library](https://sourceware.org/newlib/).
-- If you are compiling for WebAssmebly to run in a simulator, then we use [Rust's official port of MUSL's libm](https://github.com/rust-lang/libm/).
+```rs
+#![no_std]
+#![no_main]
 
-> You can also force vexide to always use the Rust libm port regardless of target if you want truly pure-rust binaries using the `"force-rust-libm"` feature. Keep in mind that the Rust port is both much slower and consierably larger!
+use vexide::core::float::Float;
 
-## Bonus: It's fast!
+#[vexide::main]
+async fn main(_: Peripherals) {
+    f32::sin(2.0); // it works!
+}
+```
 
-These functions are actually **more performant** than the ones you'll find in PROS or VEXcode due to using a more optimized build of libm, with trig performance being nearly **63 times faster**.
+We use two different libraries for this depending on the target you're compiling to:
 
-Here's a (crude) benchmark of us running 10,000 iterations of `f64::sin(35.0)` on a V5 brain:
+- If you're compiling for the native `armv7a-vex-v5` target (a brain) then we use newlib's [libm](https://sourceware.org/newlib/), which has platform-specific optimizations for our target (such as leveraging the brain's [FPU](https://developer.arm.com/documentation/ddi0408/latest/)).
+- If you're compiling for WebAssmebly to run in a simulator, then we use [Rust's official port of MUSL's libm](https://github.com/rust-lang/libm/), which is platform-agnostic, but generally slower due to not being especially optimized.
 
-| [rust-lang/libm](https://github.com/rust-lang/libm/) | newlib libm | [PROS libm](https://github.com/purduesigbots/pros/blob/develop/firmware/libm.a) |
+> This means that we now link to a C library when compiling for the brain. If you want a pure Rust binary, you can force vexide to always use the Rust libm port with the `force_rust_libm` feature flag. This will result slower math and larger binaries!
+
+## It's fast too!
+
+These math functions are actually far more performant than the ones in PROS or VEXcode due to using a more optimized build of libm, with trig performance benchmarking around **100 times faster**.
+
+Here's the results of a (crude) benchmark we ran testing 10,000 iterations of `f64::sin(35.0)` on a V5 brain:
+
+| [PROS libm.a](https://github.com/purduesigbots/pros/blob/develop/firmware/libm.a) (baseline) | [rust-lang/libm](https://github.com/rust-lang/libm/) | [newlib libm.a](https://github.com/vexide/vexide/blob/main/packages/vexide-startup/link/libm.a) |
 | -- | -- | -- |
-| `6.809ms` | `3.699ms` | `383.284ms` |
+| 383.284ms (1.0x) | 6.809ms (56.29x) | **3.699ms (103.61x)** |
 
-We've passed this more optimized version of libm to the PROS developers, so you can expect to see similar improvements on their end soon as well!
+> We've also passed this more optimized version of `libm` to the PROS team, so you can expect to see similar improvements soon if you're a PROS user!
+
+## Changes to the `vexide::main` Macro
+
+This is the entrypoint of a vexide program:
+
+```rs
+#[vexide::main]
+async fn main(peripherals: Peripherals) {}
+```
+
+As of vexide 0.3.0, you can now pass in some startup options, including the ability to disable the startup terminal banner (this replaces the `no_banner` feature flag).
+
+```rs
+#[vexide::main(banner = false)]
+async fn main(peripherals: Peripherals) {
+    println!("Look ma! No banners!");
+}
+```
 
 # Future Plans
 
-We still have a lot of plans for the rest of the summer!
-Here is a list of our major plans:
-- Evian: Evian is a work in progress controls library for vexide. You can think of it as similar to a template like LemLib for PROS. This library will make it much easier for beginners to use vexide. We hope that Evian will be in a usable state by the end of summer. You can find the repository [here](https://github.com/vexide/evian)
-- QEMU Simulator: For a very long time now we have been working on our simulators. The holy grail of simulators is the QEMU simulator backend which will allow any program for a V5 Brain written in any language to be simulated perfectly. This will allow for incredibly easy debugging. You can view the QEMU simulator backend code [here](https://github.com/vexide/vex-v5-sim). Unfortunately, this is a really hard project to create. We hope that this project will be finished by the end of summer, but it might not end up happening. For a more in-depth look at simulators, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
+As we look forward to next competition season, there are several improvements and projects we plan to focus our work on. Consider this to be a showcase of whatever happens to be work-in-progress right now.
+
+## Runtime Stuff
+
+As of currently writing this, the vexide runtime is fairly feature-complete (although lacking real-world testing). That being said, there are a still a few things missing before we have complete feature parity with PROS. This includes:
+
+- SDCard filesystem support. Currently being worked on by Gavin in [PR #22](https://github.com/vexide/vexide/pull/22).
+- GPS sensor bindings, which are already [feature-complete](https://github.com/vexide/vexide/pull/79) but couldn't be tested on real hardware in time for 0.3.0.
+- AI Vision Sensor support, which has a [draft PR](https://github.com/vexide/vexide/pull/58) in the works by Gavin.
+- Some irrelevant legacy ADI devices that nobody uses. I'll maybe add these one day. 
+
+## Evian
+
+Evian is a work in progress controls library for vexide. You can think of it as similar to a template like LemLib for PROS. This library will make it much easier for advanced users to fully leverage vexide for writing autonomous routines. Evian is highly generic across different localization and robot setups, and uses command-based architecture. We hope it can serve as a base framework for testing and writing new motion algorithms and controls libraries.
+
+It's not competition-ready at all yet -- many API details haven't been ironed out and it's completely untested, but you can check out the repository [here](https://github.com/vexide/evian).
+
+
+## QEMU Simulator
+
+Some significant effort has been put into our simulator tooling by [Lewis](https://github.com/doinkythederp), who has written a communications protocol for V5 simulator backends to communicate with the frontend. For a more in-depth look at that, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
+
+The "holy grail" of our simulators is currently the [QEMU backend](https://github.com/vexide/vex-v5-sim/) which will emulate the actual user processor of the brain on a hardware level, allowing you to run both PROS and vexide programs compiled for ARM. We hope that this will allow for some accurate realtime user program simulations in the future with advanced debugging features through GDB.
+
+This has proved to be a pretty hard project though, as it's essentially a completely bare metal embedded kernel designed to emulate a proprietary userspace. Despite this, we are currently able to emulate a PROS user program with functional FreeRTOS tasks as well as vexide programs. The main hurdle at this point is finding a cross-platform solution for host-to-guest communication, which will probably result in us having to write our own UART driver. Fun!
+
+## Porting `std` to the V5
+
+Back in May, [Max](https://github.com/max-niederman) forked the Rust compiler and [began efforts](https://github.com/max-niederman/rust) to port the Rust standard library (`std` crate) to the V5. We ended up with a program that compiled against our new experimental port, but threw memory errors at runtime. As a result, this was put on the backburner while the serial protocol efforts happened, but it's something we plan to come back to. We've already identified the probably cause of these memory errors, and will be putting further testing into that stuff soon.
+
+The end-goal of these efforts is to eventually merge in support for a [Tier-3 compiler target](https://doc.rust-lang.org/rustc/target-tier-policy.html) for the V5 to upstream Rust, which will give vexide users the ability to leverage the Rust standard library.
