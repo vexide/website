@@ -27,7 +27,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 <a href="https://github.com/vexide/v5-serial-protocol-rust" target="_blank" rel="noreferrer noopener">
 
-![vex-v5-serial banner](/blog/serial-experiments-vex-banner.png)
+![vex-v5-serial banner](/blog/serial-experiments-vex.png)
 
 </a>
 
@@ -43,7 +43,7 @@ Shortly after our new serial crate became usable, we began putting efforts towar
   </video>
 </div>
 
-You can install it as a cargo subcommand by running `cargo install cargo-v5`. This tool comes with a few fancy new features, like better error messages and the ability to configure your uploads from your Rust project's `Cargo.toml` file.
+You can install it as a cargo subcommand by running `cargo install cargo-v5`. This tool comes with a few fancy new features, like better error messages and the ability to configure uploads from your Rust project's `Cargo.toml` file.
 
 ```ansi
 [32mtropical@island[0m:[32m~/Documents/GitHub/vexide[0m$ cargo v5 upload
@@ -66,7 +66,7 @@ compress = true
 
 # Releasing vexide 0.3.0
 
-Along with the new tooling improvements, we've also released vexide version 0.3.0 which includes a bunch of useful feature improvements. I'll try to cover the important stuff, but you can view the full changelog for that [here](https://github.com/vexide/vexide/blob/main/CHANGELOG.md).
+Along with the new tooling improvements, we've also released vexide version 0.3.0 which includes a some of useful improvements. I'll try to cover the important stuff, but you can view the full changelog for that [here](https://github.com/vexide/vexide/blob/main/CHANGELOG.md).
 
 ## New Competition API
 
@@ -201,7 +201,7 @@ async fn main(peripherals: Peripherals) {
 
 # Future Plans
 
-As we look forward to next competition season, there are several improvements and projects we plan to focus our work on. Consider this to be a showcase of whatever happens to be work-in-progress right now.
+As we look forward to next competition season, there are several improvements and projects we plan to focus our work on. Here's a rundown of what's work-in-progress right now.
 
 ## Runtime Stuff
 
@@ -214,23 +214,23 @@ As of currently writing this, the vexide runtime is fairly feature-complete (alt
 
 ## Evian
 
-Evian is a work in progress controls library for vexide. You can think of it as similar to a template like LemLib for PROS. This library will make it much easier for advanced users to fully leverage vexide for writing autonomous routines. Evian is highly generic across different localization and robot setups, and uses command-based architecture. We hope it can serve as a base framework for testing and writing new motion algorithms and controls libraries.
+Evian is a work in progress controls library for vexide. You can think of it as similar to a template like [LemLib](https://github.com/LemLib/LemLib) for PROS. This library will make it much easier for advanced users to fully leverage vexide for writing autonomous routines. Evian is highly generic across different localization and robot setups, and uses a command-based architecture. We hope it can serve as a base framework for testing and writing new motion algorithms and controls libraries.
 
 It's not competition-ready at all yet -- many API details haven't been ironed out and it's completely untested, but you can check out the repository [here](https://github.com/vexide/evian).
 
 ## Simulators
 
-Some significant effort has been put into our simulator tooling by [Lewis](https://github.com/doinkythederp), who has written a communications protocol for V5 simulator backends to communicate with the frontend. For a more in-depth look at that, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
+Some significant effort has been put into our simulator tooling by [Lewis](https://github.com/doinkythederp), who has written a communications protocol for V5 simulator backends to communicate with. For a more in-depth look at that, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
 
-The "holy grail" of our simulator backends is currently the [QEMU backend](https://github.com/vexide/vex-v5-sim/) which will emulate the actual user processor of the brain on a hardware level, allowing you to run both PROS and vexide programs compiled for ARM. We hope that this will allow for some accurate realtime user program simulations in the future with advanced debugging features through GDB.
+The "holy grail" of our simulator backends is currently the [QEMU backend](https://github.com/vexide/vex-v5-sim/) which emulates the actual user processor of the brain on a hardware level, allowing you to run both PROS and vexide programs compiled for ARM. We hope that this will allow for some accurate realtime user program simulations in the future with advanced debugging features through GDB.
 
-This has proved to be a pretty hard project though, as it's essentially a completely bare metal embedded kernel designed to emulate a proprietary userspace. Despite this, we are currently able to emulate a PROS user program with functional FreeRTOS tasks as well as vexide programs. The main hurdle at this point is finding a cross-platform solution for host-to-guest communication, which will probably result in us having to write our own UART driver. (Fun!)
+This has proved to be a pretty hard project though, as it's essentially a completely bare metal embedded kernel designed to emulate a proprietary userspace. Despite this, we are currently able to emulate a PROS user program with functional FreeRTOS tasks as well as vexide programs. The main hurdle at this point is finding a cross-platform solution for host-to-guest communication, which will likely result in us having to write our own embedded UART driver. (Fun!)
 
 ## Porting `std` to the V5
 
-Back in May, [Max](https://github.com/max-niederman) forked the Rust compiler and [began efforts](https://github.com/max-niederman/rust) to port the Rust standard library (`std` crate) to the V5. We ended up with a program that compiled against our new experimental port, but threw memory errors at runtime. As a result, this was put on the backburner while the serial protocol efforts happened, but it's something we plan to come back to. We've already identified the probably cause of these memory errors, and will be putting further testing into that stuff soon.
+Back in May, [Max](https://github.com/max-niederman) forked the Rust compiler and [began efforts](https://github.com/max-niederman/rust) to port the Rust standard library (`std` crate) to the V5. We ended up with a program that compiled against our new experimental port, but threw memory errors at runtime. As a result, this was put on the backburner while the serial protocol efforts happened, but it's something we plan to come back to. We've already identified the probable cause of these memory errors and will be testing things soon.
 
-The end-goal of these efforts is to eventually merge in support for a [Tier-3 compiler target](https://doc.rust-lang.org/rustc/target-tier-policy.html) for the V5 to upstream Rust, which will give vexide users the ability to leverage the Rust standard library.
+The end-goal of these efforts is to eventually merge in support for a [Tier-3 compiler target](https://doc.rust-lang.org/rustc/target-tier-policy.html) for the V5 to upstream Rust, which will serve as a large step in improving Rust tooling on the V5.
 
 # New Contributors
 
