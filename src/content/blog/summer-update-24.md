@@ -219,3 +219,10 @@ This has proved to be a pretty hard project though, as it's essentially a comple
 Back in May, [Max](https://github.com/max-niederman) forked the Rust compiler and [began efforts](https://github.com/max-niederman/rust) to port the Rust standard library (`std` crate) to the V5. We ended up with a program that compiled against our new experimental port, but threw memory errors at runtime. As a result, this was put on the backburner while the serial protocol efforts happened, but it's something we plan to come back to. We've already identified the probably cause of these memory errors, and will be putting further testing into that stuff soon.
 
 The end-goal of these efforts is to eventually merge in support for a [Tier-3 compiler target](https://doc.rust-lang.org/rustc/target-tier-policy.html) for the V5 to upstream Rust, which will give vexide users the ability to leverage the Rust standard library.
+
+# New Contributors
+
+vexide is a community project maintained for free by open-source contributors. We'd like to thank the following new contributors to the project:
+
+- [alexDickhans](https://github.com/alexDickhans) (VRC team 2654P) for several contributions to our screen drawing API.
+- [42Willow](https://github.com/42Willow) for finding and fixing some bugs in `vexide-template`
