@@ -168,6 +168,19 @@ Here's the results of a (crude) benchmark we ran testing 10,000 iterations of `f
 
 > We've also passed this more optimized version of `libm` to the PROS team, so you can expect to see similar improvements soon if you're a PROS user!
 
+## Text-drawing APIs
+
+Along with several memory-related fixes to the screen drawing API, you can now measure and draw aligned text to the screen:
+
+```rs
+let mut text = Text::new("Test Text", TextSize::Medium, (0, 0));
+text.align(HAlign::Center, VAlign::Top);
+
+text.fill(&mut screen, Rgb::new(0, 255, 255));
+
+println!("width: {}, height: {}", text.width(), text.height());
+```
+
 ## Changes to the `vexide::main` Macro
 
 This is the entrypoint of a vexide program:
@@ -205,14 +218,13 @@ Evian is a work in progress controls library for vexide. You can think of it as 
 
 It's not competition-ready at all yet -- many API details haven't been ironed out and it's completely untested, but you can check out the repository [here](https://github.com/vexide/evian).
 
-
-## QEMU Simulator
+## Simulators
 
 Some significant effort has been put into our simulator tooling by [Lewis](https://github.com/doinkythederp), who has written a communications protocol for V5 simulator backends to communicate with the frontend. For a more in-depth look at that, we have a [simulators section in our internal documentation](https://internals.vexide.dev/simulators/).
 
-The "holy grail" of our simulators is currently the [QEMU backend](https://github.com/vexide/vex-v5-sim/) which will emulate the actual user processor of the brain on a hardware level, allowing you to run both PROS and vexide programs compiled for ARM. We hope that this will allow for some accurate realtime user program simulations in the future with advanced debugging features through GDB.
+The "holy grail" of our simulator backends is currently the [QEMU backend](https://github.com/vexide/vex-v5-sim/) which will emulate the actual user processor of the brain on a hardware level, allowing you to run both PROS and vexide programs compiled for ARM. We hope that this will allow for some accurate realtime user program simulations in the future with advanced debugging features through GDB.
 
-This has proved to be a pretty hard project though, as it's essentially a completely bare metal embedded kernel designed to emulate a proprietary userspace. Despite this, we are currently able to emulate a PROS user program with functional FreeRTOS tasks as well as vexide programs. The main hurdle at this point is finding a cross-platform solution for host-to-guest communication, which will probably result in us having to write our own UART driver. Fun!
+This has proved to be a pretty hard project though, as it's essentially a completely bare metal embedded kernel designed to emulate a proprietary userspace. Despite this, we are currently able to emulate a PROS user program with functional FreeRTOS tasks as well as vexide programs. The main hurdle at this point is finding a cross-platform solution for host-to-guest communication, which will probably result in us having to write our own UART driver. (Fun!)
 
 ## Porting `std` to the V5
 
@@ -225,4 +237,4 @@ The end-goal of these efforts is to eventually merge in support for a [Tier-3 co
 vexide is a community project maintained for free by open-source contributors. We'd like to thank the following new contributors to the project:
 
 - [alexDickhans](https://github.com/alexDickhans) (VRC team 2654P) for several contributions to our screen drawing API.
-- [42Willow](https://github.com/42Willow) for finding and fixing some bugs in `vexide-template`
+- [42Willow](https://github.com/42Willow) for finding and fixing some bugs in `vexide-template`.
