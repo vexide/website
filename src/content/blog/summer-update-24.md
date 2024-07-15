@@ -27,7 +27,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 <a href="https://github.com/vexide/v5-serial-protocol-rust" target="_blank" rel="noreferrer noopener">
 
-![vex-v5-serial banner](/blog/serial-experiments-vex.png)
+![vex-v5-serial banner](/blog/serial-experiments-vex-banner.png)
 
 </a>
 
