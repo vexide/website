@@ -140,7 +140,7 @@ For the time being, vexide now [has its own implementation](https://github.com/v
 #![no_std]
 #![no_main]
 
-use vexide::core::float::Float;
+use vexide::prelude::*;
 
 #[vexide::main]
 async fn main(_: Peripherals) {
