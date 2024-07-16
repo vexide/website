@@ -1,5 +1,25 @@
 ---
-const { name, title, description } = Astro.props;
+interface Props {
+	name: string;
+	title: string;
+	description: string;
+	banner: Banner;
+}
+
+export interface Banner {
+	url: string;
+	width: number;
+	height: number;
+	alt: string;
+	twitter_card: string;
+}
+
+const {
+	name,
+	title,
+	description,
+	banner,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -45,15 +65,31 @@ const { name, title, description } = Astro.props;
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.url} />
 		<meta property="og:description" content={description} />
-		<meta
-			property="og:image"
-			content={new URL("/images/logo.svg", Astro.url)}
-		/>
-		<meta property="og:image:type" content="mime/svg+xml" />
-		<meta property="og:image:alt" content="vexide-logo" />
-		<!-- <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="twitter:card" content="summary_large_image"> -->
+
+		{
+			banner && (
+				<>
+					<meta
+						property="og:image"
+						content={new URL(banner.url, Astro.url)}
+					/>
+					<meta property="og:image:type" content="image/png" />
+					<meta property="og:image:alt" content={banner.alt} />
+					<meta
+						property="og:image:width"
+						content={banner.width.toString()}
+					/>
+					<meta
+						property="og:image:height"
+						content={banner.height.toString()}
+					/>
+					<meta
+						property="twitter:card"
+						content={banner.twitter_card}
+					/>
+				</>
+			)
+		}
 
 		<title>{title}</title>
 	</head>

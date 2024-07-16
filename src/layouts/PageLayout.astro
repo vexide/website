@@ -4,24 +4,31 @@ import NavigationItem from "components/NavigationItem.astro";
 
 import Button from "components/Button.svelte";
 import { GITHUB_REPO_URL, DISCORD_INVITE_URL } from "config";
-import BaseLayout from "./BaseLayout.astro";
+import BaseLayout, { type Banner } from "./BaseLayout.astro";
 
 interface Props {
 	name?: string;
 	title?: string;
 	type?: string;
 	description?: string;
+	banner?: Banner;
 }
 
 const {
 	name = "vexide",
 	title = "vexide",
-	type = "website",
 	description = "Open-source Rust runtime for VEX robots.",
+	banner = {
+		url: "/images/logo_opengraph.png",
+		width: 280,
+		height: 280,
+		alt: "vexide logo",
+		twitter_card: "summary",
+	},
 } = Astro.props;
 ---
 
-<BaseLayout {name} {title} {type} {description}>
+<BaseLayout {name} {title} {description} {banner}>
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
 	<Navigation title="vexide">
 		<img
