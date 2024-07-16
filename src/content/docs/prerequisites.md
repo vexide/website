@@ -13,7 +13,6 @@ Before we setup a project, there are some tools you'll need to have installed to
 vexide relies on some features that are only availble in Rust's nightly release channel, so you'll need to switch to using nightly:
 
 ```sh
-rustup toolchain install nightly
 rustup default nightly
 ```
 
