@@ -9,7 +9,7 @@ const { title, author, date, description, tags, thumbnail } =
 <PageLayout
 	name="vexide"
 	banner={{
-		url: thumbnail?.src ?? "/images/logo_opengraph.png",
+		url: thumbnail?.url ?? "/images/logo_opengraph.png",
 		width: thumbnail ? 1280 : 280,
 		height: thumbnail ? 600: 280,
 		alt: thumbnail?.alt ?? "vexide Logo",
