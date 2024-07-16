@@ -9,11 +9,11 @@ const { title, author, date, description, tags, thumbnail } =
 <PageLayout
 	name="vexide"
 	banner={{
-		url: thumbnail.src,
-		width: 1280,
-		height: 600,
-		alt: thumbnail.alt,
-		twitter_card: "summary_large_image",
+		url: thumbnail?.src ?? "/images/logo_opengraph.png",
+		width: thumbnail ? 1280 : 280,
+		height: thumbnail ? 600: 280,
+		alt: thumbnail?.alt ?? "vexide Logo",
+		twitter_card: thumbnail ? "summary_large_image" : "summary",
 	}}
 	{title}
 	{description}
