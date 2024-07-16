@@ -4,6 +4,7 @@ description: A brand new serial protocol implementation and our plans to use it.
 author: gavin-niederman
 tags: ["blog"]
 date: 2024-07-13
+draft: true
 ---
 
 For vexide 0.3.0, we have completely revamped our build tooling. Now, instead of `cargo-pros`, vexide projects should be built and uploaded through [`cargo-v5`](https://github.com/vexide/cargo-v5). The biggest change between `cargo-pros` and `cargo-v5` is that `cargo-v5` doesn't depend on pros-cli, or anything else for that matter. In order to do that, we have created a complete Rust implementation of the V5 serial protocol. You can find it on crates.io with the name [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial). It supports wired, controller, and direct Bluetooth connections.

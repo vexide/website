@@ -3,12 +3,11 @@ title: "Summer Updates: Announcing cargo-v5 and vexide 0.3.0"
 description: Important project updates for Summer 2024!
 author: tropix126
 tags: ["blog"]
-date: 2024-06-28
+date: 2024-07-16
 thumbnail: {
     url: "/images/thumbnails/vaporwave.png",
     alt: "Thumbnail Image"
 }
-# draft: true
 ---
 
 Happy summer everyone, hope you're enjoying the vacation! It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-010/) back in May, but we've been busy with development and (finally) have some important announcements!

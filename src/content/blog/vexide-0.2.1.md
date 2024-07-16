@@ -1,5 +1,5 @@
 ---
-title: vexide v0.2.1
+title: vexide v0.2.1 Changelog
 description: vexide 0.2.1 released
 author: gavin-niederman
 tags: ["release"]
