@@ -1,5 +1,5 @@
 ---
-title: vexide v0.1.0
+title: vexide has been released to crates.io!
 description: All about the first version of vexide
 author: gavin-niederman
 thumbnail: {

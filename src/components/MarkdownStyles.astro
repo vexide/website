@@ -31,7 +31,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(h6) {
 		color: var(--foreground-primary);
 		font-family: var(--font-monospace);
-		font-weight: 300;
+		font-weight: 400;
 	}
 
 	.markdown-body :global(:first-child) {
@@ -44,6 +44,8 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 
 	.markdown-body :global(h1) {
 		font-size: 3.6rem;
+		font-weight: 300;
+		margin-block-start: 72px;
 	}
 
 	.markdown-body :global(pre) {
@@ -85,6 +87,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(img),
 	.markdown-body :global(video) {
 		border-radius: 4px;
+		max-width: 100%;
 	}
 
 	.markdown-body :global(.code-split) {
@@ -104,5 +107,27 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		margin-block: 0;
 		flex: 1 1 auto;
 		border-radius: 0;
+	}
+
+	.markdown-body :global(table) {
+		text-align: left;
+		border-collapse: collapse;
+		margin-block: 24px;
+	}
+
+	.markdown-body :global(table th),
+	.markdown-body :global(table td) {
+		padding: 6px 12px;
+		border: 1px solid var(--background-secondary);
+	}
+
+	.markdown-body :global(table th) {
+		font-weight: 600;
+		color: var(--foreground-primary);
+	}
+
+	.markdown-body :global(table tr) {
+		background-color: var(--background-primary);
+		border-top: 1px solid var(--background-secondary);
 	}
 </style>

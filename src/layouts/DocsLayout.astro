@@ -15,15 +15,29 @@ const categorize = (array: any[], fn: (arg: any) => any) =>
 		{},
 	);
 
-const pages = (await getCollection("docs"))
-	.sort((a: any, b: any) => a.data.page - b.data.page);
+const pages = (await getCollection("docs")).sort(
+	(a: any, b: any) => a.data.page - b.data.page,
+);
 const categories = categorize(pages, (page: any) => page.data.category);
 
-const prevPage = pages[pages.findIndex((page: any) => page.id === currentPage.id) - 1];
-const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id) + 1];
+const prevPage =
+	pages[pages.findIndex((page: any) => page.id === currentPage.id) - 1];
+const nextPage =
+	pages[pages.findIndex((page: any) => page.id === currentPage.id) + 1];
 ---
 
-<BaseLayout name="vexide Docs" title={currentPage.data.title}>
+<BaseLayout
+	name="vexide Docs"
+	title={currentPage.data.title}
+	description="Documentation and tutorials for the vexide runtime."
+	banner={{
+		url: "/images/logo_opengraph.png",
+		width: 280,
+		height: 280,
+		alt: "vexide logo",
+		twitter_card: "summary",
+	}}
+>
 	<Button class="skip-to-content" href="#content">Skip to content</Button>
 	<Navigation title="vexide">
 		<img
@@ -47,16 +61,29 @@ const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id
 							</strong>
 							<ul class="docs-category">
 								{categories[category]
-									.sort((a: any, b: any) => a.data.page - b.data.page)
+									.sort(
+										(a: any, b: any) =>
+											a.data.page - b.data.page,
+									)
 									.map((page: any) => {
 										return (
 											<li
 												class:list={[
 													"docs-sidebar-item",
-													{ selected: page.slug === currentPage.slug },
+													{
+														selected:
+															page.slug ===
+															currentPage.slug,
+													},
 												]}
 											>
-												<a href={page.slug == "index" ? "/docs/" : `/docs/${page.slug }/`}>
+												<a
+													href={
+														page.slug == "index"
+															? "/docs/"
+															: `/docs/${page.slug}/`
+													}
+												>
 													{page.data.title}
 												</a>
 											</li>
@@ -98,7 +125,11 @@ const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id
 							{prevPage ? (
 								<a
 									class="page-action prev-page"
-									href={prevPage.slug == "index" ? "/docs/" : `/docs/${prevPage.slug}/`}
+									href={
+										prevPage.slug == "index"
+											? "/docs/"
+											: `/docs/${prevPage.slug}/`
+									}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -110,22 +141,24 @@ const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id
 									</svg>
 									<div class="page-action-contents">
 										Previous
-										<strong>
-											{prevPage.data.title}
-										</strong>
+										<strong>{prevPage.data.title}</strong>
 									</div>
 								</a>
-							) : <div></div>}
+							) : (
+								<div />
+							)}
 							{nextPage ? (
 								<a
 									class="page-action next-page"
-									href={nextPage.slug == "index" ? "/docs/" : `/docs/${nextPage.slug}/`}
+									href={
+										nextPage.slug == "index"
+											? "/docs/"
+											: `/docs/${nextPage.slug}/`
+									}
 								>
 									<div class="page-action-contents">
 										Next
-										<strong>
-											{nextPage.data.title}
-										</strong>
+										<strong>{nextPage.data.title}</strong>
 									</div>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +169,9 @@ const nextPage = pages[pages.findIndex((page: any) => page.id === currentPage.id
 										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
 									</svg>
 								</a>
-							) : <div></div>}
+							) : (
+								<div />
+							)}
 						</nav>
 					)
 				}

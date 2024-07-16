@@ -6,16 +6,28 @@ const { title, author, date, description, tags, thumbnail } =
 	Astro.props.page.data;
 ---
 
-<PageLayout name="vexide" {title} {description}>
+<PageLayout
+	name="vexide"
+	banner={{
+		url: thumbnail?.url ?? "/images/logo_opengraph.png",
+		width: thumbnail ? 1280 : 280,
+		height: thumbnail ? 600: 280,
+		alt: thumbnail?.alt ?? "vexide Logo",
+		twitter_card: thumbnail ? "summary_large_image" : "summary",
+	}}
+	{title}
+	{description}
+>
 	<PageSection id="blog-content">
-		{thumbnail && (
-			<div
-				class="post-backdrop"
-				style={`--thumbnail: url(${thumbnail.url})`}
-				slot="outer"
-			>
-			</div>
-		)}
+		{
+			thumbnail && (
+				<div
+					class="post-backdrop"
+					style={`--thumbnail: url(${thumbnail.url})`}
+					slot="outer"
+				></div>
+			)
+		}
 		<h1 class="post-title">{title}</h1>
 		<div class="post-metadata">
 			<a
@@ -36,9 +48,15 @@ const { title, author, date, description, tags, thumbnail } =
 			</a>
 		</div>
 		<hr class="blog-post-separator" />
-		{thumbnail && (
-			<img class="post-thumbnail" src={thumbnail.url} alt={thumbnail.alt} />
-		)}
+		{
+			thumbnail && (
+				<img
+					class="post-thumbnail"
+					src={thumbnail.url}
+					alt={thumbnail.alt}
+				/>
+			)
+		}
 		<MarkdownStyles element="article" id="content">
 			<slot />
 		</MarkdownStyles>
