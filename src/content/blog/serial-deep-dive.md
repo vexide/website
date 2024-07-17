@@ -20,7 +20,7 @@ Not only does this improve code quality, but it also has the added benefit of al
 
 ## Encoding and Decoding
 
-We use two traits we use for encoding packets into bytes and decoding response packets. These two traits are [`Encode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/encode/trait.Encode.html) and [`Decode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.Decode.html). The `Decode` trait isn't perfect as it can struggle to decode arrays and strings that aren't null-terminated (the solution to this is the third, less commonly used, trait: [`SizedDecode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.SizedDecode.html)), but for how simple it is you can make some surprisingly capable and speedy parsers in a really ergonomic way! Take the following basic parsing example based off of our real code:
+We use two traits for encoding command packets and decoding response packets. These two traits are [`Encode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/encode/trait.Encode.html) and [`Decode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.Decode.html). The `Decode` trait isn't perfect as it can struggle to decode arrays and strings that aren't null-terminated (the solution to this is the third, less commonly used, trait: [`SizedDecode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.SizedDecode.html)), but for how simple it is you can make some surprisingly capable and speedy parsers in a really ergonomic way! Take the following basic parsing example based off of our real code:
 ```rust
 // Decode is implemented for a variety of primitives,
 // including most integer types and [D; N] where D implements Decode
