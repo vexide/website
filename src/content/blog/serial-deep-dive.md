@@ -3,7 +3,7 @@ title: A deep dive into Brain communications and vex-v5-serial
 description: A look into the technical side of vex-v5-serial and the V5 Serial Protocol.
 author: gavin-niederman
 tags: ["blog"]
-date: 2024-07-13
+date: 2024-07-17
 draft: false
 ---
 
