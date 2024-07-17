@@ -10,7 +10,7 @@ thumbnail: {
 }
 ---
 
-Happy summer everyone, hope you're enjoying the vacation! It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-010/) back in May, but we've been busy with development and (finally) have some important announcements!
+Happy summer everyone, hope you're enjoying the vacation! It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-release/) back in May, but we've been busy with development and (finally) have some important announcements!
 
 # Growing Pains & `pros-cli`
 
