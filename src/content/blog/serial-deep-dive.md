@@ -3,8 +3,7 @@ title: A Deep Dive Into the V5 Serial Protocol
 description: A look into the inner workings of vex-v5-serial and the V5 Serial Protocol.
 author: gavin-niederman
 tags: ["blog"]
-date: 2024-07-17
-draft: false
+date: 2024-07-18
 ---
 
 As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a revamped toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new library [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.

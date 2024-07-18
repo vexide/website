@@ -42,7 +42,7 @@ const { title, author, date, description, tags, thumbnail } =
 				/>
 				<span>
 					<strong>{author}</strong> • {
-						new Date(date).toLocaleDateString()
+						new Date(date).toLocaleDateString("en-US", { timeZone: 'UTC' })
 					}
 				</span>
 			</a>

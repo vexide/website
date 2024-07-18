@@ -28,7 +28,7 @@
 		>
 			<img src={`https://github.com/${author}.png`} alt="Author Profile" />
 			<span>
-				<strong>{author}</strong> • {date.toLocaleDateString()}
+				<strong>{author}</strong> • {date.toLocaleDateString("en-US", { timeZone: 'UTC' })}
 			</span>
 		</a>
 		<Button class="blog-card-button" variant="accent" href={url}>
