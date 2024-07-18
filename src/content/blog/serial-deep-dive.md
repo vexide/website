@@ -55,7 +55,9 @@ One simple CDC2 packet type is [`WriteKeyValuePacket`](https://docs.rs/vex-v5-se
 
 ![WriteKeyValuePacket Structure](/blog/write_kv.png)
 
-Host-bound CDC2 packets are very similar with the addition of an ACK code just after the header. When `vex-v5-serial` decodes CDC2 packets, it will first decode the entire packet and then later the ACK code will be checked. If it is not [`Cdc2Ack::Ack`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/enum.Cdc2Ack.html) an error will be thrown with more info about the cause of failure.
+Host-bound CDC2 packets are very similar with the addition of an ACK code just after the header. When `vex-v5-serial` decodes CDC2 packets, it will first decode the entire packet and then later the ACK code will be checked. If it is not [`Cdc2Ack::Ack`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/enum.Cdc2Ack.html) an error will be thrown with more info about the cause of failure. Here is the structure of one of these packets:
+
+![ReadKeyValueReplyPacket Structure](/blog/read_kv_reply.png)
 
 ### Irregular Packets
 
