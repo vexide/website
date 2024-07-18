@@ -7,19 +7,34 @@ date: 2024-07-17
 draft: false
 ---
 
-As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a revamped toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new crate [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.
+As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a revamped toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new library [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.
 
 Reimplementing the Brain's serial protocol was no small feat! It would have been much harder without amazing references like [`vexrs-serial`](https://github.com/vexrs/vexrs-serial) (`vex-v5-serial` was originally a fork of this repo but we eventually completely rewrote it), [`v5-serial-protocol`](https://github.com/Jerrylum/v5-serial-protocol), and, last but not least, [`pros-cli`](https://github.com/purduesigbots/pros-cli). I want to give a huge thanks to all of these projects for open sourcing their code.
 
+This post will be going over both the details of the V5 Serial Protocol and the implementation details of `vex-v5-serial`. My aim is to make this as understandable as possible for everyone with basic systems programming knowledge, regardless of if you know anything about VEX robotics.
+
 # The Serial Protocol
+
+First off, what exactly is this V5 Serial Protocol? In short, V5 Serial Protocol is what allows your computer to communicate with your [V5 Brain](https://www.vexrobotics.com/276-4810.html). This is what tools like `pros-cli` and VEXcode use to upload programs and view terminal output among other things. Despite being named a serial protocol, it can function across both USB serial connections and wireless Bluetooth connections. 
 
 The V5 Brain Serial Protocol is a binary protocol consisting of Command (device-bound) and Response (host-bound) packets. Every Command packet has a corresponding Response packet. There are two categories of packets: CDC and CDC2 (I'm not entirely sure what the meaning of CDC is). All Command packets start with the device bound header (`[0xC9, 0x36, 0xB8, 0x47]`) and a one byte ID. Similarly, Response packets start with the host-bound packet header (`[0xAA, 0x55]`) and a one byte ID with the same value of the corresponding Command packet. The rest of the contents of Command and Response packets change based on what category of packet it is, but both packets types can optionally have a payload depending on the packet type. CDC packets are sometimes called simple packets, and CDC2 packets are sometimes called extended packets.
 
 ### CDC Packets
 
-CDC Command packets contain the device bound packet header, a one byte ID unique to every CDC packet, and finally the payload data. Currently all supported CDC command packets do not have any payload data so they just end after the ID. One example of a CDC command packet is [`Query1Packet`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.Query1Packet.html). It has an ID of 33, so it would be encoded as `[0xC9, 0x36, 0xB8, 0x47, 0x21]`.
+CDC Command packets contain:
+* the device bound packet header,
+* a one byte ID unique to every CDC packet,
+* and finally the payload data. 
 
-Host bound CDC packets contain a bit more info. They contain the host bound packet header, an ID, a variable width integer that can be stored in 8 or 16 bits (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload, and the payload data. [`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
+Currently all supported CDC command packets do not have any payload data so they just end after the ID. One example of a CDC command packet is [`Query1Packet`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.Query1Packet.html). It has an ID of 33, so it would be encoded as `[0xC9, 0x36, 0xB8, 0x47, 0x21]`.
+
+Host bound CDC packets contain a bit more info. They contain:
+* the host bound packet header,
+* an ID,
+* a variable width integer that can be stored in 8 or 16 bits (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload,
+* and the payload data. 
+
+[`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
 
 ![GetSystemVersionReplyPacket structure](/blog/incoming_cdc.png)
 
@@ -27,9 +42,16 @@ Host bound CDC packets contain a bit more info. They contain the host bound pack
 
 ### CDC2 Packets
 
-CDC2 packets make up the vast majority of packet types. The biggest differences between CDC2 packets and CDC packets are that CDC2 packets include extended IDs and CRC16 checksums.
+CDC2 packets make up the vast majority of packet types. The biggest differences between CDC2 packets and CDC packets are that CDC2 packets include extended IDs and [CRC16](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) checksums.
 
-Device bound CDC2 packets contain the device bound packet header, a one byte ID which is the same for most CDC2 packets, a one byte 'extended' ID unique to each CDC2 packet type, a `VarU16` with the size of the payload, the payload bytes, and a CRC16 checksum of the entire packet. One simple CDC2 packet type is [`WriteKeyValuePacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/kv/type.WriteKeyValuePacket.html). Its payload stores two strings, one for the key and the other for the value. This packet would look like this encoded:
+Device bound CDC2 packets contain: 
+* the device bound packet header
+* a one byte ID which is the same for most CDC2 packets
+* a one byte 'extended' ID unique to each CDC2 packet type
+* a `VarU16` with the size of the payload, the payload bytes
+* a CRC16 checksum of the entire packet. 
+
+One simple CDC2 packet type is [`WriteKeyValuePacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/kv/type.WriteKeyValuePacket.html). Its payload stores two strings, one for the key and the other for the value. This packet would look like this encoded:
 
 ![WriteKeyValuePacket Structure](/blog/write_kv.png)
 
@@ -37,7 +59,20 @@ Host bound CDC2 packets are very similar with the addition of an ACK code just a
 
 ### Irregular Packets
 
-Notably, there is one packet type that doesn't cleanly fit into CDC or CDC2. This one packet type is [`ReadFileReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/file/type.ReadFileReplyPacket.html). On failure, it will contain an ID, extended ID, ACK code, and CRC16 checksum; however, on success it will contain an ID, extended ID, the address that was read from, the data that was read, and a CRC16 checksum. It doesn't fit in with CDC2 because it doesn't always have an ACK code, and it doesn't fit with CDC because of its extended ID.
+Notably, there is one packet type that doesn't cleanly fit into CDC or CDC2. This one packet type is [`ReadFileReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/file/type.ReadFileReplyPacket.html). On failure, it will contain:
+* an ID,
+* an extended ID,
+* an ACK code,
+* and a CRC16 checksum.
+
+However, on success it will contain:
+* an ID,
+* an extended ID,
+* the address that was read from,
+* the data that was read,
+* and a CRC16 checksum. 
+
+It doesn't fit in with CDC2 because it doesn't always have an ACK code, and it doesn't fit with CDC because of its extended ID.
 
 # How `vex-v5-serial` Works
 
@@ -48,7 +83,7 @@ Not only does this improve code quality, but it also has the added benefit of al
 
 There are about 100 unique packets types, whether Brain or host bound. Because of that huge number, we keep all of our packets in submodules of a larger `packets` module.
 
-In order to encode and decode packets, `vex-v5-serial` has 4 base packet types representing every kind of packet in the protocol: [`CdcReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcReplyPacket.html), [`Cdc2ReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2ReplyPacket.html), [`CdcCommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcCommandPacket.html), and [`Cdc2CommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2CommandPacket.html).
+In order to encode and decode packets, `vex-v5-serial` has 4 base packet types representing every kind of packet in the protocol (excluding `ReadFileReplyPacket`): [`CdcReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcReplyPacket.html), [`Cdc2ReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2ReplyPacket.html), [`CdcCommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcCommandPacket.html), and [`Cdc2CommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2CommandPacket.html).
 
 These types have type parameters for the packets ID, extended ID (if it has one), and the payload type. A payload type of `()` signifies that the packet type has no payload. These parameters allow for every packet type to be easily created like this:
 
@@ -169,7 +204,11 @@ We already have big plans for how we will use it in the future.
 
 ## `v5d` and `v5ctl`
 
-In the future, we plan on using `vex-v5-serial` to implement a V5 Brain Daemon (`v5d`) which will allow sharing a connection with the brain. Multiple programs will be able to communicate with the brain even though only one program can connect to it at a time. `v5ctl` will be a general purpose CLI tool that supports most features of the V5 Serial protocol. Once `v5d` is finished, `cargo-v5` will be switched to using `v5d`. You can find the repo for both `v5d` and `v5ctl` [here](https://github.com/vexide/v5ctl).
+In the future, we plan on using `vex-v5-serial` to implement a V5 Brain Daemon (`v5d`) which will allow sharing a connection with the brain. Multiple programs will be able to communicate with the brain even though only one program can connect to it at a time.
+
+![v5d Diagram](/blog/v5d.png)
+
+`v5ctl` will be a general purpose CLI tool that supports most features of the V5 Serial protocol. Once `v5d` is finished, `cargo-v5` will be switched to using `v5d`. You can find the repo for both `v5d` and `v5ctl` [here](https://github.com/vexide/v5ctl).
 
 ## LemLink
 
