@@ -137,7 +137,7 @@ impl Encode for ExamplePayload {
 // ExampleCommandPacket::new(ExamplePayload { data: 10 })
 type ExampleCommandPacket = CommandPacket<ExamplePayload>;
 ```
-Encoding boils down to extending a vector at the end of the day, not super interesting. Here, encoding can never fail, but there are some cases where that isn't the case. Specifically in the case of `vex-v5-serial` encoding can fail when you attempt to encode a number larger than the 15bit integer limit as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html) or when you attempt to encode a `String` a string that is too large into one of the [many string types in the serial protocol](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/string/index.html).
+Encoding boils down to extending a vector at the end of the day, not super interesting. Here, encoding can never fail, but there are some cases where that isn't the case. Specifically in the case of `vex-v5-serial` encoding can fail when you attempt to encode a number larger than the 15bit integer limit as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html) or when you attempt to encode a `String` longer than the maximum length into one of the [many string types in the serial protocol](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/string/index.html).
 
 ## Connection
 
