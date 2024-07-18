@@ -23,7 +23,7 @@ Host bound CDC packets contain a bit more info. They contain the host bound pack
 
 ![GetSystemVersionReplyPacket structure](/blog/incoming_cdc.png)
 
-`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`; however, when the number is larger than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
+`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`; however, when the number is greater than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
 
 ### CDC2 Packets
 
