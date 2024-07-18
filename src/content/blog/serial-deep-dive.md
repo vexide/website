@@ -7,11 +7,37 @@ date: 2024-07-17
 draft: false
 ---
 
-As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a completely new toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new crate [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth (btle) connections.
+As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a completely new toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new crate [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.
 
 Reimplementing the Brain's serial protocol was no small feat! It would have been much harder without amazing references like [`vexrs-serial`](https://github.com/vexrs/vexrs-serial) (`vex-v5-serial` was originally a fork of this repo but we slowly completely rewrote it), [`v5-serial-protocol`](https://github.com/Jerrylum/v5-serial-protocol), and, last but not least, [`pros-cli`](https://github.com/purduesigbots/pros-cli). I want to give a huge thanks to all of these projects for open sourcing their code.
 
-This blog post should hopefully educate you on not only the inner workings of `vex-v5-serial`, but also the serial protocol itself. Think of it as a giant knowledge dump with a minor attempt to organize it into meaningful sections.
+# The Serial Protocol
+
+The V5 Brain Serial Protocol is a binary protocol consisting of Command (device-bound) and Response (host-bound) packets. Every Command packet has a corresponding Response packet. There are two categories of packets: CDC and CDC2 (I'm not entirely sure what the meaning of CDC is). All Command packets start with the device bound header (`[0xC9, 0x36, 0xB8, 0x47]`) and a one byte ID. Similarly, Response packets start with the host-bound packet header (`[0xAA, 0x55]`) and a one byte ID with the same value of the corresponding Command packet. The rest of the contents of Command and Response packets change based on what category of packet it is, but both packets types can optionally have a payload depending on the packet type. CDC packets are sometimes called simple packets, and CDC2 packets are sometimes called extended packets.
+
+### CDC Packets
+
+CDC Command packets contain the device bound packet header, a one byte ID unique to every CDC packet, and finally the payload data. Currently all supported CDC command packets do not have any payload data so they just end after the ID. One example of a CDC command packet is [`Query1Packet`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.Query1Packet.html). It has an id of 33, so it would be encoded as `[0xC9, 0x36, 0xB8, 0x47, 0x21]`.
+
+Host bound CDC packets contain a bit more info. They contain the host bound packet header, an ID, a variable width 15 bit integer (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload, and the payload data. [`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
+
+![GetSystemVersionReplyPacket structure](/blog/incoming_cdc.png)
+
+`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`. However, when the number is larger than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
+
+### CDC2 Packets
+
+CDC2 packets make up the vast majority of packet types. The biggest differences between CDC2 packets and CDC packets are that CDC2 packets include extended IDs and CRC16 checksums.
+
+Device bound CDC2 packets contain the device bound packet header, a one byte ID which is the same for most CDC2 packets, a one byte 'extended' ID unique to each CDC2 packet type, a `VarU16` with the size of the payload, the payload bytes, and a CRC16 checksum of the entire packet. One simple CDC2 packet type is [`WriteKeyValuePacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/kv/type.WriteKeyValuePacket.html). Its payload stores two strings, one for the key and the other for the value. This packet would look like this encoded:
+
+![WriteKeyValuePacket Structure](/blog/write_kv.png)
+
+Host bound CDC2 packets are very similar with the addition of an ACK code just after the header. When `vex-v5-serial` decodes CDC2 packets, it will first decode the entire packet and then later the ACK code will be checked. If it is not [`Cdc2Ack::Ack`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/enum.Cdc2Ack.html) an error will be thrown with more info about the cause of failure.
+
+### Irregular Packets
+
+Notably, there is one packet type that doesn't cleanly fit into CDC or CDC2. This one packet type is [`ReadFileReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/file/type.ReadFileReplyPacket.html). On failure, it will contain an ID, extended ID, ACK code, and CRC16 checksum; however, on success it will contain an ID, extended ID, the address that was read from, the data that was read, and a CRC16 checksum. It doesn't fit in with CDC2 because it doesn't always have an ACK code, and it doesn't fit with CDC because of its extended ID.
 
 # How `vex-v5-serial` Works
 
@@ -22,39 +48,26 @@ Not only does this improve code quality, but it also has the added benefit of al
 
 There are about 100 unique packets types, whether Brain or host bound. Because of that huge number, we keep all of our packets in submodules of a larger `packets` module.
 
-In the decoding and encoding example code, we saw the `ResponsePacket` and `CommandPacket` types. The equivalents of that type in `vex-v5-serial` for encoding and decoding are [`CdcReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcReplyPacket.html), [`Cdc2ReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2ReplyPacket.html), [`CdcCommandPcket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcCommandPacket.html), and [`Cdc2CommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2CommandPacket.html). The reason that there are 4 top level packet types is because of the two different packet categories in the serial protocol.
+In order to encode and decode packets, `vex-v5-serial` has 4 base packet types representing every kind of packet in the protocol: [`CdcReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcReplyPacket.html), [`Cdc2ReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2ReplyPacket.html), [`CdcCommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc/struct.CdcCommandPacket.html), and [`Cdc2CommandPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/struct.Cdc2CommandPacket.html).
 
-### CDC (simple) packets
+These types have type parameters for the packets ID, extended ID (if it has one), and the payload type. A payload type of `()` signifies that the packet type has no payload. These parameters allow for every packet type to be easily created like this:
 
-Device bound CDC packets contain the device bound packet header (`[0xC9, 0x36, 0xB8, 0x47]`), a one byte ID unique to every CDC packet, and finally the payload data. Currently all supported CDC command packets do not have any payload data so they just end after the ID. One example of a CDC command packet is [`Query1Packet`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.Query1Packet.html). It has an id of 33, so it would be encoded as `[0xC9, 0x36, 0xB8, 0x47, 0x21]`.
-
-Host bound CDC packets contain a bit more info. They contain the host bound packet header (`[0xAA, 0x55]`), an ID, a variable width 15 bit integer (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload, and the payload data. [`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
-
-![GetSystemVersionReplyPacket structure](/blog/incoming_cdc.png)
-
-`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`. However, when the number is larger than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
-
-### CDC2 (extended) packets
-
-CDC2 packets make up the vast majority of packet types. The biggest differences between CDC2 packets and CDC packets are that CDC2 packets include extended IDs and CRC16 checksums.
-
-Device bound CDC2 packets contain the device bound packet header, a one byte ID which is the same for most CDC2 packets, a one byte 'extended' ID unique to each CDC2 packet type, a `VarU16` with the size of the payload, the payload bytes, and a CRC16 checksum of the entire packet. One simple CDC2 packet type is [`WriteKeyValuePacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/kv/type.WriteKeyValuePacket.html). Its payload stores two strings, one for the key and the other for the value. This packet would look like this encoded:
-
-![WriteKeyValuePacket Structure](/blog/write_kv.png)
-
-Host bound CDC2 packets are very similar with the addition of an ACK code just after the header. When `vex-v5-serial` decodes CDC2 packets, it will first decode the entire packet and then later the ACK code will be checked. If it is not [`Cdc2Ack::Ack`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/cdc2/enum.Cdc2Ack.html) an error will be thrown with more info about the cause of failure.
-
-### Anomalies
-
-Notably, there is one packet type that doesn't cleanly fit into CDC or CDC2. This one packet type is [`ReadFileReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/file/type.ReadFileReplyPacket.html). On failure, it will contain an ID, extended ID, ACK code, and CRC16 checksum; however, on success it will contain an ID, extended ID, the address that was read from, the data that was read, and a CRC16 checksum. It doesn't fit in with CDC2 because it doesn't always have an ACK code, and it doesn't fit with CDC because of its extended ID.
+```rust
+// This would have a `Decode` implementation if it were a real payload.
+// See the Encoding and Decoding section for more info
+pub struct ExampleReplyPayload {
+    foo: u8,
+    bar: u8,
+}
+// 90 is the ID for this example packet
+pub type ExampleReplyPacket = CdcReplyPacket<90, ExampleReplyPayload>;
+```
 
 In order to receive a packet, `vex-v5-serial` first decodes the header of the incoming packet and the length of the incoming packet. If the header and length is valid, it will asynchronously read 'length' bytes into a buffer, and then decode that into the packet type given by the user.
 
-
-
 ## Encoding and Decoding
 
-We use two traits for encoding command packets and decoding response packets. These two traits are [`Encode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/encode/trait.Encode.html) and [`Decode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.Decode.html). The `Decode` trait isn't perfect as it can struggle to decode arrays and strings that aren't null-terminated (the solution to this is the third, less commonly used, trait: [`SizedDecode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.SizedDecode.html)), but for how simple it is you can make some surprisingly capable and speedy parsers in a really ergonomic way! Take the following basic parsing example based off of our real code:
+We use two traits for encoding command packets and decoding response packets. These two traits are [`Encode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/encode/trait.Encode.html) and [`Decode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.Decode.html). `Encode` takes a Command packet and encodes it into a byte vector that can be sent to the Brain. Inversely, `Decode` takes a byte vector and constructs a Response packet with it. For any language nerds out there, `Decode` is an `LL(1)` parser. The `Decode` trait isn't perfect as it can struggle to decode arrays and strings that aren't null-terminated (the solution to this is the third, less commonly used, trait: [`SizedDecode`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/decode/trait.SizedDecode.html)), but for how simple it is you can make some surprisingly capable and speedy parsers in a really ergonomic way! Take the following basic parsing example based off of our real code:
 ```rust
 // Decode is implemented for a variety of primitives,
 // including most integer types and [D; N] where D implements Decode
