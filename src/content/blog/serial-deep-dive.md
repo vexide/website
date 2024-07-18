@@ -7,9 +7,9 @@ date: 2024-07-17
 draft: false
 ---
 
-As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a completely new toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new crate [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.
+As we announced in our [summer update blog](/blog/posts/summer-update-24), we have a revamped toolchain! `cargo-v5` is the replacement for `cargo-pros`. Instead of depending on pros-cli for uploading and terminal, `cargo-v5` uses our new crate [`vex-v5-serial`](https://crates.io/crates/vex-v5-serial) which is a complete reimplementation of the V5 Serial Protocol written in 100% Rust. It supports wired, controller, and direct Bluetooth, sometimes called btle, connections.
 
-Reimplementing the Brain's serial protocol was no small feat! It would have been much harder without amazing references like [`vexrs-serial`](https://github.com/vexrs/vexrs-serial) (`vex-v5-serial` was originally a fork of this repo but we slowly completely rewrote it), [`v5-serial-protocol`](https://github.com/Jerrylum/v5-serial-protocol), and, last but not least, [`pros-cli`](https://github.com/purduesigbots/pros-cli). I want to give a huge thanks to all of these projects for open sourcing their code.
+Reimplementing the Brain's serial protocol was no small feat! It would have been much harder without amazing references like [`vexrs-serial`](https://github.com/vexrs/vexrs-serial) (`vex-v5-serial` was originally a fork of this repo but we eventually completely rewrote it), [`v5-serial-protocol`](https://github.com/Jerrylum/v5-serial-protocol), and, last but not least, [`pros-cli`](https://github.com/purduesigbots/pros-cli). I want to give a huge thanks to all of these projects for open sourcing their code.
 
 # The Serial Protocol
 
@@ -19,11 +19,11 @@ The V5 Brain Serial Protocol is a binary protocol consisting of Command (device-
 
 CDC Command packets contain the device bound packet header, a one byte ID unique to every CDC packet, and finally the payload data. Currently all supported CDC command packets do not have any payload data so they just end after the ID. One example of a CDC command packet is [`Query1Packet`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.Query1Packet.html). It has an id of 33, so it would be encoded as `[0xC9, 0x36, 0xB8, 0x47, 0x21]`.
 
-Host bound CDC packets contain a bit more info. They contain the host bound packet header, an ID, a variable width 15 bit integer (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload, and the payload data. [`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
+Host bound CDC packets contain a bit more info. They contain the host bound packet header, an ID, a variable width integer that can be stored in 8 or 16 bits (from now on I will refer to this type as a [`VarU16`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/varint/struct.VarU16.html)) storing the size of the payload, and the payload data. [`GetSystemVersionReplyPacket`](https://docs.rs/vex-v5-serial/latest/vex_v5_serial/packets/system/type.GetSystemVersionReplyPacket.html) is host bound CDC packet. This diagram shows the structure of the packet with reasonable byte values:
 
 ![GetSystemVersionReplyPacket structure](/blog/incoming_cdc.png)
 
-`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`. However, when the number is larger than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
+`VarU16`s are stored in an interesting way. When the number stored in the `VarU16` is lower than 128, the number is stored as if it was a regular `u8`; however, when the number is larger than 128, it is stored in two bytes and the most significant bit is set to 1. The number 50 would be encoded in a `VarU16` as `0b00110010` taking up 8 bits, but 200 would be encoded as `0b1000000011001000` taking up 16 bits.
 
 ### CDC2 Packets
 
