@@ -63,7 +63,7 @@ Understanding how competition control interacts with your robot is of great impo
 
 The first and **most important** thing to understand is that the **only function guaranteed to run once and only once is `main`!**
 
-> Every function in `Compete` can and will run any number of times in a single match. Your code should be designed around this fact. For example, you should **NEVER** assume that a function like `driver` or `connected` only runs once.
+> Every function in `Compete` can and will run any number of times in a single match. Your code should be designed around this fact. For example, you should **NEVER** assume that a function like `driver` or `connected` only runs once. You also cannot assume modes like `autonomous` will always run after `driver`.
 
 Here is an example of some bad code that assumes `driver` only runs once, resulting in a panic if it were to ever run twice.
 
