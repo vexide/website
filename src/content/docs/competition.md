@@ -103,9 +103,7 @@ Or the TM could get bored and start randomly flicking switches on the field cont
 
 The second important thing to understand about the competition lifecycle is that competition functions other than `connected` and `disconnected` can have their execution cancelled at any time. If you are in the middle of `autonomous` and the field controller decides to disable you, execution *will* jump to `disabled` at the next opportunity the async runtime gets and any local context in `autonomous` will be lost, since its future will simply stop being polled.
 
-No `drop` implementations will be called when this happens. `autonomous` will simply stop being polled and `disabled` will start running. If `autonomous` ever runs a second time, execution will not pick up where it left off. `autonomous` will instead just run again from the start.
-
-> Yes, this is technically a memory leak since no `drop` implementations are called when a mode switch occurs. It's unavoidable, though, and the alternatives would offer a far worse experience.
+> In other words, if `autonomous` ever runs a second time, execution will not pick up where it left off. `autonomous` will instead just run again from the start.
 
 # Competition Information
 
