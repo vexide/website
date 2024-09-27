@@ -10,7 +10,7 @@ thumbnail: {
 }
 ---
 
-I'm writing this post to hopefully serve as a basic introduction to low-level development on the V5 Brain for those wanting to hack around in the PROS kernel or vexide (or even make their own thing!). Information about this is kind of spread thin across random forums and discords (or behind some partner developer's NDA), so it felt necessary to put this all in once place.
+I'm writing this post to hopefully serve as a basic introduction to low-level development on the V5 Brain for those wanting to hack around in the PROS kernel or vexide (or even make their own thing!). Information about this is kind of spread thin across random forums and discords, so it felt necessary to put this all in once place.
 
 Hopefully you can take *something* away from these ramblings.
 
