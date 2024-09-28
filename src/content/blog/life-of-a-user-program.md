@@ -148,3 +148,14 @@ You read that right. Who needs an IDE or syntax highlighting or line numbers, or
 All jokes aside, what we've just written is the smallest theoretical program binary, containing just the first four bytes of the code signature (the "magic" sequence) and nothing else. This is *just* enough to get VEXos to recognize our binary as a program and start execution of it on CPU1 ("it" being nothing, since our program contains no instructions).
 
 Let's run this thing onto a brain just to confirm.
+And success! Nothing happens!
+
+That's pretty boring so let's make something happen!
+
+# The Fun Bit — Getting code running
+
+This is where we really start to get into the weeds of embedded development.
+
+The first thing we need to decide is what language and toolchain we will be using. We saw the vexcode stack earlier, but what we'll make in this blog will use the same stack as vexide:
+
+![vexide's build process](/blog/vexide-build-process.png)
