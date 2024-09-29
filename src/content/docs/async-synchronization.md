@@ -1,6 +1,6 @@
 ---
 title: Synchronization
-category: 03. Async Multitasking
+category: 03. Concurrency & Multitasking
 page: 13
 ---
 
