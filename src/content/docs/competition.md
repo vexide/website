@@ -135,6 +135,67 @@ This includes:
 - [The current competition mode (Driver, Autonomous, Disabled).](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.mode.html)
 - [The raw status flags returned by VEXos about the competition state.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.status.html)
 
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*
+// @fold end
+use vexide::core::competition::{
+    self,
+    CompetitionMode,
+    CompetitionSystem,
+};
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+//     (                         )
+    if competition::is_connected() {
+//                 ^
+//     [Check if we are currently controlled by a competition controller.]
+        println!("We are connected to a competition controller!");
+    }
+
+//                        (                   )
+    if let Some(system) = competition::system() {
+//                                    ^
+//     [Get the type of competition controller we are connected to.]
+        match system {
+            CompetitionSystem::FieldControl => {
+                println!("We are tethered to a field controller.");
+            }
+            CompetitionSystem::CompetitionSwitch => {
+                println!("We are tethered to a competition switch.");
+            }
+        }
+    } else {
+        println!("Not connected to competition control.");
+    }
+
+//        (                 )
+    match competition::mode() {
+//                    ^
+//     [Get the current that mode we are in.]
+//     [This will always be Driver if we are disconnected to competition control.]
+        CompetitionMode::Disabled => {
+            println!("Currently running disabled.");
+        },
+        CompetitionMode::Autonomous => {
+            println!("Currently running autonomous.");
+        }
+        CompetitionMode::Driver => {
+            println!("Currently running driver.");
+        }
+    }
+
+//                                               (                   )
+    println!("Competition status flags are: {}", competition::status());
+//                                                           ^
+//                          [Get the current competition-related bitflags returned by VEXos.]
+}
+```
+
 # Edge-cases
 
 There are some edge cases associated with the Competition API. These are simply a side-effect of VEXos behavior and not really something we can control. They're useful to know about, regardless.
