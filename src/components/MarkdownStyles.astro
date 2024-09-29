@@ -125,6 +125,13 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		min-height: 1.5em;
 	}
 
+	.markdown-body :global(pre.shaku .line.highlight) {
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.25);
+		margin-left: -24px;
+		padding-left: 24px;
+		width: calc(100% + 48px);
+	}
+
 	/* There seems to be a bug where shaku always inserts an extra line at the end of our codeblocks */
 	.markdown-body :global(pre.shaku code > .line:last-of-type) {
 		display: none;
