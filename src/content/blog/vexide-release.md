@@ -41,8 +41,8 @@ Most APIs in vexide are asynchronous.
 Here is a quick example showing a working program using the ``CompetitionRobot`` API.
 
 ```rust
-#![no_main]
 #![no_std]
+#![no_main]
 #![feature(never_type)]
 
 use vexide::prelude::*;

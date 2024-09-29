@@ -197,11 +197,6 @@ const nextPage =
 		padding-inline: 16px;
 	}
 
-	:global(.navigation) {
-		position: sticky !important;
-		top: 0;
-	}
-
 	.docs-layout {
 		display: flex;
 		position: relative;
@@ -209,15 +204,20 @@ const nextPage =
 
 	.docs-sidebar {
 		width: 280px;
-		height: calc(100vh - 48px);
+		height: 100vh;
 		flex: 0 0 auto;
 		position: sticky;
-		top: 48px;
+		top: 0;
 	}
 
 	@media only screen and (max-width: 768px) {
 		.docs-sidebar {
 			display: none;
+		}
+
+		:global(.navigation) {
+			position: sticky !important;
+			top: 0;
 		}
 	}
 

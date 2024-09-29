@@ -11,13 +11,16 @@ There's a pretty good chance that you're using vexide for competition purposes. 
 The `Compete` trait allows us to do just that - you can implement it on a data structure containing your robot's devices and have vexide run a function corresponding to the current competition mode.
 
 ```rs
+// @fold start
 #![no_std]
 #![no_main]
 
 use vexide::prelude::*;
 
-struct MyRobot;
+// @fold end
+struct MyRobot {}
 
+//   (     )
 impl Compete for MyRobot {
     async fn autonomous(&mut self) {
         println!("Running in autonomous mode!");
@@ -31,6 +34,7 @@ impl Compete for MyRobot {
 #[vexide::main]
 async fn main(_peripherals: Peripherals) {
     let my_robot = MyRobot {};
+//  (                       )
     my_robot.compete().await;
 }
 ```
@@ -63,20 +67,29 @@ Understanding how competition control interacts with your robot is of great impo
 
 The first and **most important** thing to understand is that the **only function guaranteed to run once and only once is `main`!**
 
+> [!WARNING]
 > Every function in `Compete` can and will run any number of times in a single match. Your code should be designed around this fact. For example, you should **NEVER** assume that a function like `driver` or `connected` only runs once. You also cannot assume modes like `autonomous` will always run after `driver`.
 
 Here is an example of some bad code that assumes `driver` only runs once, resulting in a panic if it were to ever run twice.
 
 ```rs
-// ...
+// @fold start
+#![no_std]
+#![no_main]
 
+use vexide::prelude::*;
+
+// @fold end
 struct MyRobot {
     some_data: Option<i32>,
 }
 
 impl Compete for MyRobot {
     async fn driver(&mut self) {
+//      (error                                   )
         let data = self.some_data.take().unwrap();
+        //                             ^
+        // [called `Option::unwrap()` on a `None` value]
     }
 }
 
@@ -89,9 +102,12 @@ async fn main(_peripherals: Peripherals) {
 }
 ```
 
-In this case, since the default state of the robot when not plugged into field control is `driver`, running this program before connecting to field control will start the program in `driver`, meaning `driver` will run a second time in the match and panic the program.
+> Wait, what's going on here? Why did we panic again?
 
-The order of competition functions would look like this:
+In this case, since the default state of the robot when not plugged into field control is `driver`, running this program before connecting to field control will start the program in `driver`, meaning `driver` will run a second time in the match and panic the program. The program panics since we already took out `Some(3)` from `self.some_data` in the first run of `driver`. When we try to take it a second time, we get `None` and panic when trying to call `unwrap` on that.
+
+To visualize what happened, let's look at the order of competition functions throughout a theoretical match with this program:
+
 
 ![Possible chain of competition modes: main, driver, connected, disabled, autonomous, disabled, driver, disabled, disconnected](https://i.imgur.com/NWIHvxx.png)
 
@@ -99,10 +115,13 @@ Or the TM could get bored and start randomly flicking switches on the field cont
 
 ![Rapid switches between autonomous and driver many times](https://i.imgur.com/chVRJn1.png)
 
+> That'd be a fun match.
+
 ## Cancellation of Competition Functions
 
 The second important thing to understand about the competition lifecycle is that competition functions other than `connected` and `disconnected` can have their execution cancelled at any time. If you are in the middle of `autonomous` and the field controller decides to disable you, execution *will* jump to `disabled` at the next opportunity the async runtime gets and any local context in `autonomous` will be lost, since its future will simply stop being polled.
 
+> [!TIP]
 > In other words, if `autonomous` ever runs a second time, execution will not pick up where it left off. `autonomous` will instead just run again from the start.
 
 # Competition Information

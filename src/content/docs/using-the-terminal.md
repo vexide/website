@@ -11,12 +11,44 @@ One of the most useful debugging tools available to you is the terminal, which a
 The easiest way to send some data to the terminal in a vexide program is through the `print` family of macros. You might recall `println` from our "Hello World" example:
 
 ```rs
-println!("Hello World!"); // same thing as print!("Hello World!\n");
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    // @focus
+    println!("Hello World!");
+}
 ```
 
-Simply running this code with no connection to a computer won't visibly do anything, so let's change that.
+That will send `Hello World!` followed by a newline to your computer over a USB or bluetooth connection. This is useful in cases where you need to quickly view or debug a value on the brain, or send some logs over for future use.
+
+We also have a `print` macro, which is the same as `println` except it won't end your message in a newline.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    print!("Hello");
+    print!("Hello");
+}
+```
+
+That will send the data `HelloHello` to your computer.
+
+> That's cool and all but... where am I supposed to be seeing all this?
 
 # Reading the Terminal
+
+Simply running all of this code with no connection to a computer won't visibly do anything, so let's change that.
 
 Terminal data can be read over a USB connection to a V5 brain or controller using `cargo-v5` (one of the [prerequisites](../prerequisites/) that you should already have installed). To open a terminal connection with the brain, we'll simply run the following command:
 
@@ -24,18 +56,29 @@ Terminal data can be read over a USB connection to a V5 brain or controller usin
 cargo v5 terminal
 ```
 
+When you run your program, you should be greeted by vexide's startup banner along with the output of `print`/`println`.
+
 <div style="margin-block-start: 16px; text-align: center">
   <video width="600" controls>
     <source src="/docs/terminal-demo.mp4" type="video/mp4">
   </video>
 </div>
 
+
 # Disabling the vexide Banner
 
-You might have noticed that in the video above, vexide printed a startup banner along with your `Hello world!` message. If you don't want this banner to be printed, you can disable this in your program:
+In the video above, vexide printed a startup banner along with your `Hello world!` message. If you don't want this banner to be printed, you can disable this in your program:
 
 ```rs
-#[vexide::main(banner = false)]
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+//             (                    )
+#[vexide::main(banner(enabled = false))]
 async fn main(_peripherals: Peripherals) {
     println!("Look ma! No banners!");
 }
@@ -66,28 +109,36 @@ println!("Hello world!");
 
 The brain communicates with your computer through two buffers: [`Stdin`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.Stdin.html) and [`Stdout`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.Stdout.html). `Stdout`, or "standard output" is what's being used to print our "Hello world!" message here, as it represents the outgoing message from the brain to your computer.
 
-`Stdout` is part of vexide's [`io`](https://docs.rs/vexide-core/latest/vexide_core/io/index.html) API.
+> [!NOTE]
+> `Stdout` is part of vexide's [`io`](https://docs.rs/vexide-core/latest/vexide_core/io/index.html) API.
 
 ## Example: Printing Without Macros
 
 To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, which will give us exclusive access to the buffer until we release the lock (either by explicitly `drop`ping it or having it fall out of scope). This ensures that we won't get interrupted by another print attempt while we are writing to our buffer.
 
-```rs
-use vexide::core::io::stdout;
-
-let lock = stdout().lock();
-
-// Beautiful poem goes here...
-
-core::mem::drop(lock);
-```
-
 [`StdoutLock`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.StdoutLock.html) implements the [`Write`](https://docs.rs/vexide-core/latest/vexide_core/io/trait.Write.html) trait, which provides some methods for writing to the buffer:
 
 ```rs
-use vexide::core::io::Write;
+// @fold start
+#![no_std]
+#![no_main]
 
-lock.write(b"some bytes")?;
+use vexide::prelude::*;
+// @fold end
+use vexide::core::io::{Write, stdout};
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+    let lock = stdout().lock();
+//                    ^
+//        [Obtain a lock of Stdout.]
+  
+    lock.write(b"Hello World!\n").unwrap();
+    
+    core::mem::drop(lock);
+//                 ^
+// [Bring the lock out of scope to release it.]
+}
 ```
 
 # Advanced Logging Solutions

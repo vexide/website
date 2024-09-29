@@ -16,7 +16,7 @@ vexide is a `no_std` Rust runtime for VEX V5 robots. It allows the code that you
 
 The V5 Brain is an *embedded platform*, meaning the code that you write runs without a traditional operating system like Windows or Linux. Your code runs closer to the underlying hardware ("bare metal"), giving you more control over things like memory allocation and program behavior. It also unfortunately means that Rust's `std` (standard library) crate cannot be used, as `std` expects some operating system features like threads, a filesystem, and I/O to be available on the target.
 
-> Fortunately, this isn't as bad as it sounds, and vexide programs can still make use of most high level Rust features, as you'll learn later.
+Fortunately, this isn't as bad as it sounds, and vexide programs can still make use of most high level Rust features, as you'll learn later.
 
 # Why should I use this?
 
