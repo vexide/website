@@ -78,7 +78,7 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-//                                                   (error )
+//                                                   (err )
     let peripherals_2_electric_boogaloo = peripherals.clone();
 //                                                  ^
 //                                     [Unable to clone peripherals!]
@@ -102,7 +102,7 @@ async fn main(peripherals: Peripherals) {
 //                           ^
 //                  [Value is moved here.]
 
-//                                  (error           )
+//                                  (err           )
     let my_other_motor = Motor::new(peripherals.port_1, Gearset::Blue, Direction::Forward);
 //                                 ^
 //                 [Attempted to use after move here!]
@@ -122,7 +122,7 @@ use vexide::prelude::*;
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let my_motor = Motor::new(peripherals.port_1, Gearset::Blue, Direction::Forward);
-    //                           (error )
+    //                           (err )
     let my_other_motor = my_motor.clone();
 //                              ^
 //                       [Unable to clone my_motor!]
@@ -146,7 +146,7 @@ Despite the restrictions placed on passing around peripherals, they can be circu
 
 > Screw the memory safety! Give me another `Peripherals` instance! This is a robbery.
 
-If you *absolutely* need another instance of `Peripherals`, you can get one with [`Peripherals::steal`](https://docs.rs/vexide-devices/latest/vexide_devices/peripherals/struct.Peripherals.html#method.steal). This is an unsafe operation and will need to be marked as such:
+If you *absolutely* need another instance of `Peripherals`, you can get one with [`Peripherals::steal`](https://docs.rs/vexide-devices/latest/vexide_devices/peripherals/struct.Peripherals.html#method.steal). This is an `unsafe` operation and will need to be marked as such:
 
 ```rs
 // @fold start
@@ -197,24 +197,246 @@ This is effectively the same as stealing `Peripherals` and results in the same p
 > [!CAUTION]
 > I'm being serious, please don't do this. This isn't really a workaround, it's a footgun. Stealing peripherals and creating new ports is an escape hatch, and an unsafe one at that. It's intended for cases where it is *literally impossible* to pass an existing owned device, such as with [panic handlers](https://doc.rust-lang.org/nomicon/panic-handler.html). If you are using `Peripherals::steal`, you should probably be using one of the safer solutions that I'm about to cover or be seriously questioning what you are doing.
 
-# Multiple Ownership
+> Well, theft isn't very nice and memory is best served safe, so let's take another approach here.
 
-Well, theft isn't very nice and memory is best served safe, so let's take another approach here.
+# Interior Mutability
 
 So let's say you want to access a device *mutably* from multiple data structures or tasks. This is a pretty common pattern you'll run into when dealing with a controls library:
 - Some `Drivetrain` struct has mutable ownership of some motor.
 - An `Odometry` struct also needs to read data off of that same motor while its being controlled and modified by `Drivetrain`.
 
-or:
-
-- I need to access a device from a background task without permanently moving it into that task.
-
 > ...what do?
 
-Turns out, Rust has a solution for this baked right into its core library — [interior mutability](https://doc.rust-lang.org/book/ch15-05-interior-mutability.html) and [shared-state concurrency](https://doc.rust-lang.org/beta/book/ch16-03-shared-state.html)! Those are some pretty big words, so let's go over each one.
+Turns out, Rust has a solution for this baked right into its core library — [interior mutability](https://doc.rust-lang.org/book/ch15-05-interior-mutability.html)!
 
-## Interior Mutability
+*Interior mutability* is a pattern that allows many mutable references to be made on a single piece of data. This is done through a natural combination of Rust's `Rc` and `RefCell` smart pointer types, and effectively allows mutation of a variable declared as immutable as well as multiple owners of a single piece of data! Let's have a look at the types we'll be working with:
 
-## Shared-state Concurrency
+- `Rc<T>` or "Reference Counted `T`" is a smart pointer that enables multiple owners over the same piece of data.
+- `RefCell<T>` is a wrapper that moves mutable borrow checking rules from compile-time to run-time, allowing us to mutably borrow an immutable piece of data.
 
-Shared-state concurrency is the multithreaded big brother of interior mutability. That is, it allows you to share mutable, owned data across multiple running tasks.
+> [!TIP]
+> In other words, `Rc` lets many variables own one piece of data and `RefCell` lets us modify that data without having mutable ownership of it.
+
+Combining these two types together gives us a powerful pattern that allows us to "sneak around the borrow checker". Take this piece of code for example, Rust refuses to let us mutably borrow our owned value `x` twice:
+```rs
+let mut x = 1;
+
+let y = &mut x;
+//      (err )
+let z = &mut x;
+//     ^
+// [cannot borrow `x` as mutable more than once at a time]
+
+*y = 2;
+*z = 3;
+
+println!("{x}");
+//        ^
+// [We are trying to get x to equal 3 here.]
+```
+
+...but we can get around this by wrapping `x` in an `Rc` and `RefCell`.
+
+```rs
+extern crate alloc;
+
+use core::cell::RefCell;
+use alloc::rc::Rc;
+
+let x = Rc::new(RefCell::new(1));
+
+//       (      )
+let y = x.clone();
+//       (      )
+let z = x.clone();
+//       ^
+// [cloning here does not clone the data in x, but rather the `Rc` smart pointer around x.]
+// [y and z are still referencing the underlying data in x!]
+
+//(           )
+*y.borrow_mut() = 2;
+//(           )
+*z.borrow_mut() = 3;
+//^
+// [Notice how y and z are both declared as immutable, yet we can get mutable references to them.]<<<
+// [This is the power of RefCell. It gives us interior mutability of the data without actually borrowing mutably.]<<<
+
+println!("{:?}", x);
+// ^<<<
+// [RefCell { value: 3 }]<<<
+```
+
+Cool. Let's apply this power to some devices. We're going to use the `Drivetrain`/`Odometry` example from before, so let's make some structs:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+pub struct Drivetrain {
+    pub left_motor: Motor,
+    pub right_motor: Motor,
+}
+
+pub struct Odometry {
+    pub left_motor: Motor,
+    pub right_motor: Motor,
+}
+```
+
+Both of these structs want to own the same two motors, but Rust won't allow this. We need to wrap these in `Rc<RefCell<T>>` to allow for interior mutability:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+// @diff + start
+extern crate alloc;
+
+use core::cell::RefCell;
+use alloc::rc::Rc;
+// @diff + end
+
+pub struct Drivetrain {
+    // @diff - start
+    pub left_motor: Motor,
+    pub right_motor: Motor,
+    // @diff - end
+    // @diff + start
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+    // @diff + end
+}
+
+pub struct Odometry {
+    // @diff - start
+    pub left_motor: Motor,
+    pub right_motor: Motor,
+    // @diff - end
+    // @diff + start
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+    // @diff + end
+}
+```
+
+Now we can pass both structs a shared `Rc<RefCell<Motor>>` smart pointer, allowing them to both access the same two motors.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+extern crate alloc;
+
+use core::cell::RefCell;
+use alloc::rc::Rc;
+
+pub struct Drivetrain {
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+}
+
+pub struct Odometry {
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+}
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let left_motor = Rc::new(RefCell::new(Motor::new(
+        peripherals.port_1,
+        Gearset::Blue,
+        Direction::Forward
+    )));
+    let right_motor = Rc::new(RefCell::new(Motor::new(
+        peripherals.port_2,
+        Gearset::Blue,
+        Direction::Reverse
+    )));
+
+    let drivetrain = Drivetrain {
+        left_motor: left_motor.clone(),
+        right_motor: right_motor.clone(),
+    };
+
+    let odometry = Odometry {
+        left_motor: left_motor.clone(),
+        right_motor: right_motor.clone(),
+    };
+}
+```
+
+Keep in mind — we haven't cloned a `Motor` at all here, just cloned a *smart pointer to the Motor*. Pretty neat, huh?
+
+Each struct can then internally access the inner motor and modify its state:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::{devices::smart::motor::MotorError, prelude::*};
+
+extern crate alloc;
+
+use core::cell::RefCell;
+use alloc::rc::Rc;
+
+pub struct Odometry {
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+}
+
+// @fold end
+pub struct Drivetrain {
+    pub left_motor: Rc<RefCell<Motor>>,
+    pub right_motor: Rc<RefCell<Motor>>,
+}
+
+impl Drivetrain {
+    pub fn run(&mut self, voltage: f64) -> Result<(), MotorError> {
+        self.left_motor.get_mut().set_voltage(voltage)?;
+        self.right_motor.get_mut().set_voltage(voltage)?;
+    }
+}
+// @fold start
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let left_motor = Rc::new(RefCell::new(Motor::new(
+        peripherals.port_1,
+        Gearset::Blue,
+        Direction::Forward
+    )));
+    let right_motor = Rc::new(RefCell::new(Motor::new(
+        peripherals.port_2,
+        Gearset::Blue,
+        Direction::Reverse
+    )));
+
+    let drivetrain = Drivetrain {
+        left_motor: left_motor.clone(),
+        right_motor: right_motor.clone(),
+    };
+
+    let odometry = Odometry {
+        left_motor: left_motor.clone(),
+        right_motor: right_motor.clone(),
+    };
+}
+// @fold end
+```
+
+> [!WARNING]
+> Interior mutability comes with one **massive** limitation, however. You cannot, under any circumstances share an `Rc<RefCell<T>>` across tasks or threads. Rust simply wont let you, because `Rc<RefCell<T>>` is not a thread-safe type. For that, you need its threadsafe counterpart - [Shared State Concurrency](todo)
