@@ -166,7 +166,7 @@ Here's the results of a (crude) benchmark we ran testing 10,000 iterations of `f
 | -- | -- | -- |
 | 383.284ms (1.0x) | 6.809ms (56.29x) | **3.699ms (103.61x)** |
 
-> [!INFO]
+> [!NOTE]
 > We've also passed this more optimized version of `libm` to the PROS team, so you can expect to see similar improvements soon if you're a PROS user!
 
 ## Text-drawing APIs
