@@ -210,7 +210,7 @@ const { title = "" } = Astro.props;
 		margin-bottom: 8px;
 	}
 
-	@media only screen and (max-width: 768px) {
+	@media screen and (max-width: 768px) {
 		.navigation-items,
 		.navigation-actions {
 			display: none;
@@ -221,7 +221,7 @@ const { title = "" } = Astro.props;
 		}
 
 		.navigation-inner {
-			padding-inline: 24px;
+			padding-inline: 24px 8px;
 		}
 	}
 </style>

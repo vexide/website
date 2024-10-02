@@ -61,13 +61,13 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		opacity: 0.8;
 	}
 
-	@media only screen and (max-width: 1024px) {
+	@media screen and (max-width: 1024px) {
 		.page-section :global(h1.title) {
-			font-size: 6.4rem;
+			font-size: 4.8rem;
 		}
 	}
 	
-	@media only screen and (max-width: 768px) {
+	@media screen and (max-width: 768px) {
 		.page-section-inner {
 			padding-inline: 24px;
 		}

@@ -93,7 +93,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 
 	#hero {
 		z-index: 1;
-		/* border-bottom: 1px solid #6e59ff; */
+		border-bottom: 1px solid var(--background-secondary);
 		--grid-color: hsl(var(--base-hue), 12%, 18%);
 		background-size: 20px 20px;
 		background-image: linear-gradient(
@@ -120,7 +120,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 		gap: 84px;
 		min-block-size: 720px;
 		block-size: 90vh;
-		max-block-size: 1200px;
+		max-block-size: 1000px;
 		padding-block: 108px;
 	}
 
@@ -163,7 +163,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 		animation: slide-up 500ms backwards 500ms;
 	}
 
-	@media only screen and (max-width: 1024px) {
+	@media screen and (max-width: 1024px) {
 		#hero > :global(.page-section-inner) {
 			padding-block: 72px;
 			flex-direction: column;

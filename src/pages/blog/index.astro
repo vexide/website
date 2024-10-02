@@ -71,7 +71,7 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 		gap: 30px;
 		padding-block: 128px;
 	}
-	@media only screen and (max-width: 800px) {
+	@media screen and (max-width: 800px) {
 		#blogs > :global(.page-section-inner) {
 			width: 100%;
 		}
