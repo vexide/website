@@ -58,6 +58,8 @@ const { filename, lang, code } = Astro.props;
 		padding: 12px;
 		margin: 0;
 		overflow: auto;
+		scrollbar-width: thin;
+		scrollbar-color: var(--foreground-tertiary) var(--background-primary);
 	}
 
 	.code-example :global(code) {
