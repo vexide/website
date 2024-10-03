@@ -42,7 +42,7 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		margin: 0;
 	}
 
-	.page-section :global(.subtext) {
+	.page-section :global(.subtitle) {
 		font-size: 2.2rem;
 		line-height: 2;
 		font-weight: 400;
@@ -50,20 +50,24 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		color: var(--foreground-secondary);
 	}
 
-	.page-section :global(.subtext a) {
+	.page-section :global(.subtitle a) {
 		color: var(--foreground-accent-red);
 		text-decoration: none;
 		border-bottom: 1px solid currentColor;
 		transition: 250ms ease;
 	}
 
-	.page-section :global(.subtext a:hover) {
+	.page-section :global(.subtitle a:hover) {
 		opacity: 0.8;
 	}
 
 	@media screen and (max-width: 1024px) {
 		.page-section :global(h1.title) {
 			font-size: 4.8rem;
+		}
+
+		.page-section :global(p.subtitle) {
+			font-size: 1.8rem;
 		}
 	}
 	

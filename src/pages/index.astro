@@ -25,7 +25,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 					<h1 class="title">
 						Open-source Rust runtime for VEX robots.
 					</h1>
-					<p class="subtext">
+					<p class="subtitle">
 						vexide provides a safe and efficient runtime and
 						toolchain for writing VEX V5 programs in the <a
 							href="https://rust-lang.com/"
@@ -148,7 +148,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 		animation: slide-up 500ms backwards 150ms;
 	}
 
-	.hero-lead .subtext {
+	.hero-lead .subtitle {
 		animation: slide-up 500ms backwards 350ms;
 	}
 
