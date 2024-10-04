@@ -202,7 +202,7 @@ async fn main(peripherals: Peripherals) {
 Great question!
 - **Voltage control** is ideal in situations where you need to run the motor at its maximum speed no matter what. For example, nothing can make an 11W motor run faster than spinning it at `12.0` volts. Since velocity control is using an actual measurement of the motor's speed, setting a motor to its maximum rated velocity might not actually be using all of the motor's potential voltage (and thus waste speed and torque).
 - **Voltage control** is also useful if you are implementing your own kind of velocity controllers and need to bypass VEX's builtin velocity control. The builtin velocity control on the motor is often far from perfect and isn't tuned for every case (it can perform poorly with very fast drivetrains, for example).
-- **Velocity control** is useful if you need a quick and easy way to run a motor at a consistent speed. For example, a lift might need to spin at exactly 50RPM regardless of the load applied to the motor. If the lift encounters a load that slows it down, the velocity controller will see this and put more voltage into the motor to reach that target 50RPM.
+- **Velocity control** is useful if you need a quick and easy way to run a motor at a consistent speed. For example, a lift might need to spin at exactly 50RPM regardless of the load applied to the motor. If the lift encounters a load that slows it down, the velocity controller will see this and try to compensate by putting more voltage into the motor to reach that target 50RPM.
 
 ## Position Control
 
@@ -216,12 +216,12 @@ Motors record a lot of information about themselves and their state as they run.
 
 This data includes:
 
-- [The position of the motor measured by its encoder.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.is_connected.html)
-- [The velocity of the motor measured by its encoder.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.system.html)
-- [The estimated efficiency of the motor.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.mode.html)
-- [The electrical current draw of the motor.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.status.html)
-- [The internal temperature of the motor.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.status.html)
-- [Any internal errors or damage to the motor.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.status.html)
+- [The position of the motor measured by its encoder.](#todo)
+- [The velocity of the motor measured by its encoder.](#todo)
+- [The estimated efficiency of the motor.](#todo)
+- [The electrical current draw of the motor.](#todo)
+- [The internal temperature of the motor.](#todo)
+- [Any internal errors or damage to the motor.](#todo)
 
 As an example, let's read out a bunch of this data and log it to the [terminal](/docs/using-the-terminal):
 
