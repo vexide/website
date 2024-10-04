@@ -27,7 +27,7 @@ async fn main(peripherals: Peripherals) {
 		Direction::Forward,
 	);
 
-	my_motor.set_voltage(10.0).unwrap();
+	my_motor.set_voltage(10.0).ok();
 }`,
 	},
 ];

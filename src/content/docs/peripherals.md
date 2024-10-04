@@ -78,7 +78,7 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-//                                                   (err )
+//                                                   (err   )
     let peripherals_2_electric_boogaloo = peripherals.clone();
 //                                                  ^
 //                                     [Unable to clone peripherals!]
@@ -102,7 +102,7 @@ async fn main(peripherals: Peripherals) {
 //                           ^
 //                  [Value is moved here.]
 
-//                                  (err           )
+//                                  (err             )
     let my_other_motor = Motor::new(peripherals.port_1, Gearset::Blue, Direction::Forward);
 //                                 ^
 //                 [Attempted to use after move here!]
@@ -122,7 +122,7 @@ use vexide::prelude::*;
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let my_motor = Motor::new(peripherals.port_1, Gearset::Blue, Direction::Forward);
-    //                           (err )
+    //                           (err   )
     let my_other_motor = my_motor.clone();
 //                              ^
 //                       [Unable to clone my_motor!]
@@ -182,7 +182,7 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let my_motor = Motor::new(peripherals.port_1, Gearset::Blue, Direction::Forward);
     let also_my_motor = Motor::new(
-//      (                           ) 
+//      (                          ) 
         unsafe { SmartPort::new(1) },
 //     ^
 // [Right here, we create a new SmartPort with a number of 1.]

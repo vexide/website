@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions, fade } from 'astro:transitions';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
 	name: string;
@@ -93,7 +93,7 @@ const {
 			)
 		}
 
-		<ViewTransitions transition:animate={fade({ duration: "0.1s" })} />
+		<ViewTransitions />
 
 		<title>{title}</title>
 	</head>
@@ -216,5 +216,29 @@ const {
 
 	.skip-to-content:focus-visible {
 		transform: none;
+	}
+
+	@media print {
+		:root {
+			--foreground-primary: hsl(0, 0%, 0%);
+			--foreground-secondary: hsl(0, 0%, 25%);
+			--foreground-tertiary: hsl(0, 0%, 50%);
+		}
+
+		@page {
+			margin-inline: 0;
+		}
+
+		@page :first {
+			margin-block-start: 0;
+		}
+
+		@page :last {
+			margin-block-end: 0;
+		}
+
+		.skip-to-content {
+			display: none !important;
+		}
 	}
 </style>

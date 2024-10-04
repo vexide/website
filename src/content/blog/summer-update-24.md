@@ -30,6 +30,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 </a>
 
+> [!NOTE]
 > Thanks to the help of [JerryLum's past reverse-engineering efforts](https://github.com/jerrylum/v5-serial-protocol) for making this possible.
 
 ## `cargo-pros` is dead. Long live `cargo-v5`! 🦀

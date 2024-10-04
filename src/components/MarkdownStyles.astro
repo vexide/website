@@ -36,6 +36,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		font-weight: 400;
 	}
 
+	.markdown-body :global(h1) {
+		page-break-after: avoid;
+	}
+
 	.markdown-body :global(.icon-link) {
 		display: none;
 		position: absolute;
@@ -76,6 +80,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	}
 	
 	.markdown-body :global(pre) {
+		page-break-inside: avoid;
 		margin-block: 24px;
 		padding: 24px;
 		border: 1px solid var(--background-secondary);
@@ -126,7 +131,8 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	}
 
 	.markdown-body :global(pre.shaku .line.highlight) {
-		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.25);
+		print-color-adjust: economy;
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.15);
 		margin-left: -24px;
 		padding-left: 24px;
 		width: calc(100% + 48px);
@@ -144,6 +150,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		color: var(--foreground-primary);
 		padding: 0.5em 1ch;
 		position: relative;
+		z-index: 1;
 		margin: 0.5em 0 0 0.2ch;
 		display: inline-block;
 		border-radius: 4px;
@@ -163,6 +170,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		top: -0.5ch;
 		transform: rotate(45deg);
 		margin-left: 0.2ch;
+		z-index: -1;
 	}
 
 	.markdown-body :global(pre.shaku .line.diff) {
@@ -193,10 +201,14 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	}
 
 	.markdown-body :global(.shaku-inline-highlight) {
-		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.25);
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.15);
 	}
 
 	.markdown-body :global(.shaku-inline-highlight[data-id="err"]) {
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
 		background-color: hsl(var(--accent-red-hue), 73%, 63%, 0.25);
 	}
 
@@ -254,6 +266,8 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='m8.177.677 2.896 2.896a.25.25 0 0 1-.177.427H8.75v1.25a.75.75 0 0 1-1.5 0V4H5.104a.25.25 0 0 1-.177-.427L7.823.677a.25.25 0 0 1 .354 0ZM7.25 10.75a.75.75 0 0 1 1.5 0V12h2.146a.25.25 0 0 1 .177.427l-2.896 2.896a.25.25 0 0 1-.354 0l-2.896-2.896A.25.25 0 0 1 5.104 12H7.25v-1.25Zm-5-2a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5ZM6 8a.75.75 0 0 1-.75.75h-.5a.75.75 0 0 1 0-1.5h.5A.75.75 0 0 1 6 8Zm2.25.75a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5ZM12 8a.75.75 0 0 1-.75.75h-.5a.75.75 0 0 1 0-1.5h.5A.75.75 0 0 1 12 8Zm2.25.75a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5Z'%3E%3C/path%3E%3C/svg%3E")
 			center/contain no-repeat;
 		background: currentColor;
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
 	}
 
 	.markdown-body :global(.shaku-expand summary::after) {
@@ -399,5 +413,32 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(table tr) {
 		background-color: var(--background-primary);
 		border-top: 1px solid var(--background-secondary);
+	}
+
+	@media print {
+		.markdown-body :global(.markdown-alert),
+		.markdown-body :global(blockquote),
+		.markdown-body :global(.shaku-callout) {
+			border: 1px solid currentColor;
+		}
+
+		.markdown-body :global(.shaku-callout-arrow) {
+			display: none;
+		}
+
+		.markdown-body :global(pre) {
+			overflow: hidden !important;
+			white-space: pre-wrap;
+		}
+
+		.markdown-body :global(blockquote::after) {
+			border-top-color: currentColor;
+			border-left-color: currentColor;
+			top: -1px;
+		}
+
+		.markdown-body :global(pre span[style="color:#E1E4E8"]) {
+			color: var(--foreground-secondary) !important
+		}
 	}
 </style>

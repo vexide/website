@@ -86,7 +86,7 @@ struct MyRobot {
 
 impl Compete for MyRobot {
     async fn driver(&mut self) {
-//      (err                                   )
+//      (err                                     )
         let data = self.some_data.take().unwrap();
         //                             ^
         // [called `Option::unwrap()` on a `None` value]
