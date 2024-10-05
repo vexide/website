@@ -3,7 +3,7 @@ title: vexide has been released to crates.io!
 description: All about the first version of vexide
 author: gavin-niederman
 thumbnail: {
-    url: "https://i.imgur.com/ulrHCP2.jpeg",
+    url: "/images/thumbnails/flower.png",
     alt: "Thumbnail Image"
 }
 tags: ["release"]

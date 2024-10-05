@@ -4,12 +4,15 @@ category: 02. Hardware
 page: 10
 ---
 
+![Sketch of two different V5 motors](/docs/motors.svg)
+
 Motors serve as the foundation for most robot subsystems, and are very likely the most common device you'll be interacting with in vexide.
 
 V5 motors are rather special in that they are both fairly fault-tolerant and provide extra features such as builtin velocity/position control, temperature sensors, and encoders. This is why they're commonly referred to as **Smart Motors**.
 
 > [!NOTE]
 > For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview).
+
 
 # Creating Motors
 
