@@ -331,7 +331,9 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	}
 
 	.markdown-body :global(.markdown-alert.important) {
-		border: 2px solid var(--foreground-accent-yellow);
+		border: 1px solid var(--foreground-accent-yellow);
+		color: var(--foreground-accent-yellow);
+		background-color: transparent;
 	}
 
 	.markdown-body :global(.markdown-alert > svg) {
@@ -372,6 +374,8 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		display: flex;
 		flex-wrap: wrap;
 		flex-basis: content;
+		gap: 1px;
+		background-color: var(--background-secondary);
 		margin-block: 24px;
 		border: 1px solid var(--background-secondary);
 		border-radius: 4px;
@@ -383,10 +387,6 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		margin-block: 0;
 		flex: 1 1 auto;
 		border-radius: 0;
-	}
-
-	.markdown-body :global(.code-split pre) {
-		border-left: 1px solid var(--background-secondary);
 	}
 
 	.markdown-body :global(.code-split pre:first-child) {
