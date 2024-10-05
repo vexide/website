@@ -230,7 +230,7 @@ The GUI is still in its early stages of development. Gavin had to write his own 
 
 ## Simulator Host
 
-The simulator's [host crate](https://github.com/vexide/vex-v5-qemu/tree/main/packages/host) is the "API" behind the QEMU sim, and is where the host-side device abstractions are being developed. This is where things like device firmware is mocked and communication with the QEMU child process over our binary protocol is done.
+The simulator's [host crate](https://github.com/vexide/vex-v5-qemu/tree/main/packages/host) is the API behind the QEMU sim, and is where the host-side device abstractions are being developed. This is where things like interactions with motors and sensors are mocked and communication with the QEMU child process over our binary protocol is done.
 
 ```rs
 let mut simulated_brain = Brain::new();
