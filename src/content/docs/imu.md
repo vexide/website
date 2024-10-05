@@ -62,4 +62,4 @@ Now that we have created an intertial sensor, it's time for use to use it.
 There are two main ways of getting the IMU's yaw rotation: heading and rotation.
 The rotation of the IMU is the total number of degrees it has rotated around.
 
-![Heading vs Rotation Graphic](/docs/imu-heading-vs-rotation.svg)
+![Heading vs Rotation Graphic](/docs/imu-heading-vs-rotation.png)
