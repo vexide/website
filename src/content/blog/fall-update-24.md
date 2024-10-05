@@ -18,6 +18,16 @@ We've got some important updates to share with you regarding the vexide project,
 
 vexide 0.4.0 has just released, containing our last 3 months of work on the vexide runtime. [If bullet points are more your style, the full changelog can be viewed here.](/blog/posts/vexide-040/)
 
+This new version of vexide will require you to update to the latest version of `cargo-v5`. You can do that with the following terminal command:
+
+```sh
+cargo install cargo-v5
+```
+
+> [!IMPORTANT]
+> If you are not on `cargo-v5` 0.8.0 or above, some things will be broken due to [ABI changes in our target specification](#target-spec-changes). You can check your version using `cargo v5 --version`.
+
+
 ## Major Stability Improvements
 
 0.4.0 comes with many **major** improvements to runtime stability, and things should overall run a lot smoother. This includes a major bug where programs would freeze when being run for the first time with a motor plugged in.
@@ -182,7 +192,7 @@ _start at /home/tropical/Documents/GitHub/vexide/packages/vexide/examples/basic.
 </div>
 
 > [!NOTE]
-> This was made possible by compiling a custom version of [`libunwind`](https://github.com/libunwind/libunwind) for the V5 brain, then [writing our own bindings to the library for retrieving backtrace context](https://github.com/vexide/vex-libunwind). Thanks to [Lewis](https://github.com/doinkythederp/) for his work on this!
+> This was made possible by compiling a custom version of [`libunwind`](https://github.com/llvm/llvm-project/tree/main/libunwind) for the V5 brain, then [writing our own bindings to the library for retrieving backtrace context](https://github.com/vexide/vex-libunwind). Thanks to [Lewis](https://github.com/doinkythederp/) for his work on this!
 
 ## Startup/Boot Code Rewrite
 
@@ -203,6 +213,26 @@ Sometime after the release of 0.3.0, the bug got worse and led to `debug` builds
 ![Discord conversation showing the stack corruption bug](/blog/stack-corruption.png)
 
 Eventually, this led to the discovery of a stack corruption bug in vexide's startup code. This bug has been fixed in 0.4.0 and our boot routine in `vexide_startup` has been completely refactored — vexide programs now boot starting from a small assembly routine rather than starting directly in Rust. No more stack corruption and no more magic numbers.
+
+# `cargo-v5` 0.8.0
+
+Along with vexide 0.4.0, we are releasing `cargo-v5` version 0.8.0. `cargo-v5` is our command-line tool for building and uploading vexide projects, and this release comes with some minor improvements and polish to the tool.
+
+## Target Spec Changes
+
+We've made some breaking changes to the target spec in order to support vexide 0.4.0's new math optimizations. This switches us to use LLVM's `armv7a-none-eabihf` target, as well as cleaning up a few relics from the `pros-rs` days.
+
+## Runner
+
+A new command has been added — `cargo v5 run`, which uploads your program, runs it on the brain, then opens the serial terminal all in a single command. This is effectively a faster shorthand for `cargo v5 upload --after=run && cargo v5 terminal`, which was a lot to type out and a pretty common operation.
+
+## Uploading Outside of Cargo Projects
+
+Previously, it was absolutely required that cargo-v5 be ran inside of a valid Rust project, despite manual file uploads supported. This is no longer the case, and you can use it as a generic CLI tool anywhere for uploading program binaries.
+
+```sh
+cargo v5 upload --file program.bin
+```
 
 # Simulator Progress
 
