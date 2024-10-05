@@ -256,7 +256,7 @@ Work has already begun on a rewritten version of `vexide` that works in a `std`-
 
 # Documentation Improvements
 
-Many improvements to both our [API docs](https://docs.rs/vexide) and [tutorials](https://vexide.dev/) have been made, along with some fixes to mobile support on our website. Tutorials should now be much more in-depth and come with some fancy new annotated codeblocks as examples. Hope you enjoy those.
+Many improvements to both our [API docs](https://docs.rs/vexide) and [tutorials](https://vexide.dev/docs) have been made, along with some fixes to mobile support on our website. Tutorials should now be much more in-depth and come with some fancy new annotated codeblocks as examples. Hope you enjoy those.
 
 # New Contributors
 
