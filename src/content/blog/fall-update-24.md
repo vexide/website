@@ -3,7 +3,7 @@ title: "Fall Updates: vexide 0.4.0, Simulator Progress, Docs, and more!"
 description: Important project updates for Fall 2024!
 author: tropix126
 tags: ["blog"]
-date: 2024-10-03
+date: 2024-10-05
 thumbnail: {
     url: "/images/thumbnails/y2k.png",
     alt: "Thumbnail Image"
