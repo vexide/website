@@ -220,7 +220,7 @@ Along with vexide 0.4.0, we are releasing `cargo-v5` version 0.8.0. `cargo-v5` i
 
 ## Target Spec Changes
 
-We've made some breaking changes to the target spec in order to support vexide 0.4.0's new math optimizations. This switches us to use LLVM's `armv7a-none-eabihf` target, as well as cleaning up a few relics from the `pros-rs` days.
+We've made some breaking changes to the `armv7a-vex-v5` target spec in order to support vexide 0.4.0's new math optimizations. This switches us to use LLVM's `armv7a-none-eabihf` target, as well as clean up a few relics from the `pros-rs` days.
 
 ## Runner
 
