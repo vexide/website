@@ -20,7 +20,7 @@ vexide 0.4.0 has just released, containing our last 3 months of work on the vexi
 
 ## Major Stability Improvements
 
-0.4.0 comes with many **major** improvements to runtime stability, and things should overall run a lot smoother. This includes a major bug where programs would deadlock the first time they were ran, but only when a motor was plugged in.
+0.4.0 comes with many **major** improvements to runtime stability, and things should overall run a lot smoother. This includes a major bug where programs would freeze when being run for the first time with a motor plugged in.
 
 > [!IMPORTANT]
 > In fact, it's strongly recommended that you update to 0.4.0 as soon as possible, since some of the bugs fixed here were fairly serious and unpredictable.
