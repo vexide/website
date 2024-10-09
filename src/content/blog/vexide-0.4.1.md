@@ -6,7 +6,7 @@ tags: ["release"]
 date: 2024-10-08
 ---
 
-vexide 0.4.1 is a hotfix for a hard float related issue with VEXos syscalls.
+vexide 0.4.1 is a hotfix for a hard-float related issue with VEXos syscalls.
 
 # Changelog
 
