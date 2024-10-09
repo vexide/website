@@ -10,10 +10,13 @@ import BlogCard from "components/BlogCard.svelte";
 
 import Button from "components/Button.svelte";
 
-const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft)).sort(
-	(a, b) =>
-		new Date(b.data.date).getTime() -
-		new Date(a.data.date).getTime(),
+const latestBlogPost = (
+	await getCollection(
+		"blog",
+		({ data }) => !data?.draft && data?.tags.includes("blog"),
+	)
+).sort(
+	(a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 )[0];
 ---
 
@@ -36,12 +39,7 @@ const latestBlogPost = (await getCollection("blog", ({ data }) => !data?.draft))
 					</p>
 				</div>
 				<div class="hero-buttons">
-					<Button
-						variant="accent"
-						href="/docs/"
-					>
-						Learn More
-					</Button>
+					<Button variant="accent" href="/docs/">Learn More</Button>
 					<Button
 						variant="default"
 						href={GITHUB_REPO_URL}
