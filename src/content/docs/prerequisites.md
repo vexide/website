@@ -8,7 +8,8 @@ Before we setup a project, there are some tools you'll need to have installed to
 
 # Tooling
 
-> Before we start, make sure you have rustc and cargo installed on your machine. You can get that [here](https://www.rust-lang.org/tools/install) from the official Rust website.
+> [!NOTE]
+> Before we start, make sure you have rustc and cargo installed on your machine. You can get that [here](https://www.rust-lang.org/tools/install) from the official Rust site.
 
 vexide relies on some features that are only availble in Rust's nightly release channel, so you'll need to switch to using nightly:
 
@@ -31,6 +32,7 @@ To make a new project, we recommend using [vexide-template](https://github.com/v
 git clone https://github.com/vexide/vexide-template
 ```
 
+> [!TIP]
 > If you don't have git, you can download the project as a zip archive using [this link](https://github.com/vexide/vexide-template/archive/refs/heads/main.zip).
 
 This will leave you with a folder containing a barebones vexide project. Open that folder in an editor of your choice (if you aren't sure what to use, it's hard to go wrong with [VSCode](https://code.visualstudio.com/)).

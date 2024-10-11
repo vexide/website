@@ -33,9 +33,40 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(h4),
 	.markdown-body :global(h5),
 	.markdown-body :global(h6) {
+		width: fit-content;
+		position: relative;
 		color: var(--foreground-primary);
 		font-family: var(--font-monospace);
 		font-weight: 400;
+	}
+
+	.markdown-body :global(h1) {
+		page-break-after: avoid;
+	}
+
+	.markdown-body :global(.icon-link) {
+		display: none;
+		position: absolute;
+		top: 0;
+		right: 100%;
+		padding-right: 8px;
+	}
+
+	@media screen and (max-width: 768px) {
+		.markdown-body :global(.icon-link) {
+			left: 100%;
+			padding-left: 8px;
+			padding-right: 0;
+		}
+	}
+
+	.markdown-body :global(:hover .icon-link) {
+		display: inline;
+	}
+
+	.markdown-body :global(.icon-link::before) {
+		content: "#";
+		color: var(--foreground-tertiary);
 	}
 
 	.markdown-body :global(:first-child) {
@@ -45,14 +76,15 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(:last-child) {
 		margin-bottom: 0;
 	}
-
+	
 	.markdown-body :global(h1) {
 		font-size: 3.6rem;
 		font-weight: 300;
 		margin-block-start: 72px;
 	}
-
+	
 	.markdown-body :global(pre) {
+		page-break-inside: avoid;
 		margin-block: 24px;
 		padding: 24px;
 		border: 1px solid var(--background-secondary);
@@ -60,17 +92,265 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		border-radius: 4px;
 		line-height: 1.5;
 	}
-
+	
 	.markdown-body :global(pre code) {
 		background-color: transparent;
 	}
 
+	.markdown-body :global(.shiki-code-block) {
+		margin-block: 24px;
+	}
+
+	.markdown-body :global(.shiki-code-block-title) {
+		user-select: none;
+		background: var(--background-primary);
+		border: 1px solid var(--background-secondary);
+		border-bottom: none;
+		position: relative;
+		z-index: 0;
+		top: 1px;
+		border-radius: 4px 4px 0 0;
+		font-weight: 600;
+		color: var(--foreground-secondary);
+		padding-block: 1px;
+		padding-inline: 12px;
+		display: block;
+		width: fit-content;
+		font-size: 12px;
+	}
+
+	.markdown-body :global(.shiki-code-block pre) {
+		margin: 0;
+		border-top-left-radius: 0;
+	}
+
+	.markdown-body :global(pre.shaku[data-language="sh"] .line::before) {
+		content: "$ ";
+		color: var(--foreground-tertiary);
+	}
+
+	.markdown-body :global(pre.shaku .line) {
+		display: block;
+		min-height: 1.5em;
+	}
+
+	.markdown-body :global(pre.shaku .line.highlight) {
+		print-color-adjust: economy;
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.15);
+		margin-left: -24px;
+		padding-left: 24px;
+		width: calc(100% + 48px);
+	}
+
+	/* There seems to be a bug where shaku always inserts an extra line at the end of our codeblocks */
+	.markdown-body :global(pre.shaku code > .line:last-of-type) {
+		display: none;
+	}
+
+	.markdown-body :global(.shaku-callout) {
+		white-space: pre-line;
+		font-family: var(--font-monospace);
+		background-color: var(--background-secondary);
+		color: var(--foreground-primary);
+		padding: 0.5em 1ch;
+		position: relative;
+		z-index: 1;
+		margin: 0.5em 0 0 0.2ch;
+		display: inline-block;
+		border-radius: 4px;
+		user-select: none;
+	}
+
+	.markdown-body :global(.shaku-callout p) {
+		margin: 0;
+	}
+
+	.markdown-body :global(.shaku-callout-arrow) {
+		width: 1ch;
+		height: 1ch;
+		display: inline-block;
+		background-color: inherit;
+		position: absolute;
+		top: -0.5ch;
+		transform: rotate(45deg);
+		margin-left: 0.2ch;
+		z-index: -1;
+	}
+
+	.markdown-body :global(pre.shaku .line.diff) {
+		position: relative;
+		margin-inline-start: -24px;
+		padding-inline: 24px;
+		inline-size: calc(100% + 48px);
+	}
+	.markdown-body :global(pre.shaku .line.diff::before) {
+		position: absolute;
+		left: 8px;
+		font-family: var(--font-primary);
+	}
+	.markdown-body :global(pre.shaku .line.diff-insert) {
+		background-color: rgba(126, 231, 135, 0.1);
+	}
+	.markdown-body :global(pre.shaku .line.diff-insert::before) {
+		content: "+";
+		color: #7ee787;
+	}
+	.markdown-body :global(pre.shaku .line.diff-delete) {
+		opacity: 0.5;
+		background-color: rgba(248, 81, 73, 0.1);
+	}
+	.markdown-body :global(pre.shaku .line.diff-delete::before) {
+		content: "-";
+		color: rgb(248, 81, 73);
+	}
+
+	.markdown-body :global(.shaku-inline-highlight) {
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.15);
+	}
+
+	.markdown-body :global(.shaku-inline-highlight[data-id="err"]) {
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+		background-color: hsl(var(--accent-red-hue), 73%, 63%, 0.25);
+	}
+
+	.markdown-body :global(pre.shaku .line.dim) {
+		filter: blur(2px) brightness(0.5);
+	}
+
+	.markdown-body :global(.shaku-expand summary::-webkit-details-marker),
+	.markdown-body :global(.shaku-expand summary::marker) {
+		display: none;
+		content: "";
+	}
+
+	.markdown-body :global(.shaku-expand) {
+		position: relative;
+		margin-left: -24px;
+		width: calc(100% + 48px);
+		margin-block: 0.5em;
+		border-top: 1px dashed var(--background-secondary);
+		border-bottom: 1px dashed var(--background-secondary);
+	}
+
+	.markdown-body :global(.shaku-expand):first-child {
+		margin-block-start: -24px;
+		margin-block-end: 24px;
+		border-top: none;
+	}
+
+	.markdown-body :global(.shaku-expand):nth-last-child(2) {
+		margin-block-start: 24px;
+		margin-block-end: -24px;
+		border-bottom: none;
+	}
+
+	.markdown-body :global(.shaku-expand summary) {
+		cursor: pointer;
+		padding-inline: 24px;
+		padding-block: 8px;
+		margin: 0 !important;
+		display: flex;
+		align-items: center;
+		color: var(--foreground-secondary);
+		gap: 8px;
+	}
+
+	.markdown-body :global(.shaku-expand:hover summary) {
+		color: var(--foreground-primary);
+	}
+
+	.markdown-body :global(.shaku-expand summary::before) {
+		content: "";
+		display: block;
+		width: 12px;
+		height: 12px;
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='m8.177.677 2.896 2.896a.25.25 0 0 1-.177.427H8.75v1.25a.75.75 0 0 1-1.5 0V4H5.104a.25.25 0 0 1-.177-.427L7.823.677a.25.25 0 0 1 .354 0ZM7.25 10.75a.75.75 0 0 1 1.5 0V12h2.146a.25.25 0 0 1 .177.427l-2.896 2.896a.25.25 0 0 1-.354 0l-2.896-2.896A.25.25 0 0 1 5.104 12H7.25v-1.25Zm-5-2a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5ZM6 8a.75.75 0 0 1-.75.75h-.5a.75.75 0 0 1 0-1.5h.5A.75.75 0 0 1 6 8Zm2.25.75a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5ZM12 8a.75.75 0 0 1-.75.75h-.5a.75.75 0 0 1 0-1.5h.5A.75.75 0 0 1 12 8Zm2.25.75a.75.75 0 0 0 0-1.5h-.5a.75.75 0 0 0 0 1.5h.5Z'%3E%3C/path%3E%3C/svg%3E")
+			center/contain no-repeat;
+		background: currentColor;
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+	}
+
+	.markdown-body :global(.shaku-expand summary::after) {
+		content: "Show collapsed";
+		font-size: 12px;
+	}
+
+	.markdown-body :global(.shaku-expand[open]) {
+		display: contents;
+	}
+
+	.markdown-body :global(.shaku-expand[open] summary),
+	.markdown-body :global(.shaku-expand summary mark) {
+		display: none;
+	}
+
 	.markdown-body :global(blockquote) {
-		padding: 16px;
+		position: relative;
+		padding: 16px 24px;
 		color: var(--foreground-primary);
 		background-color: var(--background-secondary);
 		border-radius: 4px;
+		border-top-right-radius: 0;
 		margin: 0;
+		width: fit-content;
+		max-width: 60ch;
+		margin-left: auto;
+		margin-right: 16px;
+	}
+
+	.markdown-body :global(blockquote)::after {
+		content: "";
+		position: absolute;
+		left: 100%;
+		top: 0;
+		width: 0px;
+		height: 0px;
+		border-top: 8px solid var(--background-secondary);
+		border-left: 8px solid var(--background-secondary);
+		border-bottom: 8px solid transparent;
+		border-right: 8px solid transparent;
+	}
+
+	.markdown-body :global(.markdown-alert) {
+		padding: 16px 24px;
+		gap: 16px;
+		margin-block: 24px;
+		background-color: var(--background-secondary);
+		border-radius: 4px;
+		display: flex;
+	}
+
+	.markdown-body :global(.markdown-alert.warning) {
+		background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.25);
+		color: var(--foreground-accent-yellow);
+	}
+
+	.markdown-body :global(.markdown-alert.caution) {
+		background-color: hsl(var(--accent-red-hue), 73%, 63%, 0.25);
+		color: var(--foreground-accent-red);
+	}
+
+	.markdown-body :global(.markdown-alert.important) {
+		border: 1px solid var(--foreground-accent-yellow);
+		color: var(--foreground-accent-yellow);
+		background-color: transparent;
+	}
+
+	.markdown-body :global(.markdown-alert > svg) {
+		flex: 0 0 auto;
+		margin-top: 0.5em;
+	}
+
+	.markdown-body :global(.markdown-alert code) {
+		color: var(--foreground-secondary);
+	}
+
+	.markdown-body :global(.markdown-alert a code) {
+		color: inherit;
 	}
 
 	.markdown-body :global(ul) {
@@ -100,10 +380,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		display: flex;
 		flex-wrap: wrap;
 		flex-basis: content;
-		margin-block: 24px;
-		background: var(--background-secondary);
-		border: 1px solid var(--background-secondary);
 		gap: 1px;
+		background-color: var(--background-secondary);
+		margin-block: 24px;
+		border: 1px solid var(--background-secondary);
 		border-radius: 4px;
 		overflow: hidden;
 	}
@@ -113,6 +393,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		margin-block: 0;
 		flex: 1 1 auto;
 		border-radius: 0;
+	}
+
+	.markdown-body :global(.code-split pre:first-child) {
+		border-left: none;
 	}
 
 	.markdown-body :global(table) {
@@ -135,5 +419,32 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(table tr) {
 		background-color: var(--background-primary);
 		border-top: 1px solid var(--background-secondary);
+	}
+
+	@media print {
+		.markdown-body :global(.markdown-alert),
+		.markdown-body :global(blockquote),
+		.markdown-body :global(.shaku-callout) {
+			border: 1px solid currentColor;
+		}
+
+		.markdown-body :global(.shaku-callout-arrow) {
+			display: none;
+		}
+
+		.markdown-body :global(pre) {
+			overflow: hidden !important;
+			white-space: pre-wrap;
+		}
+
+		.markdown-body :global(blockquote::after) {
+			border-top-color: currentColor;
+			border-left-color: currentColor;
+			top: -1px;
+		}
+
+		.markdown-body :global(pre span[style="color:#E1E4E8"]) {
+			color: var(--foreground-secondary) !important
+		}
 	}
 </style>

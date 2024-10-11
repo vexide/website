@@ -4,10 +4,9 @@ category: 01. Getting Started
 page: 4
 ---
 
-
 # Uploading with `cargo v5`
 
-Let's get our Hello World program onto a brain.
+Let's get our "Hello World" program onto a brain.
 
 To build and upload vexide programs, we use the [`cargo v5` command line tool](https://github.com/vexide/cargo-v5/). If you went through the [prerequisites](../prerequisites/) you should already have it installed. To build and upload our project in one simple command, we'll use the `cargo v5 upload` command in the root directory of our project.
 
@@ -33,7 +32,7 @@ Upload behavior can be configured through either your project's Cargo.toml file 
 
 cargo-v5 will attempt to locate `Cargo.toml` files with the following structure for providing defaults to some upload options (these should already be included for you if you use [vexide-template](https://github.com/vexide/vexide-template)):
 
-```toml
+```toml title="Cargo.toml"
 [package.metadata.v5]
 slot = 1
 icon = "cool-x"
@@ -50,6 +49,7 @@ You can override your project's default upload options, as well as configure a l
 cargo v5 upload --slot 3 --release
 ```
 
+> [!TIP]
 > For a full list of options you can provide to `cargo-v5`, try running `cargo v5 upload --help`
 
 # Building Without Uploading

@@ -6,11 +6,11 @@ page: 3
 
 # Hello World!
 
-Here's one of the simplest vexide programs that can be written, printing a simple message to the terminal:
+Here's one of the simplest vexide programs that can be written, printing a short message to the terminal:
 
-```rs
-#![no_main]
+```rs title="main.rs"
 #![no_std]
+#![no_main]
 
 use vexide::prelude::*;
 
@@ -33,19 +33,36 @@ Both of these are necessary for programs to run on the V5's embedded hardware. R
 ## The vexide Prelude
 
 ```rs
+#![no_std]
+#![no_main]
+
+// @focus
 use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    println!("Hello World!");
+}
 ```
 
 This piece of code brings vexide's *prelude* module into scope. All that this does is import a bunch of commonly used types for you, so you don't have to type their full name every time. For example, you can simply use `Motor` rather than `vexide::devices::smart::motor::Motor`.
 
 ## The Program Entrypoint
 
-All vexide programs begin and end at the `main` function. That looks something like this, and can be found in your project's `main.rs` file:
+All vexide programs begin and end at the `main` function.
 
 ```rs
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @focus start
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-	...
+	// @focus end
+    println!("Hello World!");
+// @focus start
 }
 ```
 
@@ -56,25 +73,25 @@ You'll see three key differences in this version of the `main` function compared
 
 ## Returning Errors from `main`
 
-vexide's `main` functions can also return certain types for error handling purposes:
+Your `main` function can also return certain types for error handling purposes:
 
 ```rs
-// Typical main functions
-async fn main(peripherals: Peripherals) { ... }
-async fn main(peripherals: Peripherals) -> () { ... }
+// Typical `main` functions
+async fn main(peripherals: Peripherals) {}
+async fn main(peripherals: Peripherals) -> () {}
 
-// Main can never return
-async fn main(peripherals: Peripherals) -> ! { ... }
-async fn main(peripherals: Peripherals) -> core::convert::Infallible { ... }
+// `main` can never return
+async fn main(peripherals: Peripherals) -> ! {}
+async fn main(peripherals: Peripherals) -> core::convert::Infallible {}
 
-// Main returns a [`Result`] type
+// `main` returns a [`Result`] type
 async fn main(peripherals: Peripherals) -> Result<(), E> {
-	...
 	Ok(())
 }
 ```
 
-> NOTE: The valid return types for `main` are dictated by `vexide_core`'s [`Termination`](https://docs.rs/vexide-core/latest/vexide_core/program/trait.Termination.html) trait.
+> [!NOTE]
+> The valid return types for `main` are dictated by `vexide_core`'s [`Termination`](https://docs.rs/vexide-core/latest/vexide_core/program/trait.Termination.html) trait.
 
 All of these forms of `main` technically do the same thing. The only difference at runtime is that entries returning `Result` will print out an error message if the `Result::Err` variant is returned.
 

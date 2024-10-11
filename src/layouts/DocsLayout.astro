@@ -197,11 +197,6 @@ const nextPage =
 		padding-inline: 16px;
 	}
 
-	:global(.navigation) {
-		position: sticky !important;
-		top: 0;
-	}
-
 	.docs-layout {
 		display: flex;
 		position: relative;
@@ -209,13 +204,19 @@ const nextPage =
 
 	.docs-sidebar {
 		width: 280px;
-		height: calc(100vh - 48px);
+		height: 100vh;
 		flex: 0 0 auto;
 		position: sticky;
-		top: 48px;
+		top: 0;
 	}
 
-	@media only screen and (max-width: 768px) {
+	@media screen and (max-width: 768px) {
+		.docs-sidebar {
+			display: none;
+		}
+	}
+
+	@media print {
 		.docs-sidebar {
 			display: none;
 		}
@@ -230,6 +231,13 @@ const nextPage =
 	.docs-header,
 	.docs-page #content {
 		padding: 48px;
+	}
+	
+	@media screen and (max-width: 768px) {
+		.docs-header,
+		.docs-page #content {
+			padding-inline: 24px;
+		}
 	}
 
 	.docs-page #content {
@@ -284,7 +292,6 @@ const nextPage =
 	.docs-sidebar-item a {
 		display: flex;
 		align-items: center;
-		border-bottom: 1px solid var(--background-secondary);
 		border-left: 2px solid transparent;
 		font-size: 1.4rem;
 		text-decoration: none;

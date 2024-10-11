@@ -3,7 +3,7 @@ title: vexide has been released to crates.io!
 description: All about the first version of vexide
 author: gavin-niederman
 thumbnail: {
-    url: "https://i.imgur.com/ulrHCP2.jpeg",
+    url: "/images/thumbnails/flower.png",
     alt: "Thumbnail Image"
 }
 tags: ["release"]
@@ -41,8 +41,8 @@ Most APIs in vexide are asynchronous.
 Here is a quick example showing a working program using the ``CompetitionRobot`` API.
 
 ```rust
-#![no_main]
 #![no_std]
+#![no_main]
 #![feature(never_type)]
 
 use vexide::prelude::*;

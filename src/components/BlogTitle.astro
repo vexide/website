@@ -14,7 +14,7 @@ const { title, date, author, tag } = Astro.props;
 	<PageSection>
 		<h1 class="title">{title}</h1>
 		<br />
-		<div id="subtext-container">
+		<div id="subtitle-container">
 			<p class="text">{date.toLocaleDateString("en-US", { timeZone: 'UTC' })}</p>
 			<p class="text">•</p>
 			<p class="text">{author}</p>
@@ -54,7 +54,7 @@ const { title, date, author, tag } = Astro.props;
 			);
 	}
 
-	#subtext-container {
+	#subtitle-container {
 		display: flex;
 		flex-direction: row;
 		gap: 1rem;
@@ -81,7 +81,7 @@ const { title, date, author, tag } = Astro.props;
 		margin: 0;
 	}
 
-	@media only screen and (max-width: 800px) {
+	@media screen and (max-width: 800px) {
 		h1.title {
 			font-size: 5.8rem;
 		}

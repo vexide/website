@@ -14,14 +14,22 @@
 	"dependencies": {
 		"@astrojs/check": "^0.4.1",
 		"@astrojs/cloudflare": "^8.1.0",
-		"@astrojs/sitemap": "^3.1.5",
-		"@astrojs/svelte": "^5.4.0",
-		"astro": "^4.9.1",
+		"@astrojs/sitemap": "^3.1.6",
+		"@astrojs/svelte": "^5.7.1",
+		"@rudeigerc/shiki-transformer-title": "^0.1.0",
+		"@shikijs/transformers": "^1.20.0",
+		"astro": "^4.15.9",
 		"fuzzysort": "^2.0.4",
-		"prettier": "^3.2.5",
+		"hast-util-from-html": "^2.0.3",
+		"prettier": "^3.3.3",
 		"prettier-plugin-astro": "^0.12.3",
-		"prettier-plugin-svelte": "^3.2.3",
-		"svelte": "^4.2.17",
-		"typescript": "^5.4.5"
+		"prettier-plugin-svelte": "^3.2.7",
+		"rehype-autolink-headings": "^7.1.0",
+		"rehype-github-alerts": "^3.0.0",
+		"rehype-slug": "^6.0.0",
+		"shaku-code-annotate-shiki": "^0.10.0",
+		"shaku-code-annotate-shiki-transformer": "^0.2.4",
+		"svelte": "^4.2.19",
+		"typescript": "^5.6.2"
 	}
 }

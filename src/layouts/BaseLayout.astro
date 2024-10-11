@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+
 interface Props {
 	name: string;
 	title: string;
@@ -91,6 +93,8 @@ const {
 			)
 		}
 
+		<ViewTransitions />
+
 		<title>{title}</title>
 	</head>
 
@@ -137,6 +141,7 @@ const {
 
 		--foreground-primary: hsl(var(--base-hue), 27%, 88%);
 		--foreground-secondary: hsl(var(--base-hue), 20%, 68%);
+		--foreground-tertiary: hsl(var(--base-hue), 16%, 58%);
 		--foreground-accent-red: hsl(var(--accent-red-hue), 76%, 78%);
 		--foreground-accent-yellow: hsl(var(--accent-yellow-hue), 76%, 78%);
 
@@ -149,9 +154,9 @@ const {
 			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
 
-		--breakpoint-large: 1380px;
+		/* --breakpoint-large: 1380px;
 		--breakpoint-medium: 1024px;
-		--breakpoint-small: 768px;
+		--breakpoint-small: 768px; */
 	}
 
 	html {
@@ -168,6 +173,7 @@ const {
 		font-family: var(--font-primary);
 		background-color: var(--background-primary);
 		color: var(--foreground-primary);
+		scrollbar-color: var(--foreground-tertiary) var(--background-secondary);
 		margin: 0;
 		padding: 0;
 	}
@@ -186,30 +192,6 @@ const {
 	::selection {
 		background-color: hsla(var(--base-hue), 20%, 68%, 80%);
 		color: var(--background-secondary);
-	}
-
-	::-webkit-scrollbar {
-		inline-size: 12px;
-		block-size: 12px;
-		background-color: var(--background-primary);
-	}
-
-	::-webkit-scrollbar-thumb {
-		border-radius: 8px;
-		border: 3.5px solid var(--background-primary);
-		background-color: var(--background-secondary);
-	}
-
-	::-webkit-scrollbar-thumb:hover {
-		background-color: var(--foreground-secondary);
-	}
-
-	::-webkit-scrollbar-thumb:active {
-		background-color: var(--foreground-primary);
-	}
-
-	::-webkit-scrollbar-corner {
-		appearance: none;
 	}
 
 	code {
@@ -234,5 +216,29 @@ const {
 
 	.skip-to-content:focus-visible {
 		transform: none;
+	}
+
+	@media print {
+		:root {
+			--foreground-primary: hsl(0, 0%, 0%);
+			--foreground-secondary: hsl(0, 0%, 25%);
+			--foreground-tertiary: hsl(0, 0%, 50%);
+		}
+
+		@page {
+			margin-inline: 0;
+		}
+
+		@page :first {
+			margin-block-start: 0;
+		}
+
+		@page :last {
+			margin-block-end: 0;
+		}
+
+		.skip-to-content {
+			display: none !important;
+		}
 	}
 </style>

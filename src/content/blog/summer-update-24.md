@@ -30,6 +30,7 @@ Since as early as [January of this year](/blog/protocol-plans.png), we had plans
 
 </a>
 
+> [!NOTE]
 > Thanks to the help of [JerryLum's past reverse-engineering efforts](https://github.com/jerrylum/v5-serial-protocol) for making this possible.
 
 ## `cargo-pros` is dead. Long live `cargo-v5`! 🦀
@@ -153,6 +154,7 @@ We use two different libraries for this depending on the target you're compiling
 - If you're compiling for the native `armv7a-vex-v5` target (a brain) then we use newlib's [libm](https://sourceware.org/newlib/), which has platform-specific optimizations for our target (such as leveraging the brain's [FPU](https://developer.arm.com/documentation/ddi0408/latest/)).
 - If you're compiling for WebAssmebly to run in a simulator, then we use [Rust's official port of MUSL's libm](https://github.com/rust-lang/libm/), which is platform-agnostic, but generally slower due to not being especially optimized.
 
+> [!TIP]
 > This means that we now link to a C library when compiling for the brain. If you want a pure Rust binary, you can force vexide to always use the Rust libm port with the `force_rust_libm` feature flag. This will result slower math and larger binaries!
 
 ## It's fast too!
@@ -165,6 +167,7 @@ Here's the results of a (crude) benchmark we ran testing 10,000 iterations of `f
 | -- | -- | -- |
 | 383.284ms (1.0x) | 6.809ms (56.29x) | **3.699ms (103.61x)** |
 
+> [!NOTE]
 > We've also passed this more optimized version of `libm` to the PROS team, so you can expect to see similar improvements soon if you're a PROS user!
 
 ## Text-drawing APIs
