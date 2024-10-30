@@ -14,19 +14,16 @@ export interface Example {
 export const EXAMPLES: Example[] = [
 	{
 		name: "Basic",
-		code: `#![no_std]
-#![no_main]
-
-use vexide::prelude::*;
-
-#[vexide::main]
+		code: `#[vexide::main]
 async fn main(peripherals: Peripherals) {
+	// Create a green motor on port 1.
 	let my_motor = Motor::new(
 		peripherals.port_1,
 		Gearset::Green,
 		Direction::Forward,
 	);
 
+	// Spin the motor at 10 volts!
 	my_motor.set_voltage(10.0).ok();
 }`,
 	},

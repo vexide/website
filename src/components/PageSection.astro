@@ -27,6 +27,7 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		box-sizing: border-box;
 		max-inline-size: 1380px;
 		padding-inline: 48px;
+		padding-block: 128px;
 		margin-inline: auto;
 	}
 
@@ -39,6 +40,11 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 
 	.page-section :global(h1.title) {
 		font-size: 6.4rem;
+		margin: 0;
+	}
+
+	.page-section :global(h2.title) {
+		font-size: 4.8rem;
 		margin: 0;
 	}
 

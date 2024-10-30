@@ -52,7 +52,7 @@
 
 	.button.variant-outlined {
 		background-color: transparent;
-		border: 1px solid currentColor;
+		border: 1px solid var(--foreground-tertiary);
 		color: var(--foreground-primary);
 	}
 

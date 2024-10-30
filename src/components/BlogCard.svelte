@@ -76,6 +76,7 @@
 	.blog-card-title {
 		text-decoration: none;
 		margin: 0;
+		line-height: 1.5;
 		margin-block-end: 8px;
 		font-weight: 400;
 		font-size: 1.8rem;
