@@ -14,6 +14,7 @@ I'm writing this post to hopefully serve as a basic introduction to low-level de
 
 Hopefully you can take *something* away from these ramblings.
 
+> [!TIP]
 > If you want some more technical documentation, check out the [vexide internals docs](https://internals.vexide.dev/) too!
 
 # Where to start?
@@ -26,6 +27,7 @@ A quick look through the product page tells us we're working with an [ARM Cortex
 
 Notice how they specify that there's a "User Processor" and a "VEXos Processor". That's because the code that you upload and run on the Brain runs on a separate CPU core from the actual operating system. This architecture is used because their main SOC (the Xilinx ZYNQ XC7Z010) is already a dual-core system and running code this way serves as a security boundary preventing people from ignoring/tampering with competition control or directly communicating with peripherals (cheating).
 
+> [!NOTE]
 > For the rest of this post, we're going to call the core that runs VEXos **CPU0** and the core that runs user code **CPU1**.
 
 So uh, what can we take away from this?
@@ -83,10 +85,13 @@ Finished
 
 Looking at the log left by our build suggests that the linker left us with `vexcode-test.elf`. [ELF](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) is a pretty standard binary executable format for both embedded and non-embedded devices, so it makes sense that it'd be used on the V5.
 
-But hey what's with that `vexcode-test.bin` file then? Well the brain actually doesn't execute ELFs. It expects programs to be uploaded as raw binary, so after compiling that ELF file, VEX tosses it through a tool called `objcopy` that strips out all of the ELF metadata stuff leaving only the loadable sections containing instructions and data.
+> Hey what's the deal with that `vexcode-test.bin` file?
+
+Well the brain actually doesn't run ELFs in their unmodified state. It expects programs to be uploaded as raw binary, so after compiling that ELF file, VEX tosses it through a tool called `objcopy` that strips out all of the ELF metadata stuff leaving only the loadable sections containing instructions and data.
 
 ![VEXCode's build process](/blog/vexcode-build-process.png)
 
+> [!TIP]
 > BIN files are the Brain's concept of an "executable". They contain your user program's compiled CPU instructions that will be executed on CPU1 once loaded by VEXos.
 
 ## Digging a little deeper...
@@ -131,6 +136,7 @@ Alright, so a `vcodesig` struct instance is inserted in the `.boot_data` section
   - Bit 1 will terminate the `V5_Main` scheduler task when the program is exited if set.
   - Bit 2 will invert the default graphics colors, but only if the brain's theme is set to light mode if set.
 
+> [!NOTE]
 > And before you ask, none of these fields really do anything particularly special or exciting. Nothing aside from `flags` even visibly affects program behavior. They're basically just the program's metadata.
 
 So this is what the first 32 bytes of a program binary end up looking like:
@@ -139,7 +145,7 @@ So this is what the first 32 bytes of a program binary end up looking like:
 
 ## Peak Embedded Development — Writing a valid binary in Windows Notepad
 
-You read that right. Who needs an IDE or syntax highlighting or line numbers, or like those weird programming language things that everyone is using. What the HELL is C? I'll let you in on a secret — REAL 10xers type CPU instructions into notepad.
+Who needs an IDE or syntax highlighting or line numbers or a programming language? What the HELL is C? I'll let you in on a secret — REAL 10xers type their CPU instructions directly into notepad.
 
 ![Windows 1.01](https://i.imgur.com/jmtScOd.png)
 
