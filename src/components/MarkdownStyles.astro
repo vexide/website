@@ -15,7 +15,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 <style>
 	.markdown-body {
 		color: var(--foreground-secondary);
-		font-size: 1.6rem;
+		font-size: 1.7rem;
 		line-height: 2;
 	}
 
@@ -38,6 +38,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 
 	.markdown-body :global(h1) {
 		page-break-after: avoid;
+	}
+
+	.markdown-body :global(h2) {
+		margin-block-start: 48px;
 	}
 
 	.markdown-body :global(.icon-link) {
@@ -328,6 +332,11 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(.markdown-alert.caution) {
 		background-color: hsl(var(--accent-red-hue), 73%, 63%, 0.25);
 		color: var(--foreground-accent-red);
+	}
+
+	.markdown-body :global(.markdown-alert.thanks) {
+		background-color: hsl(322deg, 58%, 69%, 0.25);
+		color: hsl(322deg, 58%, 85%);
 	}
 
 	.markdown-body :global(.markdown-alert.important) {
