@@ -10,11 +10,11 @@ thumbnail: {
 }
 ---
 
-Happy Thanksgiving everyone, we've got some exciting releases to announce. Let's recap the progress that's been made over the last few months.
+Happy Thanksgiving everyone! we've got some exciting releases to announce. Let's recap the progress that's been made over the last few months.
 
 # `vexide` 0.5.0
 
-We've published the next major release of vexide — 0.5.0 to crates.io today. As always, the full changelog can be found [here](#todo).
+We've published the next major release of vexide—version 0.5.0—to crates.io today. As always, the full changelog can be found [here](#todo).
 
 0.5.0 is a very significant update to the vexide runtime, being likely the largest update yet. This version heavily focuses on polishing vexide's **device APIs** (think motors, sensors, etc...) as well as the surrounding documentation with them. It also introduces several new devices and fixes some bugs in the existing ones. 
 
