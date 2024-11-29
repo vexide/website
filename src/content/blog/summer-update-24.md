@@ -6,7 +6,7 @@ tags: ["blog"]
 date: 2024-07-16
 thumbnail: {
     url: "/images/thumbnails/vaporwave.png",
-    alt: "Thumbnail Image"
+    alt: "vexide logo over a vaporwave-stylized beach."
 }
 ---
 

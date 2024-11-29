@@ -6,7 +6,7 @@ tags: ["blog"]
 date: 2024-10-05
 thumbnail: {
     url: "/images/thumbnails/y2k.png",
-    alt: "Thumbnail Image"
+    alt: "vexide logo in the style of the Windows ME boxart."
 }
 ---
 
