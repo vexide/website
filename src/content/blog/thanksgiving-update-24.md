@@ -34,7 +34,7 @@ To start, almost all device methods now have examples showcasing how they can be
 | -- | -- |
 | ![method documentation in vexide 0.4.0](/blog/0.4.0-method.png) | ![method documentation in vexide 0.5.0](/blog/0.5.0-method.png) <small> (this goes down further) </small> |
 
-These efforts combine information gathered from many sources, including VEX's official docs, the BLRS wiki, random jpearman posts from 5 years ago, and word-of-mouth from some discord server you've probably never heard of. Our hope is that having all this information in one place will make it less of a headache for you to find compared to the rather scattered state of things right now.
+These efforts combine information gathered from many sources, including VEX's official docs, the BLRS wiki, random jpearman posts from 5 years ago, and word-of-mouth from discord servers nobody's ever heard of. Our hope is that having all this information in one place will make it less of a headache for you to find compared to the rather scattered state of things right now.
 
 ## New Controller API
 
@@ -156,7 +156,7 @@ Do note that this API is not fully featured due to (intentional) limitations in 
 
 The first of our new devices is VEX's new [AI Vision Sensor](https://www.vexrobotics.com/276-8659.html), which is an upgrade over their older Pixy2-based vision sensor with added support for onboard AI and [AprilTag](https://april.eecs.umich.edu/software/apriltag) detection models.
 
-<iframe style="display: block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/61SxToiTqo8?si=efdqE_vQ6wdwiPbS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe style="display: block; margin: 0 auto; max-width: 100%;" width="560" height="315" src="https://www.youtube.com/embed/61SxToiTqo8?si=efdqE_vQ6wdwiPbS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Here's an example of its API in use on vexide 0.5.0:
 
@@ -196,7 +196,7 @@ async fn main(peripherals: Peripherals) {
 
 And here it is detecting an AprilTag from the `tag16h5` family during our testing.
 
-<div style="width: 480px;">
+<div style="width: 480px; max-width: 100%;">
 
 ![tag16h5 detection](/blog/aivision-tag16h5.png)
 
@@ -304,11 +304,17 @@ async fn main(_peripherals: Peripherals) {
 
 ## New Display Drawing Features
 
-vexide's `Display` API now supports basic font customization and sizing options.
+vexide's `Display` API now supports basic font customization and sizing options. You can also now specify a background color for the text.
 
-| Font Sizing | Font Families |
-| ----------- | ------------- |
-| <img width="320" height="181.333333" src="/blog/display-font-1.png" alt="brain display showcasing various font sizes" /> | <img width="320" height="181.333333" src="/blog/display-font-2.png" alt="brain display showcasing various fonts in VEXos" /> |
+<div style="display: flex; gap: 16px; flex-wrap: wrap;">
+    <div style="flex: 1">
+        <img style="min-width: 240px;" src="/blog/display-font-1.png" alt="brain display showcasing various font sizes" />
+    </div>
+    <div style="flex: 1">
+        <img style="min-width: 240px;" src="/blog/display-font-2.png" alt="brain display showcasing various fonts in VEXos" />
+    </div>
+</div>
+
 
 ```rs
 // @fold start
@@ -330,8 +336,8 @@ async fn main(peripherals: Peripherals) {
 
     let text = Text::new("Nice to see you!", Font::default(), [80, 40]);
 
-    // Draw the text on the display in cyan.
-    display.fill(&text, Rgb::new(0, 255, 255));
+    // Draw the text on the display in cyan with a yellow background color.
+    display.draw_text(&text, Rgb::new(0, 255, 255), Some(Rgb::new(255, 255, 0)));
 
     // You can use varying text sizes and fonts.
     let text = Text::new(
@@ -339,7 +345,8 @@ async fn main(peripherals: Peripherals) {
         Font::new(FontSize::new(2, 3), FontFamily::Proportional),
         [21, 84],
     );
-    display.fill(&text, Rgb::new(255, 255, 255));
+    // Draw the text white, with a transparent background.
+    display.draw_text(&text, Rgb::new(255, 255, 255), None);
 
     // Font sizes can be created with a fraction or a float
     let size = FontSize::from_float(0.333).unwrap();

@@ -408,6 +408,9 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		text-align: left;
 		border-collapse: collapse;
 		margin-block: 24px;
+		max-width: 100%;
+		display: inline-block;
+		overflow: auto;
 	}
 
 	.markdown-body :global(table th),
