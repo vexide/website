@@ -417,6 +417,8 @@ This is largely a port of [Cooper's `Real-Time-Motion-Profiling` project](https:
 
 [Hydrozoa](https://github.com/vexide/hydrozoa) is a WebAssembly interpreter that runs on the Brain. [Tons of programming languages](https://github.com/appcypher/awesome-wasm-langs) can be compiled to WASM and then run on the Brain using Hydrozoa. [Lewis](https://github.com/doinkythederp) made Hydrozoa and is currently working on [Kotlin and Java](https://github.com/vexide/Hydrozoa-Java) tooling and libraries for Hydrozoa. In the future, languages like Java, Kotlin, Javascript, Typescript, Go, C#, Lua, and many more might be usable for VRC!
 
+![3 billion devices run java (including V5)](/blog/3-billion-devices-run-java.png)
+
 Although it's not fully complete, you can already try running Java on your Brain right now! To get started, clone our [Hydrozoa Java template](https://github.com/vexide/Hydrozoa-Java-Template). Next, install the Hydrozoa CLI tool:
 
 ```
