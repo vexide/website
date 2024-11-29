@@ -416,7 +416,7 @@ Although it's not fully complete, you can already try running Java on your Brain
 cargo install --git https://github.com/vexide/hydrozoa-cli.git
 ```
 
-Finally, connect to your Brain and upload your program with gradle: You just 
+Finally, connect to your Brain and upload your program with gradle:
 
 ```
 ./gradlew upload
