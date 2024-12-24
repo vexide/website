@@ -74,7 +74,7 @@ Button states can be checked using:
 -   `button_a`/`button_b`/`button_x`/`button_y`
 -   `button_up`/`button_down`/`button_left`/`button_right`
 -   `button_l1`/`button_l2`/`button_r1`/`button_r2`
--   `button_power` (note that while you can use this in your program, holding this button down _will_ turn off the controller, which you probably don't want to happen in a match)
+-   `button_power` (note that while you can use this in your program, holding this button down _will_ stop the program (and eventually turn off the controller), which you probably don't want to happen in a match.)
 
 Joystick states can be checked using:
 
@@ -90,6 +90,9 @@ To check whether a button is _currently pressed down_, you can use the `is_press
 Don't worry! In VEXCode, you may have had to declare a separate variable just to keep track of the previous state of a button. In vexide, we do this for you!
 
 You can use the `is_now_pressed` method to check if a button was just pressed. This method returns `true` if the button was pressed in the last update (i.e., it was released the last time `Controller::state` was called and is now pressed) and `false` otherwise. This is quite useful for implementing actions like toggling a pneumatic piston or changing the state of a subsystem.
+
+> [!NOTE]
+> If a button was quickly pressed and released in between two updates, the press will not be detected by `is_now_pressed` and will be dropped. Additionally, the controller's update interval is 25ms, so the minimum time between two updates is 25ms.
 
 ```rs
 // @fold start
