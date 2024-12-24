@@ -87,12 +87,29 @@ Whether or not a motor should be reversed is ultimately in the eye of the behold
 
 There are also some cases (such as in drivetrains), where you want lots of motors in different orientations to all spin together in the same direction when given the same velocity or voltage values. This is another usecase for direction, where some of your motors may need to be reversed in order to all spin together in the same direction given the same value.
 
-## 5.5W Smart Motors
+## 5.5W Smart Motors (EXP motors)
 
-In 2023, VEX legalized the [Smart Motor (5.5W)](https://www.vexrobotics.com/276-4842.html) for competition as a lightweight and less powerful alternative to the standard 11W smart motors. These motors come with a few notable differences internally, but use the same `Motor` API under the hood. As a result, most of what you will see on this page is also applicable to these less powerful motors.
+In 2023, VEX legalized the [Smart Motor (5.5W)](https://www.vexrobotics.com/276-4842.html) for competition as a lightweight and less powerful alternative to the standard 11W smart motors. These motors come with a few notable differences internally, but use the same `Motor` API under the hood. As a result, most of what you will see on this page is also applicable to these less powerful motors. 
 
-> [!NOTE]
-> 5.5W motors are effectively the same as an **11W motor with a green (200RPM) cartridge** from the perpspective of VEXos. As such, you should always specify `Gearset::Green` when creating a 5.5w motor.
+To create a 5.5W EXP motor, you can use the `Motor::new_exp` method instead of `Motor::new`:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    //                     (     )
+    let mut motor = Motor::new_exp(peripherals.port_1, Direction::Forward);
+    motor.motor_type() // -> MotorType::Exp
+    //    ^
+    // [You can check the type of motor using the `motor_type` method.]
+}
+```
 
 # Controlling Motors
 
@@ -209,9 +226,99 @@ Great question!
 
 ## Position Control
 
+You can also control the position of a motor using the `set_position_target` method. This method will instruct the motor to rotate to a certain position and then stop.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
+    //                                (                               )
+    let _ = motor.set_position_target(Position::from_degrees(90.0), 200);
+    //                                ^
+    // [Rotate the motor to 90 degrees at 200RPM.]
+}
+```
+
+> [!WARNING]
+> `set_position` only sets the encoder's position to a certain value, analogous to taring or resetting. It does not actively try to reach that position. If you want the motor to actively try to reach a certain position using its internal PID controller, use `set_position_target` instead.
+
 ## Braking
 
+Sometimes, you don't want to move. You want to stop. This is where braking comes in.
+
+In vexide, you can brake using the `Motor::brake` method:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
+
+    //       (   ) (              )
+    my_motor.brake(BrakeMode::Brake).ok();
+    //                   ^
+    // [Brake the motor using the `Brake` brake mode]
+}
+```
+
+There are three different types of braking exposed through the `BrakeMode` enum:
+
+### Coast
+
+Coasting is the default behavior of a motor when it is not being powered. The motor will continue to **spin freely** until it comes to a stop due to friction or other external forces. This is useful for things like drive trains during the driver control, where you want the robot to coast to a stop after you release the joystick, or flywheels, where letting the wheel spin freely while not being used lessens the time needed to spin it up again later.
+
+### Brake
+
+Braking is exactly what is sounds like: the motor will actively try to stop itself when it is not being powered through **regenerative braking**.
+
+### Hold
+
+Holding is a special type of braking where the motor will actively try to **hold its position** when it is not being powered. This is useful for things like arms or lifts that need to stay in an exact certain position when not being used.
+
+> Wait, so what's the difference between `Brake` and `Hold`?
+
+`Brake` and `Hold` are both types of braking, but they differ in how they behave when the motor is not being powered. `Brake` will actively try to stop the motor from spinning, but if there's a lot of force being applied, the motor will still be able to be turned. On the other hand, `Hold` will actively try to keep the motor in a certain position using the motor's internal PID controller.
+
+> [!TIP]
+> Use **coast** when you want the motor to keep spinning unpowered.  
+> Use **brake** when you want the motor to stop spinning quickly.  
+> Use **hold** when you want the motor to actively resist being turned.
+
 ## Current Limiting
+
+All V5 Smart Motors are capped at 2.5A by the brain. However, if you use more than 8 motors, the current is further limited according to the following table:
+
+| Number of Motors | Current Limit |
+| ---------------- | ------------- |
+| 9                | 2.39A         |
+| 10               | 2.29A         |
+| 11               | 2.20A         |
+| 12               | 2.12A         |
+| 13               | 2.04A         |
+| 14               | 1.98A         |
+| 15               | 1.91A         |
+| 16               | 1.85A         |
+| 17               | 1.80A         |
+| 18               | 1.74A         |
+| 19               | 1.69A         |
+| 20               | 1.65A         |
+
+See [this vexforum post][vexforum-currentlimiting-jpearman] for more details.
+
+[vexforum-currentlimiting-jpearman]: https://www.vexforum.com/t/how-does-the-decreased-current-affect-the-robot-when-using-more-than-8-motors/72650/3
 
 # Motor Telemetry
 
@@ -239,6 +346,22 @@ use vexide::prelude::*
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-    // todo
+    let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
+
+    loop {
+        let position = motor.position();
+        let velocity = motor.velocity();
+        let efficiency = motor.efficiency();
+        let current = motor.current();
+        let temperature = motor.temperature();
+
+        println!("Position: {:?}", position);
+        println!("Velocity: {:?}", velocity);
+        println!("Efficiency: {:?}", efficiency);
+        println!("Current: {:?}", current);
+        println!("Temperature: {:?}", temperature);
+
+        sleep(core::time::Duration::from_ms(1000)).await;
+    }
 }
 ```
