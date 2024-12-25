@@ -108,9 +108,9 @@ async fn main(peripherals: Peripherals) {
   let mut piston = DigitalOut::new(peripherals.port1);
 
   loop {
-    let state = controller.state().expect("Failed to get controller state");
+    let state = controller.state().unwrap_or_default();
     //                             ^
-    // [We use `expect` here, but in production, you should handle the error more gracefully]
+    // [If the controller is disconnected or there's a problem, we'll just use the default state.]
 
     //                (              )
     if state.button_a.is_now_pressed() {
@@ -126,7 +126,7 @@ async fn main(peripherals: Peripherals) {
 
 ## Joystick states
 
-The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the `left_stick` and `right_stick` methods on the `ControllerState` struct, respectively.
+The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the `left_stick` and `right_stick` properties on the `ControllerState` struct, respectively.
 
 For fun, let's try implementing a simple tank drive program using the controller's joysticks. We'll map the y-axis of the left joystick to the left motor and the y-axis of the right joystick to the right motor. Notice that `JoystickState::x` and `JoystickState::y` return values in the interval `[-1, 1]`, and not a percentage like VEXCode does.
 
