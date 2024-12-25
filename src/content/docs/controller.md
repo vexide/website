@@ -8,9 +8,9 @@ Controllers are the basis of how you control the V5 Brain remotely. You can uplo
 
 During a match, one or two controllers can be used to control the robot. We'll refer to these controllers as the _primary controller_ and the _partner controller_. Having a partner controller is optional, but it can be useful for controlling additional functions of your robot. These two controllers are connected together with a smart cable.
 
-# Getting a reference to a `Controller`
+# Getting a controller
 
-We already talked about the [peripherals API](/docs/peripherals) earlier as providing a safe way to interact with the V5 Brain's peripherals. Using it, you can access the controller as follows:
+We already talked about the [peripherals API](/docs/peripherals) earlier as providing a safe way to interact with the V5 Brain's peripherals. Using it, you can access the controller safely as follows:
 
 ```rs
 // @fold start
@@ -54,7 +54,7 @@ async fn main(peripherals: Peripherals) {
 
   loop {
     //          (                )
-    let state = controller.state();
+    let state = controller.state().unwrap_or_default();
 
     // Now you can use the state of the controller:
     if state.button_a.is_pressed() {
@@ -145,7 +145,7 @@ async fn main(peripherals: Peripherals) {
   let mut right_motor = Motor::new(peripherals.port2);
 
   loop {
-    let state = controller.state().expect("Failed to get controller state");
+    let state = controller.state().unwrap_or_default();
 
     // Map the y-axis of the left joystick to the left motor
     //                     (                  )
