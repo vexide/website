@@ -197,7 +197,7 @@ async fn main(peripherals: Peripherals) {
 
 The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the [`left_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.left_stick) and [`right_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.right_stick) fields in our state, respectively.
 
-For fun, let's try implementing a simple tank drive program using the controller's joysticks. We'll map the y-axis of the left joystick to the left motor and the y-axis of the right joystick to the right motor. Note that our joystick functions ([`JoystickState::x`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.x) and [`JoystickState::y`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.y)) return values in the interval `[-1.0, 1.0]`, and *not* a percentage out of 100 or 127.
+For fun, let's try implementing a simple tank drive program using the controller's joysticks. We'll map the y-axis of the left joystick to the left motor and the y-axis of the right joystick to the right motor. Note that our joystick functions ([`JoystickState::x`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.x) and [`JoystickState::y`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.y)) return values in the interval `[-1.0, 1.0]`, and *not* a percentage out of 100 or value out of 127.
 
 ```rs
 // @fold start
