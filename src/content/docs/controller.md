@@ -4,13 +4,13 @@ category: 02. Hardware
 page: 11
 ---
 
-Controllers are the basis of how you control the V5 Brain remotely. You can upload programs and communicate with the competition switch using the controller. The controller has a screen, buttons, and joysticks that you can program to interact with the V5 Brain and its peripherals. The controller is also used to control the robot during the driver control period (opcontrol).
+![controller sketch](/docs/controller.svg)
 
-During a match, one or two controllers can be used to control the robot. We'll refer to these controllers as the _primary controller_ and the _partner controller_. Having a partner controller is optional, but it can be useful for controlling additional functions of your robot. These two controllers are connected together with a smart cable.
+The V5 Controller enables remote operation of a robot during the driver control period. It has two joysticks, a screen, and 13 buttons that you can program to interact with a V5 Brain and its peripherals. During a match, one or two controllers may be used to control the robot. We'll refer to these two controllers as the _primary controller_ and the _partner controller_.
 
 # Getting a controller
 
-We already talked about the [peripherals API](/docs/peripherals) earlier as providing a safe way to interact with the V5 Brain's peripherals. Using it, you can access the controller safely as follows:
+We covered the [`Peripherals` API](/docs/peripherals/) earlier as a safe way to interact with the V5 Brain's peripherals. Using the `peripherals` instance passed to our main function, we can access our two controllers controllers like this:
 
 ```rs
 // @fold start
@@ -24,8 +24,6 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     //                           (                )
     let controller = peripherals.primary_controller;
-    //                               ^
-    //         [Get the primary controller. Note that since we moved the controller out of `peripherals`, we can no longer access it there.]
     //                                   (                )
     let partner_controller = peripherals.partner_controller;
 }
@@ -33,13 +31,7 @@ async fn main(peripherals: Peripherals) {
 
 # Reading the controller's state
 
-<!-- TODO: add one of those fancy illustrations that look cool here. -->
-
-Reading the controller's state is simple through the `Controller::state` method. This method returns a `ControllerState` struct that contains the state of the controller's buttons and joysticks.
-
-You can read each button's state through the `button_x` properties and the joysticks' state through the `y_stick` properties on the `ControllerState` struct.
-
-Here's an example of how you can read the controller's state in a loop:
+Every 25 milliseconds or so, the controller will update the brain with new information about what buttons on it are pressed, as well as its current joystick values. To access this state, we use the [`Controller::state`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html#method.state) method.
 
 ```rs
 // @fold start
@@ -47,52 +39,128 @@ Here's an example of how you can read the controller's state in a loop:
 #![no_main]
 
 use vexide::prelude::*;
+
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let mut controller = peripherals.primary_controller;
+    let controller = peripherals.primary_controller;
+
+    //                            (                  )
+    let state = controller.state().unwrap_or_default();
+    //                           ^
+// [When handling controller errors, you almost always want to unwrap_or_default here.]
+
+    println!("{:?}", state);
+}
+```
+
+This function returns an instance of the [`ControllerState`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html) struct, containing fields for each button and joystick on the controller. Here's each of those fields and what they map to on a real controller:
+
+![controller state](/docs/controller-state.svg)
+
+When reading data from a controller, we almost always want to do so repeatedly so we can constantly get new updates from the controller. After all, getting the controller's state once at only one point in time wouldn't be very useful.
+
+To do this, we can use an infinite loop:
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+  let controller = peripherals.primary_controller;
 
   loop {
-    //          (                )
     let state = controller.state().unwrap_or_default();
 
-    // Now you can use the state of the controller:
-    if state.button_a.is_pressed() {
-      // Do something repeatedly when the A button is pressed
-    } else {
-      // Do something else repeatedly when the A button is not pressed
-    }
+    // Do stuff here!
 
     sleep(Controller::UPDATE_INTERVAL).await;
-    // Use the state of the controller here
   }
 }
 ```
 
-Button states can be checked using:
+Or if we're in a [competition enviornment](/docs/competition/), we'll put this loop inside our `driver` function.
 
--   `button_a`/`button_b`/`button_x`/`button_y`
--   `button_up`/`button_down`/`button_left`/`button_right`
--   `button_l1`/`button_l2`/`button_r1`/`button_r2`
--   `button_power` (note that while you can use this in your program, holding this button down _will_ stop the program (and eventually turn off the controller), which you probably don't want to happen in a match.)
+```rs
+// @fold start
+#![no_std]
+#![no_main]
 
-Joystick states can be checked using:
+use vexide::prelude::*;
 
--   `left_stick` (for the left joystick)
--   `right_stick` (for the right joystick)
+// @fold end
+struct MyRobot {
+  controller: Controller,
+}
+
+impl Compete for MyRobot {
+  async fn driver(&mut self) {
+    loop {
+      let state = self.controller.state().unwrap_or_default();
+
+      // Do stuff here!
+
+      sleep(Controller::UPDATE_INTERVAL).await;
+    }
+  }
+}
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+    let my_robot = MyRobot {
+      controller: peripherals.primary_controller,
+    };
+
+    my_robot.compete().await;
+}
+```
 
 ## Button states
 
-To check whether a button is _currently pressed down_, you can use the `is_pressed` method on the button. This method returns `true` if the button is pressed and `false` otherwise.
+To check whether a button is _currently pressed down_, you can use the `is_pressed` method on the button we want to check. This method returns `true` if the button is pressed and `false` otherwise.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+  let controller = peripherals.primary_controller;
+
+  loop {
+    let state = controller.state().unwrap_or_default();
+
+    // Use an if-statement to spam out prints depending
+    // on if the "A" button is being pressed or not.
+    //               (           )
+    if state.button_a.is_pressed() {
+      println!("A is being pressed :>");
+    } else {
+      println!("A is not being pressed :c");
+    }
+
+    sleep(Controller::UPDATE_INTERVAL).await;
+  }
+}
+```
 
 > Wait, but I want to know when a button was _just_ pressed!
 
-Don't worry! In VEXCode, you may have had to declare a separate variable just to keep track of the previous state of a button. In vexide, we do this for you!
+This is a pretty common scenario. Rather than repeatedly running code if a button is *currently being pressed*, we want to run code *once* when the button is pressed and *once* when the button is released. This is useful for things like toggles.
 
-You can use the `is_now_pressed` method to check if a button was just pressed. This method returns `true` if the button was pressed in the last update (i.e., it was released the last time `Controller::state` was called and is now pressed) and `false` otherwise. This is quite useful for implementing actions like toggling a pneumatic piston or changing the state of a subsystem.
+You can use the [`is_now_pressed`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_pressed) and [`is_now_released`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_released) methods for this exact purpose. These method returns `true` if the button was pressed in the last update (i.e., it was released the last time [`Controller::state`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html#method.state) was called and is now pressed) and `false` otherwise. This is quite useful for implementing actions like toggling a pneumatic piston or changing the state of a subsystem.
 
-> [!NOTE]
-> If a button was quickly pressed and released in between two updates, the press will not be detected by `is_now_pressed` and will be dropped. Additionally, the controller's update interval is 25ms, so the minimum time between two updates is 25ms.
+> [!WARNING]
+> Do note that if a button was quickly pressed and released in-between two updates in our loop, the press will not be detected by `is_now_pressed` and will be dropped.
 
 ```rs
 // @fold start
@@ -109,13 +177,11 @@ async fn main(peripherals: Peripherals) {
 
   loop {
     let state = controller.state().unwrap_or_default();
-    //                             ^
-    // [If the controller is disconnected or there's a problem, we'll just use the default state.]
 
     //                (              )
     if state.button_a.is_now_pressed() {
-    //                ^
-    //         [Returns true if the A button was just pressed]
+    //               ^
+    //         [Returns true if the A button was just pressed.]
       piston.toggle();
     }
 
@@ -126,9 +192,9 @@ async fn main(peripherals: Peripherals) {
 
 ## Joystick states
 
-The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the `left_stick` and `right_stick` properties on the `ControllerState` struct, respectively.
+The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the [`left_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.left_stick) and [`right_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.right_stick) fields in our state, respectively.
 
-For fun, let's try implementing a simple tank drive program using the controller's joysticks. We'll map the y-axis of the left joystick to the left motor and the y-axis of the right joystick to the right motor. Notice that `JoystickState::x` and `JoystickState::y` return values in the interval `[-1, 1]`, and not a percentage like VEXCode does.
+For fun, let's try implementing a simple tank drive program using the controller's joysticks. We'll map the y-axis of the left joystick to the left motor and the y-axis of the right joystick to the right motor. Note that our joystick functions ([`JoystickState::x`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.x) and [`JoystickState::y`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.JoystickState.html#method.y)) return values in the interval `[-1.0, 1.0]`, and *not* a percentage out of 100 or 127.
 
 ```rs
 // @fold start
@@ -140,9 +206,9 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let mut controller = peripherals.primary_controller;
-  let mut left_motor = Motor::new(peripherals.port1);
-  let mut right_motor = Motor::new(peripherals.port2);
+  let controller = peripherals.primary_controller;
+  let mut left_motor = Motor::new(peripherals.port1, Gearset::Green, Direction::Forward);
+  let mut right_motor = Motor::new(peripherals.port2, Gearset::Green, Direction::Forward);
 
   loop {
     let state = controller.state().unwrap_or_default();
@@ -151,24 +217,24 @@ async fn main(peripherals: Peripherals) {
     //                     (                  )
     left_motor.set_voltage(state.left_stick.y() * left_motor.max_voltage());
     //                     ^
-    //         [Get the y-axis of the left joystick, in the interval [-1, 1]]
+    //         [Get the y-axis of the left joystick, in the interval [-1.0, 1.0]]
 
     // Map the y-axis of the right joystick to the right motor
     //                     (                    )
     right_motor.set_voltage(state.right_stick.y() * right_motor.max_voltage());
     //                     ^
-    //         [Get the y-axis of the right joystick, in the interval [-1, 1]]
+    //         [Get the y-axis of the right joystick, in the interval [-1.0, 1.0]]
 
     sleep(Controller::UPDATE_INTERVAL).await;
   }
 }
 ```
 
-# Using the screen
+# Printing to the screen
 
-The VEX controller also has a screen that you can use to display text. Setting the text on the screen is straightforward with the `set_text` method. This method allows you to specify the text, the row, and the column where the text should be displayed.
+The VEX controller also has a screen that you can use to display text. Setting the text on the screen is straightforward with the [`set_text`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ControllerScreen.html#method.set_text) method. This method allows you to specify the text, the row, and the column where the text should be displayed.
 
-Here's how you can use the `set_text` method:
+Here's how you can use the [`set_text`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ControllerScreen.html#method.set_text) method:
 
 ```rs
 // @fold start
@@ -192,9 +258,9 @@ async fn main(peripherals: Peripherals) {
 
 # Shaking the controller
 
-Similarly to video game controllers, the VEX controller has a feature that allows you to vibrate it programmatically to provide feedback to the driver.
+Similarly to video game controllers, the VEX controller has builtin vibration motor that allows you to vibrate it programmatically to provide feedback to the driver.
 
-You can use the `rumble` method to make the controller vibrate. It accepts a string composed of `.`, `-`, and ` ` characters, where:
+You can use the [`rumble`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html#method.rumble) method to make the controller vibrate. It accepts a string composed of `.`, `-`, and ` ` characters, where:
 
 -   `.` represents a short vibration
 -   `-` represents a long vibration
