@@ -437,6 +437,3 @@ async fn main(peripherals: Peripherals) {
 }
 // @fold end
 ```
-
-> [!WARNING]
-> Interior mutability comes with one **massive** limitation, however. You cannot, under any circumstances share an `Rc<RefCell<T>>` across tasks or threads. Rust simply wont let you, because `Rc<RefCell<T>>` is not a thread-safe type. For that, you need its threadsafe counterpart - [Shared State Concurrency](#todo)

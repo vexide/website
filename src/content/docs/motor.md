@@ -326,12 +326,12 @@ Motors record a lot of information about themselves and their state as they run.
 
 This data includes:
 
-- [The position of the motor measured by its encoder.](#todo)
-- [The velocity of the motor measured by its encoder.](#todo)
-- [The estimated efficiency of the motor.](#todo)
-- [The electrical current draw of the motor.](#todo)
-- [The internal temperature of the motor.](#todo)
-- [Any internal errors or damage to the motor.](#todo)
+- [The position of the motor measured by its encoder.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.position)
+- [The velocity of the motor measured by its encoder.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.velocity)
+- [The estimated efficiency of the motor.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.efficiency)
+- [The electrical current draw of the motor.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.current)
+- [The internal temperature of the motor.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.temperature)
+- [Any internal errors or damage to the motor.](https://docs.rs/vexide/latest/vexide/devices/smart/struct.Motor.html#method.faults)
 
 As an example, let's read out a bunch of this data and log it to the [terminal](/docs/using-the-terminal):
 
