@@ -490,4 +490,4 @@ async fn better() {
 }
 ```
 
-Tight loops are by far the most common way to accidentally create blocking code. We'll cover some other cases, such as deadlocks in future pages.
+Tight loops are by far the most common way to accidentally create blocking code. We'll cover some other cases (such as deadlocks) in future pages.
