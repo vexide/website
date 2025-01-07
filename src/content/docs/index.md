@@ -24,5 +24,4 @@ The V5 Brain is an *embedded platform*, meaning the code that you write runs wit
 
 Fortunately, this isn't as bad as it sounds, and vexide programs can still make use of most high level Rust features, as you'll learn later.
 
-# Why should I use this?
-
+<!-- TODO: add a "Why should I use this?" section -->
