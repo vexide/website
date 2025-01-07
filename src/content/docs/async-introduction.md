@@ -355,7 +355,7 @@ use core::time::Duration;
 async fn main(_peripherals: Peripherals) {
     let a_task = spawn(async {
         loop {
-            println!("hiii");
+            println!("hello");
 
             sleep(Duration::from_secs(2)).await;
         }
@@ -415,7 +415,7 @@ Let's have a second look at our two tasks:
 ```rs
 let a_task = spawn(async {
     loop {
-        println!("hiii");
+        println!("hello");
 
         // @highlight
         sleep(Duration::from_secs(2)).await;
