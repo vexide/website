@@ -1,7 +1,7 @@
 ---
 title: Controller
 category: 02. Hardware
-page: 11
+page: 9
 ---
 
 ![controller sketch](/docs/controller.svg)
@@ -123,7 +123,7 @@ async fn main(_peripherals: Peripherals) {
 }
 ```
 
-## Button states
+## Buttons
 
 To check whether a button is _currently pressed down_, you can use the `is_pressed` method on the button we want to check. This method returns `true` if the button is pressed and `false` otherwise.
 
@@ -193,7 +193,7 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-## Joystick states
+## Joysticks
 
 The VEX controller has two joysticks: one on the left and one on the right. You can access the state of these joysticks using the [`left_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.left_stick) and [`right_stick`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.ControllerState.html#structfield.right_stick) fields in our state, respectively.
 

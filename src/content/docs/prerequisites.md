@@ -4,7 +4,18 @@ category: 01. Getting Started
 page: 2
 ---
 
+
 Before we setup a project, there are some tools you'll need to have installed to build and upload vexide projects. Have a command-line of your choice ready, since we'll be running some terminal commands.
+
+<div style="display: block; text-align: center; margin: 0 auto;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8lf5uh8Se2g?si=yXhixtAme-q_FIpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<br />
+
+<small>
+    If you're on Windows and prefer to follow along with a video tutorial, we have one of those too!
+</small>
+</div>
 
 # Tooling
 
@@ -42,3 +53,5 @@ This will leave you with a folder containing a barebones vexide project. Open th
 If you've worked in a rust project before, this folder structure should be somewhat familiar to you. If not, that's okay too! There are two files of relevance we'll worry about right now:
 - The contents of `src` contain your project's actual source code. All of the program you will write will be in this folder. In this case `main.rs` is your program's main source file.
 - `Cargo.toml` contains your project's package information, including its dependencies.
+
+![rocketship with ferris on it](/docs/blastoff.svg)
