@@ -1,7 +1,7 @@
 ---
 title: Motor
 category: 02. Hardware
-page: 10
+page: 8
 ---
 
 ![Sketch of two different V5 motors](/docs/motors.svg)
@@ -16,7 +16,7 @@ V5 motors are rather special in that they are both fairly fault-tolerant and pro
 
 # Creating Motors
 
-On the [previous page](/docs/peripherals), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
+On the [previous page](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
 
 Motors can be created from any one of the 21 `SmartPort` instances in `peripherals`, along with a provided `Gearset` and `Direction`:
 
@@ -361,7 +361,7 @@ async fn main(peripherals: Peripherals) {
         println!("Current: {:?}", current);
         println!("Temperature: {:?}", temperature);
 
-        sleep(core::time::Duration::from_ms(1000)).await;
+        sleep(core::time::Duration::from_millis(1000)).await;
     }
 }
 ```

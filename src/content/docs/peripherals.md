@@ -1,7 +1,7 @@
 ---
 title: Peripherals
 category: 02. Hardware
-page: 9
+page: 7
 ---
 
 Up until now, everything we've covered has to do with the Brain itself, but what about external devices? What about controllers? How can we control our motors and sensors with vexide?

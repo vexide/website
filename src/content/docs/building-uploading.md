@@ -8,6 +8,8 @@ page: 4
 
 Let's get our "Hello World" program onto a brain.
 
+![BIN file being uploaded to the brain](/docs/upload.svg)
+
 To build and upload vexide programs, we use the [`cargo v5` command line tool](https://github.com/vexide/cargo-v5/). If you went through the [prerequisites](../prerequisites/) you should already have it installed. To build and upload our project in one simple command, we'll use the `cargo v5 upload` command in the root directory of our project.
 
 Before running the command, ensure that the brain or a tethered controller is connected to your machine over USB and no other programs are using the brain's serial port.
@@ -26,7 +28,7 @@ The first time you do this, it might take a while to build! That's normal though
 
 # Configuring Uploads
 
-Upload behavior can be configured through either your project's Cargo.toml file or by providing command-line arguments to cargo-v5.
+Upload behavior can be configured through either your project's `Cargo.toml` file or by providing command-line arguments to cargo-v5.
 
 ## Cargo Metadata
 

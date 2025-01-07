@@ -1,7 +1,7 @@
 ---
 title: Display
 category: 02. Hardware
-page: 15
+page: 10
 ---
 
 Since there is only one screen on a Brain and it is always connected, you can take a `Screen` directly from `Peripherals`.

@@ -26,4 +26,3 @@ Fortunately, this isn't as bad as it sounds, and vexide programs can still make 
 
 # Why should I use this?
 
-Great question!

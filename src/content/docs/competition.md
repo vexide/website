@@ -177,7 +177,7 @@ async fn main(_peripherals: Peripherals) {
     match competition::mode() {
 //                    ^
 //     [Get the current that mode we are in.]
-//     [This will always be Driver if we are disconnected to competition control.]
+//     [This will always be Driver if we are disconnected from competition control.]
         CompetitionMode::Disabled => {
             println!("Currently running disabled.");
         },
