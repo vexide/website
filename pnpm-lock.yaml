@@ -68,6 +68,10 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
+    devDependencies:
+      wrangler:
+        specifier: ^3.101.0
+        version: 3.101.0(@cloudflare/workers-types@4.20250109.0)
 
 packages:
 

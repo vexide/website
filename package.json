@@ -8,7 +8,7 @@
 		"start": "astro dev",
 		"build": "astro check && astro build",
 		"format": "prettier . --write",
-		"preview": "astro preview",
+		"preview": "astro build && wrangler pages dev ./dist",
 		"astro": "astro"
 	},
 	"dependencies": {
@@ -32,5 +32,8 @@
 		"shaku-code-annotate-shiki-transformer": "^0.2.4",
 		"svelte": "^5.17.3",
 		"typescript": "^5.7.3"
+	},
+	"devDependencies": {
+		"wrangler": "^3.101.0"
 	}
 }
