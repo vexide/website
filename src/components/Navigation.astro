@@ -23,6 +23,7 @@ const { title = "" } = Astro.props;
 				</div>
 			)
 		}
+		<slot name="right" />
 		<details class="mobile-navigation">
 			<summary class="mobile-navigation-button">
 				<svg
@@ -45,15 +46,19 @@ const { title = "" } = Astro.props;
 					></polygon>
 				</svg>
 			</summary>
-			<ul class="mobile-navigation-items">
-				<slot />
+			<div class="mobile-navigation-flyout">
+				<ul class="mobile-navigation-items">
+					<slot />
 
-				<li class="mobile-navigation-separator" role="presentation">
-					<hr />
-				</li>
-
+					<li class="mobile-navigation-separator" role="presentation">
+						<hr />
+					</li>
+				</ul>
+				
 				<slot name="actions" />
-			</ul>
+				<slot name="mobile" />
+			</div>
+			
 		</details>
 	</nav>
 </header>
@@ -93,7 +98,7 @@ const { title = "" } = Astro.props;
 		padding-inline: 48px;
 		block-size: 48px;
 		margin-inline: auto;
-		gap: 36px;
+		gap: 16px;
 	}
 
 	.navigation-items {
@@ -114,6 +119,7 @@ const { title = "" } = Astro.props;
 	}
 
 	.navigation-title {
+		margin-inline-end: 20px;
 		display: flex;
 		gap: 12px;
 		font-weight: 600;
@@ -169,6 +175,10 @@ const { title = "" } = Astro.props;
 		inline-size: 24px;
 	}
 
+	html:has(.mobile-navigation[open]) {
+		overflow: hidden;
+	}
+
 	.navigation-close-icon,
 	.mobile-navigation[open] .navigation-menu-icon {
 		display: none;
@@ -179,7 +189,7 @@ const { title = "" } = Astro.props;
 		display: block;
 	}
 
-	.mobile-navigation[open] .mobile-navigation-items {
+	.mobile-navigation[open] .mobile-navigation-flyout {
 		animation: mobile-navigation-open 150ms ease;
 	}
 
@@ -189,7 +199,9 @@ const { title = "" } = Astro.props;
 		border-bottom: 1px solid var(--background-primary);
 	}
 
-	.mobile-navigation-items {
+	.mobile-navigation-flyout {
+		max-block-size: calc(100vh - 48px);
+		overflow: auto;
 		box-sizing: border-box;
 		position: absolute;
 		display: flex;
@@ -200,10 +212,15 @@ const { title = "" } = Astro.props;
 		inset-inline-start: 0;
 		margin: 0;
 		padding: 16px;
-		list-style-type: none;
 		background: var(--background-primary);
 		border-bottom: 1px solid var(--background-secondary);
 		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.13);
+	}
+	
+	.mobile-navigation-items {
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
 	.mobile-navigation-items li:not(:last-of-type) {

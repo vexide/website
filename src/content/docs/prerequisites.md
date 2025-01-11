@@ -41,6 +41,7 @@ To make a new project, we recommend using [vexide-template](https://github.com/v
 
 ```sh
 git clone https://github.com/vexide/vexide-template
+
 ```
 
 > [!TIP]

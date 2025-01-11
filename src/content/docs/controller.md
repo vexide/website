@@ -75,15 +75,15 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let controller = peripherals.primary_controller;
+    let controller = peripherals.primary_controller;
 
-  loop {
-    let state = controller.state().unwrap_or_default();
+    loop {
+        let state = controller.state().unwrap_or_default();
 
-    // Do stuff here!
+        // Do stuff here!
 
-    sleep(Controller::UPDATE_INTERVAL).await;
-  }
+        sleep(Controller::UPDATE_INTERVAL).await;
+    }
 }
 ```
 
@@ -98,25 +98,25 @@ use vexide::prelude::*;
 
 // @fold end
 struct MyRobot {
-  controller: Controller,
+    controller: Controller,
 }
 
 impl Compete for MyRobot {
-  async fn driver(&mut self) {
-    loop {
-      let state = self.controller.state().unwrap_or_default();
+    async fn driver(&mut self) {
+        loop {
+            let state = self.controller.state().unwrap_or_default();
 
-      // Do stuff here!
+            // Do stuff here!
 
-      sleep(Controller::UPDATE_INTERVAL).await;
+            sleep(Controller::UPDATE_INTERVAL).await;
+        }
     }
-  }
 }
 
 #[vexide::main]
 async fn main(_peripherals: Peripherals) {
     let my_robot = MyRobot {
-      controller: peripherals.primary_controller,
+        controller: peripherals.primary_controller,
     };
 
     my_robot.compete().await;
@@ -137,22 +137,21 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let controller = peripherals.primary_controller;
+    let controller = peripherals.primary_controller;
 
-  loop {
-    let state = controller.state().unwrap_or_default();
-
-    // Use an if-statement to spam out prints depending
-    // on if the "A" button is being pressed or not.
-    //               (           )
-    if state.button_a.is_pressed() {
-      println!("A is being pressed :>");
-    } else {
-      println!("A is not being pressed :c");
+    loop {
+        let state = controller.state().unwrap_or_default();
+    
+        // Use an if-statement to spam out prints depending
+        // on if the "A" button is being pressed or not.
+        //               (           )
+        if state.button_a.is_pressed() {
+          println!("A is being pressed :>");
+        } else {
+          println!("A is not being pressed :c");
+        }
+        sleep(Controller::UPDATE_INTERVAL).await;
     }
-
-    sleep(Controller::UPDATE_INTERVAL).await;
-  }
 }
 ```
 
@@ -175,21 +174,20 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let mut controller = peripherals.primary_controller;
-  let mut piston = DigitalOut::new(peripherals.port1);
+    let mut controller = peripherals.primary_controller;
+    let mut piston = DigitalOut::new(peripherals.port1);
 
-  loop {
-    let state = controller.state().unwrap_or_default();
+    loop {
+        let state = controller.state().unwrap_or_default();
 
-    //                (              )
-    if state.button_a.is_now_pressed() {
-    //               ^
-    //         [Returns true if the A button was just pressed.]
-      piston.toggle();
-    }
+        //                (              )
+        if state.button_a.is_now_pressed() {
+            //               ^
+            //         [Returns true if the A button was just pressed.]
+            piston.toggle();
+        }
 
     sleep(Controller::UPDATE_INTERVAL).await;
-  }
 }
 ```
 
@@ -209,27 +207,27 @@ use vexide::prelude::*;
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-  let controller = peripherals.primary_controller;
-  let mut left_motor = Motor::new(peripherals.port1, Gearset::Green, Direction::Forward);
-  let mut right_motor = Motor::new(peripherals.port2, Gearset::Green, Direction::Forward);
+    let controller = peripherals.primary_controller;
+    let mut left_motor = Motor::new(peripherals.port1, Gearset::Green, Direction::Forward);
+    let mut right_motor = Motor::new(peripherals.port2, Gearset::Green, Direction::Forward);
 
-  loop {
-    let state = controller.state().unwrap_or_default();
+    loop {
+        let state = controller.state().unwrap_or_default();
 
-    // Map the y-axis of the left joystick to the left motor
-    //                     (                  )
-    left_motor.set_voltage(state.left_stick.y() * left_motor.max_voltage());
-    //                     ^
-    //         [Get the y-axis of the left joystick, in the interval [-1.0, 1.0]]
+        // Map the y-axis of the left joystick to the left motor
+        //                     (                  )
+        left_motor.set_voltage(state.left_stick.y() * left_motor.max_voltage());
+        //                     ^
+        //         [Get the y-axis of the left joystick, in the interval [-1.0, 1.0]]
 
-    // Map the y-axis of the right joystick to the right motor
-    //                     (                    )
-    right_motor.set_voltage(state.right_stick.y() * right_motor.max_voltage());
-    //                     ^
-    //         [Get the y-axis of the right joystick, in the interval [-1.0, 1.0]]
+        // Map the y-axis of the right joystick to the right motor
+        //                     (                    )
+        right_motor.set_voltage(state.right_stick.y() * right_motor.max_voltage());
+        //                     ^
+        //         [Get the y-axis of the right joystick, in the interval [-1.0, 1.0]]
 
-    sleep(Controller::UPDATE_INTERVAL).await;
-  }
+        sleep(Controller::UPDATE_INTERVAL).await;
+    }
 }
 ```
 

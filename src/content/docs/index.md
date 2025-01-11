@@ -9,7 +9,6 @@ page: 1
 
 These resources serve as an introduction and set of tutorials for the vexide project's runtime and tooling, allowing you to write programs for VEX robots in Rust. If you're already somewhat familiar with vexide or prefer references over tutorials we also have complete [API documentation on docs.rs](https://docs.rs/vexide).
 
-
 It should be stated that this documentation isn't intended to be a Rust tutorial, so it's recommended for you to first go through the [Rust Book](https://doc.rust-lang.org/book/) (it's a great read!) or some other learning resource for the language if you aren't familiar with the syntax. Nevertheless, we'll try to keep things as simple as possible.
 
 ![ferris the crab pointing to a chalkboard with the vexide logo on it](/docs/professor-ferris.svg)

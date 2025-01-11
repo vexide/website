@@ -15,7 +15,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 <style>
 	.markdown-body {
 		color: var(--foreground-secondary);
-		font-size: 1.7rem;
+		font-size: 1.6rem;
 		line-height: 2;
 	}
 
@@ -140,11 +140,6 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		margin-left: -24px;
 		padding-left: 24px;
 		width: calc(100% + 48px);
-	}
-
-	/* There seems to be a bug where shaku always inserts an extra line at the end of our codeblocks */
-	.markdown-body :global(pre.shaku code > .line:last-of-type) {
-		display: none;
 	}
 
 	.markdown-body :global(.shaku-callout) {
@@ -427,6 +422,12 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(table tr) {
 		background-color: var(--background-primary);
 		border-top: 1px solid var(--background-secondary);
+	}
+
+	.markdown-body :global(iframe) {
+		max-width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
 	@media print {

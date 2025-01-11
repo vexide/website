@@ -1,24 +1,34 @@
 <script lang="ts">
-	export let variant: "default" | "accent" | "outlined" = "default";
-	export let href = "";
-	export let disabled = false;
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	let className = "";
-	export { className as class };
+	interface Props extends HTMLButtonAttributes {
+		variant?: "default" | "accent" | "outlined",
+		element?: HTMLElement | undefined,
+		href?: string,
+		disabled?: boolean,
+	}
 
-	export let element: HTMLElement | null = null;
+	let {
+		variant = "default",
+		href = "",
+		disabled = false,
+		class: _class = "",
+		element = $bindable(undefined),
+		children,
+		...rest
+	}: Props = $props();
 </script>
 
 <svelte:element
-	this={href && !disabled ? "a" : "button"}
 	bind:this={element}
+	this={href && !disabled ? "a" : "button"}
 	role={href && !disabled ? "button" : undefined}
 	href={href && !disabled ? href : undefined}
-	class="button variant-{variant} {className}"
+	class={["button", `variant-${variant}`, _class]}
 	class:disabled
-	{...$$restProps}
+	{...rest}
 >
-	<slot />
+	{@render children?.()}
 </svelte:element>
 
 <style>
@@ -41,7 +51,6 @@
 		cursor: pointer;
 		border: none;
 		outline: none;
-		/* text-transform: uppercase; */
 		transition: 0.15s ease;
 	}
 

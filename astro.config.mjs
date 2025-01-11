@@ -11,11 +11,14 @@ import { rehypeGithubAlerts } from "rehype-github-alerts";
 import shakuCodeAnnotateShikiTransformer from "shaku-code-annotate-shiki-transformer";
 import { transformerTitle } from "@rudeigerc/shiki-transformer-title";
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://vexide.dev",
   trailingSlash: "always",
   integrations: [sitemap(), svelte()],
+
   markdown: {
     rehypePlugins: [
       rehypeSlug,
@@ -84,5 +87,7 @@ export default defineConfig({
         transformerTitle(),
       ]
     }
-  }
+  },
+
+  adapter: cloudflare(),
 });

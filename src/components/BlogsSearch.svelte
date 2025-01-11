@@ -1,14 +1,18 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import Button from "./Button.svelte";
     import Chip from "./Chip.svelte";
     import fuzzysort from "fuzzysort";
-	import BlogCard from "./BlogCard.svelte";
+    import BlogCard from "./BlogCard.svelte";
 
-    export let blogsFilter: boolean = true;
-    export let releasesFilter: boolean = true;
+    let { blogsFilter = true, releasesFilter = true, blogs = [] }: Props = $props();
 
-    let query: string = "";
+    interface Props {
+        blogsFilter: boolean;
+        releasesFilter: boolean;
+        blogs: Blog[];
+    }
+
+    let query: string = $state("");
 
     interface Blog {
         title: string;
@@ -22,34 +26,34 @@
         style?: string;
     }
 
-    export let blogs: Blog[] = [];
-
     onMount(() => {
         blogs.map((blog, n) => {
-            setTimeout(() => {
-                blog.style = "";
-            }, n * 0.1 + 0.3);
+            setTimeout(
+                () => {
+                    blog.style = "";
+                },
+                n * 0.1 + 0.3,
+            );
         });
     });
 
-    let filteredBlogs: Blog[] = blogs;
-
-    $: {
-        filteredBlogs = blogs.filter(
+    let filteredBlogs: Blog[] = $derived.by(() => {
+        let filtered = blogs.filter(
             (blog) =>
                 (blog.tag == "blog" && blogsFilter) ||
-                (blog.tag == "release" && releasesFilter)
+                (blog.tag == "release" && releasesFilter),
         );
-        if (query != "") {
-            const results = fuzzysort.go(query, filteredBlogs, {
-                keys: ["title", "description", "author"],
-            });
-            console.log(results);
-            filteredBlogs = results
-                .toSorted((a: any, b: any) => a.score - b.score)
-                .map((r: any) => r.obj);
-        }
-    }
+
+        if (query == "") return filtered;
+
+        const results = fuzzysort.go(query, filtered, {
+            keys: ["title", "description", "author"],
+        });
+
+        return results
+            .toSorted((a: any, b: any) => a.score - b.score)
+            .map((r: any) => r.obj);
+    });
 </script>
 
 <div class="blogs-search">
@@ -89,7 +93,8 @@
         width: 100%;
         position: sticky;
         top: 30px;
-        box-shadow: 0px 2px 5.5px rgba(0, 0, 0, 0.072),
+        box-shadow:
+            0px 2px 5.5px rgba(0, 0, 0, 0.072),
             0px 6.1px 11px rgba(0, 0, 0, 0.103),
             0px 13.2px 16.4px rgba(0, 0, 0, 0.119),
             0px 24.7px 22.4px rgba(0, 0, 0, 0.127),

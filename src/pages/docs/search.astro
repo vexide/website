@@ -1,0 +1,199 @@
+---
+import PageSection from "components/PageSection.astro";
+import PageLayout from "layouts/PageLayout.astro";
+import type { SearchResult } from "./search.json";
+
+export const prerender = false;
+
+const query = Astro.url.searchParams.get("q") || "";
+const results: { [key: string]: SearchResult[] } = await fetch(
+    `${Astro.url.origin}/docs/search.json/?q=${query}`,
+).then((res) => res.json());
+const resultCategories = Object.keys(results);
+---
+
+<PageLayout
+    name="Docs Search"
+    title="Docs Search"
+    description="Documentation and tutorials for the vexide runtime."
+    banner={{
+        url: "/images/logo_opengraph.png",
+        width: 280,
+        height: 280,
+        alt: "vexide logo",
+        twitter_card: "summary",
+    }}
+>
+    <PageSection class="docs-search-section">
+        <form class="docs-search" method="GET" action="/docs/search/">
+            <svg
+                class="search-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                width="16"
+                height="16"
+                ><path
+                    d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"
+                ></path></svg
+            >
+            <input autocomplete="off" placeholder="Search" name="q" value={query} type="search" />
+        </form>
+        {
+            resultCategories.length > 0 ? (
+                resultCategories.map((category) => (
+                    <>
+                        <strong class="category-title">{category}</strong>
+                        <ul class="category">
+                            {results[category].map((result) => (
+                                <li class="search-result">
+                                    <a
+                                        href={
+                                            result.slug == "index"
+                                                ? "/docs/"
+                                                : `/docs/${result.slug}/`
+                                        }
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 16 16"
+                                            width="16"
+                                            height="16"
+                                        >
+                                            <path d="M0 1.75A.75.75 0 0 1 .75 1h4.253c1.227 0 2.317.59 3 1.501A3.743 3.743 0 0 1 11.006 1h4.245a.75.75 0 0 1 .75.75v10.5a.75.75 0 0 1-.75.75h-4.507a2.25 2.25 0 0 0-1.591.659l-.622.621a.75.75 0 0 1-1.06 0l-.622-.621A2.25 2.25 0 0 0 5.258 13H.75a.75.75 0 0 1-.75-.75Zm7.251 10.324.004-5.073-.002-2.253A2.25 2.25 0 0 0 5.003 2.5H1.5v9h3.757a3.75 3.75 0 0 1 1.994.574ZM8.755 4.75l-.004 7.322a3.752 3.752 0 0 1 1.992-.572H14.5v-9h-3.495a2.25 2.25 0 0 0-2.25 2.25Z" />
+                                        </svg>
+                                        <strong>{result.title}</strong>
+                                        {result.excerpt && (
+                                            <p set:html={result.excerpt} />
+                                        )}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                ))
+            ) : (
+                <div class="no-results">
+                    <img
+                        src="/docs/no-results.svg"
+                        alt="Ferris the crab holding a magnifying glass."
+                        width="137"
+                        height="122"
+                    />
+                    No results.
+                </div>
+            )
+        }
+    </PageSection>
+</PageLayout>
+
+<style>
+    :global(.docs-search-section > .page-section-inner) {
+        padding-block: 48px;
+    }
+
+    .docs-search {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-block-end: 16px;
+    }
+
+    .category-title {
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        color: var(--foreground-tertiary);
+    }
+
+    .category {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0;
+        margin-block: 16px;
+        list-style: none;
+    }
+
+    .search-result a {
+        display: grid;
+        grid-template-areas:
+            "icon title"
+            "icon excerpt";
+        grid-template-columns: fit-content(100%) auto;
+        grid-template-columns: 36px auto;
+        color: var(--foreground-secondary);
+        padding: 8px;
+        border-radius: 4px;
+        text-decoration: none;
+        scroll-margin-bottom: 8px;
+        scroll-margin-top: 42px;
+    }
+
+    .search-result a:hover {
+        background: var(--background-secondary);
+    }
+
+    .search-result svg {
+        margin-block-start: 4px;
+        margin-inline: auto;
+        grid-area: icon;
+        fill: var(--foreground-primary);
+        right: 4px;
+        position: relative;
+    }
+
+    .search-result strong {
+        grid-area: title;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--foreground-primary);
+    }
+
+    .search-result p {
+        grid-area: excerpt;
+        margin: 0;
+        margin-block-start: 8px;
+    }
+
+    .search-result :global(mark) {
+        color: inherit;
+        background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.25);
+    }
+
+    .docs-search input {
+        font: inherit;
+        inline-size: 100%;
+        border-radius: 4px;
+        padding: 6px 8px;
+        padding-inline-start: 32px;
+        border-radius: 4px;
+        background-color: transparent;
+        border: 1px solid var(--foreground-tertiary);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--foreground-primary);
+    }
+
+    .docs-search input::placeholder {
+        color: var(--foreground-secondary);
+    }
+
+    .search-icon {
+        pointer-events: none;
+        fill: var(--foreground-secondary);
+        position: absolute;
+        left: 8px;
+    }
+
+    .no-results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        min-height: 240px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+</style>

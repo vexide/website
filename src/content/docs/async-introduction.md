@@ -24,11 +24,11 @@ When we run one function after another like this, we are executing them *synchro
 
 ![a CPU labeled "CPU1" executing three functions labeled "A", "B", and "C" synchronously](/docs/sync-execution.svg)
 
+## Scheduling and Concurrency
+
 > Back in the [dark ages](https://www.youtube.com/watch?v=DgJS2tQPGKQ), I heard people used to only have one CPU core. How did we manage? How did people run multiple apps at the same time?
 
 Believe it or not, single-core systems can still run code concurrently! In fact, the V5 Brain runs all of *your* code on a single CPU core. Let's look into how that's possible.
-
-## Scheduling and Concurrency
 
 Going back to the shopping list — you're at the bakery and the man at the counter tells you to come back in 20 minutes to pick up your order. Rather than simply waiting at the bakery for 20 minutes, it'd be far more efficient to go do something else while your bread is being made. Applying this analogy, you are now doing two things *concurrently* - waiting for your bread *and* continuing your shopping list.
 
@@ -38,7 +38,7 @@ Computers can do this too. They often need to perform long-running operations th
 
 > Hey! Our poor single-core CPU can only execute one thing at a time. How do we run two concurrent tasks on a single core?
 
-Well, what if we had the ability to *yield* the execution of a function while it waits for something to happen and go do something else? This is done through a practice called *cooperative scheduling*, and it's what `async` rust models.
+Well, what if we had the ability to *yield* the execution of a function while it waits for something to happen and go do something else? This is done through a practice called *cooperative scheduling*, and it's what `async` Rust models.
 
 ![two tasks - "A" and "B" rapidly switching between eachother](/docs/context-switch.svg)
 
@@ -392,7 +392,7 @@ async fn multiply(a: f64, b: f64) {
 ```rs
 use core::future::Future;
 
-fn my_function(a: f64, b: f64) -> impl Future {
+fn multiply(a: f64, b: f64) -> impl Future {
     async {
         sleep(Duration::from_millis(500)).await;
         println!("{a} * {b} = {}", a * b);
@@ -402,7 +402,7 @@ fn my_function(a: f64, b: f64) -> impl Future {
 
 </div>
 
-On the left, we have an `async fn`, and on the right we have a regular function returning an `async` block (a struct implementing the `Future` trait).
+Above is an `async fn`, and below we have a regular function returning an `async` block (a struct implementing the `Future` trait).
 
 > [!TIP]
 > Even though the function on the right is not marked as `async`, we can still `await` it as if it was, because in both casses we are awaiting a `Future`.
@@ -448,7 +448,7 @@ The fact that context switches occur at `await` points has some important implic
 ![mom! it's my turn on the CPU!](/docs/my-turn.svg)
 
 > [!TIP]
-> This is why it's called a *cooperative* scheduler. Different tasks must *cooperate* with each other, where each tasks gives another some CPU time to run. Otherwise, one task would be hogging all of the CPU time to itself and nothing could run!
+> This is why it's called a *cooperative* scheduler. Different tasks must *cooperate* with each other, where every task gives another some CPU time to run. Otherwise, one task would be hogging all of the CPU time to itself and nothing could run!
 
 A function that runs for a long time without an `await` point is said to be **blocking**, because it *blocks* the runtime from running other tasks. This is particularly bad in vexide's case, since a function that fully blocks the runtime prevents some important OS-level background operations from occurring such as:
 
