@@ -1,14 +1,27 @@
 <script lang="ts">
 	import Button from "components/Button.svelte";
 
-	export let title: string;
-	export let description: string;
-	export let author: string;
-	export let date: Date;
-	export let url: string;
-	export let thumbnail: string | undefined = undefined;
-	export let thumbnailAlt: string | undefined = undefined;
-	export let style: string = "";
+	interface Props {
+		title: string;
+		description: string;
+		author: string;
+		date: Date;
+		url: string;
+		thumbnail?: string | undefined;
+		thumbnailAlt?: string | undefined;
+		style?: string;
+	}
+
+	let {
+		title,
+		description,
+		author,
+		date,
+		url,
+		thumbnail = undefined,
+		thumbnailAlt = undefined,
+		style = "",
+	}: Props = $props();
 </script>
 
 <div class="blog-card" {style}>
@@ -101,6 +114,7 @@
 	.blog-card-metadata {
 		margin-block-start: 16px;
 		display: flex;
+		flex-wrap: wrap;
 		gap: 24px;
 		justify-content: space-between;
 		align-items: flex-end;

@@ -8,7 +8,7 @@ interface Props {
 const { element: Element = "section", class: className, ...rest } = Astro.props;
 ---
 
-<Element class:list={["page-section", { className }]} {...rest}>
+<Element class:list={["page-section", className]} {...rest}>
 	<div class="page-section-inner">
 		<slot />
 	</div>

@@ -8,28 +8,32 @@
 		"start": "astro dev",
 		"build": "astro check && astro build",
 		"format": "prettier . --write",
-		"preview": "astro preview",
+		"preview": "astro build && wrangler pages dev ./dist",
 		"astro": "astro"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.4.1",
-		"@astrojs/cloudflare": "^8.1.0",
-		"@astrojs/sitemap": "^3.1.6",
-		"@astrojs/svelte": "^5.7.1",
+		"@astrojs/cloudflare": "^12.1.0",
+		"@astrojs/sitemap": "^3.2.1",
+		"@astrojs/svelte": "^7.0.3",
 		"@rudeigerc/shiki-transformer-title": "^0.1.0",
-		"@shikijs/transformers": "^1.20.0",
-		"astro": "^4.15.9",
+		"@shikijs/transformers": "^1.26.1",
+		"astro": "^5.1.4",
+		"flexsearch": "^0.7.43",
 		"fuzzysort": "^2.0.4",
 		"hast-util-from-html": "^2.0.3",
-		"prettier": "^3.3.3",
+		"prettier": "^3.4.2",
 		"prettier-plugin-astro": "^0.12.3",
-		"prettier-plugin-svelte": "^3.2.7",
+		"prettier-plugin-svelte": "^3.3.2",
 		"rehype-autolink-headings": "^7.1.0",
 		"rehype-github-alerts": "^3.0.0",
 		"rehype-slug": "^6.0.0",
 		"shaku-code-annotate-shiki": "^0.10.0",
 		"shaku-code-annotate-shiki-transformer": "^0.2.4",
-		"svelte": "^4.2.19",
-		"typescript": "^5.6.2"
+		"svelte": "^5.17.3",
+		"typescript": "^5.7.3"
+	},
+	"devDependencies": {
+		"wrangler": "^3.101.0"
 	}
 }

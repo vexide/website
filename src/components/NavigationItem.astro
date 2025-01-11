@@ -3,7 +3,7 @@ const { selected = false, external = false } = Astro.props;
 ---
 
 <li class={`navigation-item-wrapper ${selected ? "selected" : ""}`}>
-	<a class="navigation-item" {...Astro.props} target={external && "_blank"} rel={external && "noreferrer noopener"}>
+	<a class="navigation-item" {...Astro.props} target={external ? "_blank" : ""} rel={external ? "noreferrer noopener" : ""}>
 		<slot />
 	</a>
 </li>
@@ -25,7 +25,7 @@ const { selected = false, external = false } = Astro.props;
 		color: var(--foreground-secondary);
 		font-size: 1.5rem;
 		font-weight: 600;
-		padding: 1px 4px;
+		padding-block: 4px;
 		transition: 150ms ease;
 	}
 
@@ -33,9 +33,13 @@ const { selected = false, external = false } = Astro.props;
 		color: var(--foreground-primary);
 	}
 
-	.navigation-item:focus {
+	.selected .navigation-item {
+		color: var(--foreground-primary);
+		border-bottom: 1px solid var(--background-accent-yellow);
+	}
+
+	.navigation-item:focus-visible {
 		outline: 2px solid var(--foreground-secondary);
-		outline-offset: 2px;
 	}
 
 	.mobile-navigation-items .navigation-item {
