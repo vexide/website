@@ -43,7 +43,7 @@ const index = new FlexSearch.Document({
 });
 
 for (let i = 0; i < pages.length; i++) {
-    await index.addAsync(i, pages[i]);
+    index.add(i, pages[i]);
 }
 
 export const GET: APIRoute = async ({ request }) => {
