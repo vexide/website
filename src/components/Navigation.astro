@@ -175,10 +175,6 @@ const { title = "" } = Astro.props;
 		inline-size: 24px;
 	}
 
-	html:has(.mobile-navigation[open]) {
-		overflow: hidden;
-	}
-
 	.navigation-close-icon,
 	.mobile-navigation[open] .navigation-menu-icon {
 		display: none;
@@ -244,6 +240,10 @@ const { title = "" } = Astro.props;
 
 		.navigation-inner {
 			padding-inline: 16px;
+		}
+
+		html:has(.mobile-navigation[open]) {
+			overflow: hidden;
 		}
 	}
 </style>
