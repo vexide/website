@@ -284,10 +284,11 @@
 
         .docs-search input:not(:focus) {
             width: 36px;
+            height: 32px;
             padding: 6px 8px;
         }
         
-        .docs-search input:not(:focus)::placeholder {
+        .docs-search input:not(:focus) {
             font-size: 0;
         }
         
