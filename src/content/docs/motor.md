@@ -4,9 +4,10 @@ category: 02. Hardware
 page: 8
 ---
 
+Motors serve as the foundation for most robot subsystems, allowing you to control mechanisms through rotational motion. They are likely going to be the most common device you'll be working with in vexide.
+
 ![Sketch of two different V5 motors](/docs/motors.svg)
 
-Motors serve as the foundation for most robot subsystems, and are very likely the most common device you'll be interacting with in vexide.
 
 V5 motors are rather special in that they are both fairly fault-tolerant and provide extra features such as builtin velocity/position control, temperature sensors, and encoders. This is why they're commonly referred to as **Smart Motors**.
 
