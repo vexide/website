@@ -1,9 +1,9 @@
 ---
-title: vexide v0.5.0 Changelog
-description: vexide 0.5.0 released
-author: gavin-niederman
+title: vexide v0.6.0 Changelog
+description: vexide 0.6.0 released
+author: tropix126
 tags: ["release"]
-date: 2024-11-28
+date: 2025-01-26
 ---
 
 # Changelog
