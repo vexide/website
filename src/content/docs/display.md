@@ -65,7 +65,7 @@ To use Slint you have to enable the `slint` feature on the vexide crate. This ca
 vexide = "0.3.0"
 # @diff + start
 vexide = { version = "0.3.0", features = ["slint"] }
-slint = { version = "1.5.1", default-features = false, optional = true, features = [
+slint = { version = "1.5.1", default-features = false, features = [
     "compat-1-2",
     "unsafe-single-threaded",
     "libm",
