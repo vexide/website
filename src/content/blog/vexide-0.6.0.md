@@ -8,7 +8,7 @@ date: 2024-11-28
 
 # Changelog
 
-This release includes work on our new uploading strategy. Check out the [update post](/blog/winter-update-24) for more info.
+This release includes work on our new uploading strategy. Check out the [update post](/blog/winter-update-25) for more info.
 
 ### Added
 
