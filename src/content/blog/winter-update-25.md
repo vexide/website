@@ -209,7 +209,7 @@ We discovered a bug that could cause the [Inertial Sensor](https://docs.rs/vexid
 > [!THANKS]
 > vexide is a community project maintained for free by open-source contributors. We'd like to thank the following new contributors to the project:
 
-- [ion908](https://github.com/ion908) for implementing the `system_version` and `uptime` functions and for improvements in `cargo-v5`.
+- [ion098](https://github.com/ion098) for implementing the `system_version` and `uptime` functions and for improvements in `cargo-v5`.
 - [Saylar27](https://github.com/Saylar27) for finding and fixing a bug a bug with ADI port validation.
 
 Thanks again for your contributions!

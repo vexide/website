@@ -52,4 +52,4 @@ This release includes work on our new uploading strategy. Check out the [update 
 ### New Contributors
 
 - @Saylar27 made their first contribution in #279!
-- @ion908 made their first contribution in #278!
+- @ion098 made their first contribution in #278!
