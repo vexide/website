@@ -200,6 +200,10 @@ async fn main(peripherals: Peripherals) {
 
 We discovered a bug that could cause the [Inertial Sensor](https://docs.rs/vexide/0.4.0/vexide/devices/smart/imu/struct.InertialSensor.html) to not calibrate correctly when using `calibrate()` at the very start of the program in some rare instances. That should now be fixed.
 
+# cat
+
+[cat](https://cat.vexide.dev/)
+
 # New Contributors
 
 > [!THANKS]
