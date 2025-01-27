@@ -10,8 +10,6 @@ Before we setup a project, there are some tools you'll need to have installed to
 <div style="display: block; text-align: center; margin: 0 auto;">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8lf5uh8Se2g?si=yXhixtAme-q_FIpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-<br />
-
 <small>
     If you're on Windows and prefer to follow along with a video tutorial, we have one of those too!
 </small>
@@ -41,7 +39,6 @@ To make a new project, we recommend using [vexide-template](https://github.com/v
 
 ```sh
 git clone https://github.com/vexide/vexide-template
-
 ```
 
 > [!TIP]
