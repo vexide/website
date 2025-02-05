@@ -36,17 +36,19 @@
         box-sizing: border-box;
         text-align: center;
         font-family: inherit;
+        background-color: transparent;
+        text-transform: uppercase;
         border-radius: 2px;
         color: var(--foreground-primary);
         font-family: var(--font-monospace);
         font-size: 1.4rem;
         font-weight: 400;
-        padding-inline: 5px;
-        padding-block: 5px;
+        padding-inline: 16px;
+        padding-block: 6px;
         gap: 8px;
         cursor: pointer;
         border: none;
-        outline: none;
+        border: 1px solid var(--foreground-tertiary);
     }
 
     .chip.chip-disabled {
@@ -55,7 +57,7 @@
     }
 
     .chip.chip-activated {
-        background-color: var(--background-accent-yellow);
-        color: var(--background-primary);
+        border: 1px solid var(--background-accent-yellow);
+        color: var(--foreground-accent-yellow);
     }
 </style>

@@ -1,0 +1,262 @@
+---
+import { getCollection } from "astro:content";
+
+import PageLayout from "layouts/PageLayout.astro";
+import PageSection from "components/PageSection.astro";
+import MarkdownStyles from "components/MarkdownStyles.astro";
+import Chip from "components/Chip.svelte";
+
+function categorizeReleasesByMonth(releases) {
+    // Create a map to store releases by month-year key
+    const monthGroups = releases.reduce((acc, release) => {
+        const date = release.data.date;
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+        if (!acc[monthKey]) {
+            acc[monthKey] = [];
+        }
+
+        acc[monthKey].push(release);
+        return acc;
+    }, {});
+
+    // Convert the map to an array of arrays, maintaining sort order
+    return Object.entries(monthGroups)
+        .sort(([a], [b]) => b.localeCompare(a))
+        .map(([_, releases]) => releases);
+}
+
+const releases = categorizeReleasesByMonth(await getCollection("releases"));
+---
+
+<PageLayout title="vexide releases">
+    <PageSection id="releases-header">
+        <h1 class="releases-title">Project Releases</h1>
+        <p class="subtitle">
+            This page tracks releases for all active projects in the vexide
+            organization.
+        </p>
+        <!-- <div class="projects">
+			</div> -->
+    </PageSection>
+</PageLayout>
+<PageSection id="releases">
+    <div class="timeline">
+        {
+            releases.map((month) => (
+                <>
+                    <span class="release-month">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            width="16"
+                            height="16"
+                        >
+                            <path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0ZM2.5 7.5v6.75c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7.5Zm10.75-4H2.75a.25.25 0 0 0-.25.25V6h11V3.75a.25.25 0 0 0-.25-.25Z" />
+                        </svg>
+                        {month[0].data.date.toLocaleString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                            timeZone: "UTC",
+                        })}
+                    </span>
+                    <ul class="month-releases">
+                        {month.map(async (release) => {
+                            const { Content } = await release.render();
+
+                            return (
+                                <li class="release">
+                                    <div class="release-header">
+                                        <h2 class="release-title">
+                                            {release.data.title}
+											{" - "}
+                                            <span class="release-date">
+                                                {release.data.date.toLocaleDateString(
+                                                    "en-US",
+                                                    { timeZone: "UTC" },
+                                                )}
+                                            </span>
+                                        </h2>
+                                    </div>
+                                    <MarkdownStyles element="article">
+                                        <Content />
+                                        <button class="read-more-button">
+                                            Read More
+                                        </button>
+                                    </MarkdownStyles>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </>
+            ))
+        }
+    </div>
+    <aside class="releases-sidebar">
+        <strong>Projects (8)</strong>
+        <div class="projects">
+            <Chip text="all" activated />
+            <Chip text="vexide" />
+            <Chip text="cargo-v5" />
+            <Chip text="vex-sdk" />
+            <Chip text="symbolizer-for-vex-v5" />
+            <Chip text="evian" />
+            <Chip text="vex-v5-qemu" />
+            <Chip text="hydrozoa" />
+        </div>
+    </aside>
+</PageSection>
+
+<style>
+    :global(#releases-header > .page-section-inner) {
+        padding-block: 72px;
+        text-align: center;
+    }
+
+    :global(#releases-header) {
+        background-image: url("/images/placeholder_pattern.svg");
+        background-size: 800px;
+        border-bottom: 1px solid var(--background-secondary);
+    }
+
+    :global(#releases > .page-section-inner) {
+        padding-block: 48px;
+        gap: 48px;
+        display: flex;
+    }
+
+    .timeline {
+        flex: 3;
+    }
+
+    .releases-sidebar {
+        position: sticky;
+        top: 0;
+        flex: 1;
+    }
+
+    .releases-sidebar strong {
+        font-size: 1.6rem;
+        color: var(--foreground-primary);
+        font-weight: 600;
+        margin-block-end: 24px;
+        padding-block-end: 16px;
+        border-block-end: 1px solid var(--background-secondary);
+        display: flex;
+    }
+
+    .releases-title {
+        margin: 0;
+        margin-block-end: 16px;
+        font-family: var(--font-monospace);
+        font-weight: 200;
+        font-size: 4.8rem;
+    }
+
+    .subtitle {
+        max-inline-size: unset !important;
+        font-size: 1.8rem !important;
+        margin-block-end: 0;
+    }
+
+    .projects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .month-releases {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        padding-inline-start: 36px;
+        margin-inline-start: 8px;
+        border-inline-start: 1px dashed var(--background-secondary);
+        display: flex;
+        flex-direction: column;
+		gap: 16px;
+        margin-block: 16px;
+    }
+
+    .release {
+        position: relative;
+        border: 1px solid var(--background-secondary);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+	
+	.release:first-child {
+		margin-block-start: 24px;
+	}
+
+	.release:last-child {
+		margin-block-end: 24px;
+	}
+
+    .release-month {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--foreground-primary);
+        font-weight: 600;
+        font-size: 1.6rem;
+    }
+
+    .release-month svg {
+        width: 18px;
+        height: auto;
+        fill: var(--foreground-accent-yellow);
+    }
+
+    .release-header {
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--background-secondary);
+        background-color: var(--grid-color);
+    }
+
+    .release-title {
+        font-family: var(--font-monospace);
+        font-weight: 400;
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+	.release-date {
+		font-family: var(--font-primary);
+		color: var(--foreground-secondary);
+	}
+
+    .release :global(.markdown-body) {
+        padding: 24px;
+        max-height: 600px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .release :global(.markdown-body::after) {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 150px;
+        background: linear-gradient(transparent, var(--background-primary));
+        left: 0;
+        top: 414px;
+    }
+
+    .release :global(.read-more-button) {
+        position: absolute;
+        top: 600px;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        z-index: 1;
+        width: 100%;
+        height: 36px;
+        border-radius: 0;
+        background-color: var(--background-primary);
+        border: none;
+        color: var(--foreground-secondary);
+        font-family: var(--font-monospace);
+        border-top: 1px dashed var(--background-secondary);
+        font-size: 1.4rem;
+    }
+</style>

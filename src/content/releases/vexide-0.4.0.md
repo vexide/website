@@ -1,14 +1,12 @@
 ---
-title: vexide v0.4.0 Changelog
-description: vexide 0.4.0 released
-author: gavin-niederman
-tags: ["release"]
+title: vexide 0.4.0
+project: vexide
 date: 2024-10-04
 ---
 
 This is the fall vexide update (0.4.0) changelog! This is only the changelog for the vexide crate. For more in-depth info and a project update, read our [fall update](/blog/posts/fall-update-24/) blog post.
 
-# Changelog
+
 
 ### Added
 

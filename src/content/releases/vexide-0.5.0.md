@@ -1,15 +1,13 @@
 ---
-title: vexide v0.5.0 Changelog
-description: vexide 0.5.0 released
-author: gavin-niederman
-tags: ["release"]
+title: vexide 0.5.0
+project: vexide
 date: 2024-11-28
 ---
 
 vexide 0.5.0 is our biggest update of all time. We focused on hopefully finalizing all of our device APIs in this update and on improving the quality of our documentation.
 We highly recommend reading [our Thanksgiving blog post](/blog/posts/thanksgiving-update-24/) for more info.
 
-# Changelog
+
 
 ## Added
 

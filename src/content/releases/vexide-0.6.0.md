@@ -1,12 +1,10 @@
 ---
-title: vexide v0.6.0 Changelog
-description: vexide 0.6.0 released
-author: tropix126
-tags: ["release"]
+title: vexide 0.6.0
+project: vexide
 date: 2025-01-26
 ---
 
-# Changelog
+
 
 This release includes work on our new uploading strategy. Check out the [update post](/blog/winter-update-25) for more info.
 
