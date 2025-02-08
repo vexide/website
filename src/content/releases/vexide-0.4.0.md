@@ -8,19 +8,19 @@ This is the fall vexide update (0.4.0) changelog! This is only the changelog for
 
 
 
-### Added
+## Added
 
 - Added support for the V5 GPS Sensor ([#79](https://github.com/vexide/vexide/pull/79))
 - Added support for custom banner themes configurable through the `vexide::main` macro ([#127](https://github.com/vexide/vexide/pull/127))
 
-### Fixed
+## Fixed
 
 - Fixed an issue where the distance sensor relative_size returned a u32 when it can be negative. ([#116](https://github.com/vexide/vexide/pull/116))
 - Fixed an issue preventing the `Screen::draw_buffer` function from working properly. ([#128](https://github.com/vexide/vexide/pull/128))
 - Fixed an issue where panic messages would not be displayed even when the `display_panics` feature was enabled if the screens render mode was set to `DoubleBuffered`. ([#134](https://github.com/vexide/vexide/pull/134))
 - `GpsImu` should now validate on the correct port. ([#141](https://github.com/vexide/vexide/pull/141))
 
-### Changed
+## Changed
 
 - Refactored the distance sensor API. All readings from the sensor are now read at once in a `object` method that can be possibly `None` if no object was detected. ([#122](https://github.com/vexide/vexide/pull/122)) (**Breaking Change**)
 - Adjusted distance sensor status code errors to be more clear.

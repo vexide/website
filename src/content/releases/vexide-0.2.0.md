@@ -6,8 +6,6 @@ date: 2024-05-17
 
 vexide version 0.2.0 has been released!
 
-
-
 ## Added
 
 - Added `TICKS_PER_ROTATION` constant to `AdiEncoder` for use with `Position`.
