@@ -24,7 +24,7 @@ async fn main(peripherals: Peripherals) {
 	);
 
 	// Spin the motor at 10 volts!
-	my_motor.set_voltage(10.0).ok();
+	_ = my_motor.set_voltage(10.0);
 }`,
 	},
 ];

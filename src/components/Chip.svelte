@@ -1,20 +1,33 @@
 <script lang="ts">
+    import type { HTMLButtonAttributes } from "svelte/elements";
+
+    interface Props extends HTMLButtonAttributes {
+        element?: HTMLElement | undefined;
+        href?: string;
+        activated?: boolean;
+        disabled?: boolean;
+    }
+
     let {
-        text = "",
+        href = "",
         disabled = false,
         activated = $bindable(false),
-        chip = $bindable(undefined),
+        element = $bindable(undefined),
+        children,
         ...rest
-    } = $props();
+    }: Props = $props();
 
     function handleClick(event: MouseEvent) {
         activated = !activated;
     }
 </script>
 
-<button
+<svelte:element
+    this={href && !disabled ? "a" : "button"}
     type="button"
-    bind:this={chip}
+    bind:this={element}
+    role={href && !disabled ? "button" : undefined}
+    href={href && !disabled ? href : undefined}
     onclick={handleClick}
     class={{
         chip: true,
@@ -23,8 +36,8 @@
     }}
     {...rest}
 >
-    {text}
-</button>
+    {@render children?.()}
+</svelte:element>
 
 <style>
     .chip {

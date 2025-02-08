@@ -66,8 +66,8 @@
             <input bind:value={query} type="search" placeholder="Search" />
         </div>
         <div class="chips">
-            <Chip bind:activated={newsFilter} text="News" />
-            <Chip bind:activated={writeupsFilter} text="Writeups" />
+            <Chip bind:activated={newsFilter}>News</Chip>
+            <Chip bind:activated={writeupsFilter}>Writeups</Chip>
         </div>
     </div>
     <div class="blogs-list">

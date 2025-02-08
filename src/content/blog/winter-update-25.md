@@ -122,7 +122,7 @@ cargo v5 upload --cold --release
 
 # Other Stuff
 
-Alright, enough about uploading. Let's cover the other new additions to `vexide` and `cargo-v5`. As always, the full changelog for `vexide` 0.6.0 can be found [here](/blog/posts/vexide-060).
+Alright, enough about uploading. Let's cover the other new additions to `vexide` and `cargo-v5`. As always, the full changelog for `vexide` 0.6.0 can be found [here](/releases/#vexide-060).
 
 ## Fixed builds on latest nightlies
 

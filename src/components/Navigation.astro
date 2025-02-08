@@ -222,6 +222,10 @@ const { title = "" } = Astro.props;
 			top: 0;
 		}
 
+		:global(html) {
+			scroll-padding-block-start: 72px !important;
+		}
+
 		.navigation-items,
 		.navigation-actions {
 			display: none;

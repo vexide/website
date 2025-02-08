@@ -69,6 +69,9 @@ importers:
         specifier: ^5.7.3
         version: 5.7.3
     devDependencies:
+      '@astropub/md':
+        specifier: ^1.0.0
+        version: 1.0.0(@astrojs/markdown-remark@6.0.1)
       wrangler:
         specifier: ^3.101.0
         version: 3.101.0(@cloudflare/workers-types@4.20250109.0)
@@ -141,6 +144,11 @@ packages:
 
   '@astrojs/yaml2ts@0.2.2':
     resolution: {integrity: sha512-GOfvSr5Nqy2z5XiwqTouBBpy5FyI6DEe+/g/Mk5am9SjILN1S5fOEvYK0GuWHg98yS/dobP4m8qyqw/URW35fQ==}
+
+  '@astropub/md@1.0.0':
+    resolution: {integrity: sha512-++urcyulQogbLAF0VC2rEp6qLUfnRX9iaDREAkN1su9fF8V84DVaMHbQXn7qqQ27wYT5AVVeoK+4+vggYYVbQg==}
+    peerDependencies:
+      '@astrojs/markdown-remark': ^5
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -3323,6 +3331,10 @@ snapshots:
   '@astrojs/yaml2ts@0.2.2':
     dependencies:
       yaml: 2.7.0
+
+  '@astropub/md@1.0.0(@astrojs/markdown-remark@6.0.1)':
+    dependencies:
+      '@astrojs/markdown-remark': 6.0.1
 
   '@aws-crypto/crc32@5.2.0':
     dependencies:
