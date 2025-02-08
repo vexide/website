@@ -2,7 +2,7 @@
 title: A Deep Dive Into the V5 Serial Protocol
 description: A look into the inner workings of vex-v5-serial and the V5 Serial Protocol.
 author: gavin-niederman
-tags: ["blog"]
+tags: ["writeups"]
 date: 2024-07-18
 ---
 

@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
+import markdown from "@astropub/md";
 
 import { fromHtml } from "hast-util-from-html";
 
@@ -17,7 +18,7 @@ import cloudflare from '@astrojs/cloudflare';
 export default defineConfig({
   site: "https://vexide.dev",
   trailingSlash: "always",
-  integrations: [sitemap(), svelte()],
+  integrations: [sitemap(), svelte(), markdown()],
 
   markdown: {
     rehypePlugins: [

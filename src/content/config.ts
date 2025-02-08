@@ -25,7 +25,17 @@ const docs = defineCollection({
     })
 });
 
+const releases = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    project: z.string(),
+    date: z.date(),
+  })
+});
+
 export const collections = {
 	docs,
 	blog,
+  releases,
 };

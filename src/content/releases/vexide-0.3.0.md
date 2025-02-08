@@ -1,8 +1,6 @@
 ---
-title: vexide v0.3.0 Changelog
-description: vexide 0.3.0 released
-author: gavin-niederman
-tags: ["release"]
+title: vexide 0.3.0
+project: vexide
 date: 2024-07-13
 ---
 
@@ -10,7 +8,7 @@ This is the first major vexide update this summer! This blog post is focused sol
 
 Now for the vexide changes!
 
-# Changelog
+
 
 ## Added
 

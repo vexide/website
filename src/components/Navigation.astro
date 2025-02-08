@@ -80,7 +80,7 @@ const { title = "" } = Astro.props;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		max-inline-size: 1380px;
+		max-inline-size: 1280px;
 		padding-inline: 48px;
 		block-size: 48px;
 		margin-inline: auto;
@@ -220,6 +220,10 @@ const { title = "" } = Astro.props;
 		.navigation {
 			position: sticky;
 			top: 0;
+		}
+
+		:global(html) {
+			scroll-padding-block-start: 72px !important;
 		}
 
 		.navigation-items,

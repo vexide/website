@@ -1,0 +1,369 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+
+import PageLayout from "layouts/PageLayout.astro";
+import PageSection from "components/PageSection.astro";
+import MarkdownStyles from "components/MarkdownStyles.astro";
+import Chip from "components/Chip.svelte";
+import { GITHUB_ORG_URL } from "config";
+
+import { Markdown } from "@astropub/md";
+import { categorize } from "utils";
+
+type Release = CollectionEntry<"releases">;
+
+function categorizeReleasesByMonth(releases: Release[]) {
+    // Create a map to store releases by month-year key
+    const monthGroups = releases.reduce(
+        (acc: { [key: string]: Release[] }, release) => {
+            const date = release.data.date;
+            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+
+            if (!acc[monthKey]) {
+                acc[monthKey] = [];
+            }
+
+            acc[monthKey].push(release);
+            return acc;
+        },
+        {},
+    );
+
+    // Convert the map to an array of arrays, maintaining sort order
+    return Object.entries(monthGroups)
+        .sort(([a], [b]) => b.localeCompare(a))
+        .map(([_, releases]) => releases);
+}
+
+function splitReleaseBody(
+    content: string,
+    splitAtOccurrence: number,
+): [string, string] {
+    const newlineIndices: number[] = [];
+    let currentIndex = -1;
+
+    // Collect all indices of newline characters
+    while ((currentIndex = content.indexOf("\n", currentIndex + 1)) !== -1) {
+        newlineIndices.push(currentIndex);
+    }
+
+    // Check if there are enough newlines
+    if (splitAtOccurrence < 1 || splitAtOccurrence > newlineIndices.length) {
+        return [content, ""];
+    }
+
+    // Calculate split position (convert to 0-based index)
+    const splitIndex = newlineIndices[splitAtOccurrence - 1];
+
+    return [
+        content.substring(0, splitIndex + 1), // Include the newline character
+        content.substring(splitIndex + 1),
+    ];
+}
+
+export async function getStaticPaths() {
+    const releases = await getCollection("releases");
+    const projectCategories = categorize(
+        releases,
+        (release: any) => release.data.project,
+    );
+    const projects = Object.keys(projectCategories);
+    const paths = Object.entries(projectCategories).map(
+        ([project, releases]) => ({
+            params: { slug: project },
+            props: { releases, projects, selectedProject: project } as Props,
+        }),
+    );
+
+    paths.push({
+        params: { slug: "/" },
+        props: { releases, projects, selectedProject: null } as Props,
+    });
+
+    return paths;
+}
+
+interface Props {
+    releases: Release[],
+    projects: string[],
+    selectedProject: string | null,
+}
+
+const { releases, projects, selectedProject }: Props = Astro.props;
+const releaseMonths = categorizeReleasesByMonth(releases);
+---
+
+<PageLayout title="vexide releases">
+    <PageSection id="releases-header">
+        <h1 class="releases-title">Project Releases</h1>
+        <p class="subtitle">
+            This page tracks releases for all active projects in the <a
+                href={GITHUB_ORG_URL}
+                target="_blank"
+                rel="noreferrer noopener">vexide organization</a
+            >.
+        </p>
+    </PageSection>
+</PageLayout>
+<PageSection id="releases">
+    <div class="timeline">
+        {
+            releaseMonths.map((month) => (
+                <>
+                    <span class="release-month">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 16 16"
+                            width="16"
+                            height="16"
+                        >
+                            <path d="M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 16H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0ZM2.5 7.5v6.75c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V7.5Zm10.75-4H2.75a.25.25 0 0 0-.25.25V6h11V3.75a.25.25 0 0 0-.25-.25Z" />
+                        </svg>
+                        {month[0].data.date.toLocaleString("en-US", {
+                            month: "long",
+                            year: "numeric",
+                            timeZone: "UTC",
+                        })}
+                    </span>
+                    <ul class="month-releases">
+                        {month.map(async (release) => {
+                            const split = splitReleaseBody(release.body, 12);
+
+                            return (
+                                <li class="release">
+                                    <div class="release-header">
+                                        <h2
+                                            class="release-title"
+                                            id={release.slug}
+                                        >
+                                            <a href={`#${release.slug}`}>
+                                                {release.data.title}
+                                                {" - "}
+                                                <span class="release-date">
+                                                    {release.data.date.toLocaleDateString(
+                                                        "en-US",
+                                                        { timeZone: "UTC" },
+                                                    )}
+                                                </span>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                    <MarkdownStyles element="article">
+                                        <Markdown of={split[0]} />
+                                        {split[1] && (
+                                            <details class="read-more">
+                                                <summary>Read More</summary>
+                                                <Markdown of={split[1]} />
+                                            </details>
+                                        )}
+                                    </MarkdownStyles>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </>
+            ))
+        }
+    </div>
+    <aside class="releases-sidebar">
+        <strong>Projects ({projects.length})</strong>
+        <div class="projects">
+            <Chip activated={!selectedProject} href="/releases/">all</Chip>
+
+            {
+                Astro.props.projects.map((project) => (
+                    <Chip
+                        activated={selectedProject === project}
+                        href={`/releases/${project}/`}
+                    >
+                        {project}
+                    </Chip>
+                ))
+            }
+        </div>
+    </aside>
+</PageSection>
+
+<style>
+    :global(#releases-header > .page-section-inner) {
+        padding-block: 72px;
+        text-align: center;
+    }
+
+    :global(#releases-header) {
+        background-image: url("/images/placeholder_pattern.svg");
+        background-size: 800px;
+        border-bottom: 1px solid var(--background-secondary);
+    }
+
+    :global(#releases > .page-section-inner) {
+        padding-block: 48px;
+        gap: 48px;
+        display: flex;
+    }
+
+    .timeline {
+        flex: 3;
+    }
+
+    .releases-sidebar {
+        align-self: flex-start;
+        position: sticky;
+        top: 24px;
+        flex: 1;
+    }
+
+    .releases-sidebar strong {
+        font-size: 1.6rem;
+        color: var(--foreground-primary);
+        font-weight: 600;
+        margin-block-end: 24px;
+        padding-block-end: 16px;
+        border-block-end: 1px solid var(--background-secondary);
+        display: flex;
+    }
+
+    .releases-title {
+        margin: 0;
+        margin-block-end: 16px;
+        font-family: var(--font-monospace);
+        font-weight: 200;
+        font-size: 4.8rem;
+    }
+
+    .subtitle {
+        max-inline-size: unset !important;
+        font-size: 1.8rem !important;
+        margin-block-end: 0;
+    }
+
+    .projects {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .month-releases {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        padding-inline-start: 36px;
+        margin-inline-start: 8px;
+        border-inline-start: 1px dashed var(--background-secondary);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-block: 16px;
+    }
+
+    .release {
+        position: relative;
+        border: 1px solid var(--background-secondary);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .release:first-child {
+        margin-block-start: 24px;
+    }
+
+    .release:last-child {
+        margin-block-end: 24px;
+    }
+
+    .release-month {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--foreground-primary);
+        font-weight: 600;
+        font-size: 1.6rem;
+    }
+
+    .release-month svg {
+        width: 18px;
+        height: auto;
+        fill: var(--foreground-accent-yellow);
+    }
+
+    .release-header {
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--background-secondary);
+        background-color: var(--grid-color);
+    }
+
+    .release-title {
+        font-family: var(--font-monospace);
+        font-weight: 400;
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    .release-title a {
+        color: inherit;
+        text-decoration: none;
+        transition: 0.25s ease;
+    }
+
+    .release-title a:hover {
+        border-bottom: 1px solid currentColor;
+    }
+
+    .release-date {
+        font-family: var(--font-primary);
+        color: var(--foreground-secondary);
+    }
+
+    .release :global(.markdown-body) {
+        padding: 24px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .release .read-more summary {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 36px;
+        padding-inline: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        color: var(--foreground-secondary);
+        font-size: 1.4rem;
+        font-family: var(--font-monospace);
+        border-block-start: 1px dashed var(--background-secondary);
+    }
+
+    .release .read-more summary:hover {
+        color: var(--foreground-primary);
+    }
+
+    .release .read-more {
+        margin-bottom: 36px;
+    }
+
+    .release .read-more[open] {
+        margin-bottom: 0;
+    }
+
+    .release .read-more[open] summary {
+        display: none;
+    }
+
+    @media screen and (max-width: 1024px) {
+        :global(#releases > .page-section-inner) {
+            flex-direction: column;
+        }
+
+        .releases-sidebar {
+            order: -1;
+            top: 0;
+            align-self: stretch;
+            position: relative;
+        }
+    }
+</style>

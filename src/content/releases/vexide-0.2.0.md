@@ -1,14 +1,12 @@
 ---
-title: vexide v0.2.0 Changelog
-description: vexide 0.2.0 released
-author: gavin-niederman
-tags: ["release"]
+title: vexide 0.2.0
+project: vexide
 date: 2024-05-17
 ---
 
 vexide version 0.2.0 has been released!
 
-# Changelog
+
 
 ## Added
 

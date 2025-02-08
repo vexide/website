@@ -6,7 +6,7 @@ thumbnail: {
     url: "/images/thumbnails/flower.png",
     alt: "Thumbnail Image"
 }
-tags: ["release"]
+tags: ["news"]
 date: 2024-05-11
 ---
 

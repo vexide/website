@@ -2,7 +2,7 @@
 title: "Winter Updates: Instant wireless uploads on vexide 0.6.0 & cargo-v5"
 description: vexide update!!!!!!!!!! yippee!!!!
 author: tropix126
-tags: ["blog"]
+tags: ["news"]
 date: 2025-01-26
 thumbnail: {
     url: "/images/thumbnails/compression-hell.png",
@@ -122,7 +122,7 @@ cargo v5 upload --cold --release
 
 # Other Stuff
 
-Alright, enough about uploading. Let's cover the other new additions to `vexide` and `cargo-v5`. As always, the full changelog for `vexide` 0.6.0 can be found [here](/blog/posts/vexide-060).
+Alright, enough about uploading. Let's cover the other new additions to `vexide` and `cargo-v5`. As always, the full changelog for `vexide` 0.6.0 can be found [here](/releases/#vexide-060).
 
 ## Fixed builds on latest nightlies
 
