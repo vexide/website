@@ -1,14 +1,12 @@
 ---
 title: vexide 0.3.0
 project: vexide
-date: 2024-07-13
+date: 2024-07-16
 ---
 
 This is the first major vexide update this summer! This blog post is focused solely on the new update to the *vexide crate*. To read about our summer plans and everything else included in this release, take a look at [our blog post on that subject](/blog/posts/summer-update-24/). I highly recommend reading it!
 
 Now for the vexide changes!
-
-
 
 ## Added
 

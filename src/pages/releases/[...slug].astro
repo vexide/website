@@ -46,6 +46,10 @@ function splitReleaseBody(
     const newlineIndices: number[] = [];
     let currentIndex = -1;
 
+    if (!content) {
+        return ["", ""];
+    }
+
     // Collect all indices of newline characters
     while ((currentIndex = content.indexOf("\n", currentIndex + 1)) !== -1) {
         newlineIndices.push(currentIndex);

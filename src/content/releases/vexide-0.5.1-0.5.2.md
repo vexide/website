@@ -1,5 +1,5 @@
 ---
-title: vexide 0.5.1 and 0.5.2
+title: vexide 0.5.1-0.5.2
 project: vexide
 date: 2024-12-30
 ---
