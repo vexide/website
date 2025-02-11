@@ -44,9 +44,9 @@ async fn main(peripherals: Peripherals) {
 
 That will send the data `HelloHello` to your computer.
 
-> That's cool and all but... where am I supposed to be seeing all this?
-
 # Reading the Terminal
+
+> That's cool and all but... where am I supposed to be seeing all this?
 
 Simply running all of this code with no connection to a computer won't visibly do anything, so let's change that.
 
