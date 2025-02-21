@@ -12,13 +12,13 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.4.1",
-		"@astrojs/cloudflare": "^12.1.0",
+		"@astrojs/check": "^0.9.4",
+		"@astrojs/cloudflare": "^12.2.1",
 		"@astrojs/sitemap": "^3.2.1",
-		"@astrojs/svelte": "^7.0.3",
+		"@astrojs/svelte": "^7.0.4",
 		"@rudeigerc/shiki-transformer-title": "^0.1.0",
 		"@shikijs/transformers": "^1.26.1",
-		"astro": "^5.1.4",
+		"astro": "^5.3.0",
 		"flexsearch": "^0.7.43",
 		"fuzzysort": "^2.0.4",
 		"hast-util-from-html": "^2.0.3",
