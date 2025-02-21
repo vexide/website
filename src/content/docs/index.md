@@ -38,7 +38,7 @@ vexide projects are just regular Rust projects. By using vexide, you gain full a
 
 ![message boxes depicting various memory errors](/docs/aborts.svg)
 
-Rust as a language aims to make make it very difficult to write software that fails in unpredictable ways. This is especially important when programming robots. Many competitors can attest to the truth of [Murphy's law](https://en.wikipedia.org/wiki/Murphy%27s_law). **If something works 99.9% of the time, but very rarely fails unexplainably, then it isn't worth using at all.**
+Rust as a language aims to make make it very difficult to write software that fails in unpredictable ways. This is especially important when programming robots. Many competitors can attest to the truth of [Murphy's law](https://en.wikipedia.org/wiki/Murphy%27s_law). **If something works 99.5% of the time, but very rarely fails unexplainably, then it isn't worth using at all.**
 
 Likewise, programming in an enviornment that makes it exceedingly easy to shoot yourself in the foot isn't much better either. vexide promotes safe programming practices like error handling and memory safety, while also preventing common pitfalls like race conditions and undefined behavior. **This decreases the risk of something going wrong when it matters the most, while also making you a better programmer in the process.**
 
