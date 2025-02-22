@@ -361,6 +361,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		list-style-type: square;
 	}
 
+	.markdown-body :global(li) {
+		margin-block-end: 8px;
+	}
+
 	.markdown-body :global(ul),
     .markdown-body :global(ol) {
         padding-inline-start: 24px;

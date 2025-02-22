@@ -282,7 +282,7 @@ Both our GUI and CLI client implementations of the simulator use the host crate 
 
 This summer, we announced that progress was made on [a port of the Rust Standard Library](https://github.com/vexide/rust/tree/armv7a-vex-v5) (`libstd`) to the V5 Brain. Well, that work is nearing completion and we are going to attempt to upstream this platform support into `rust-lang/rust` in the near future. This will open the door to much of the wider Rust ecosystem to vexide and allow the use of many more crates.
 
-Work has already begun on a rewritten version of `vexide` that works in a `std`-enabled enviornment. You can track development of that [here](https://github.com/vexide/vexide/tree/feat/rust-std).
+Work has already begun on a rewritten version of `vexide` that works in a `std`-enabled environment. You can track development of that [here](https://github.com/vexide/vexide/tree/feat/rust-std).
 
 # Documentation Improvements
 

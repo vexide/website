@@ -1,7 +1,7 @@
 ---
 title: Motor
 category: 02. Hardware
-page: 8
+page: 9
 ---
 
 ![Sketch of two different V5 motors](/docs/motors.svg)

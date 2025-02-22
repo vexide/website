@@ -143,4 +143,4 @@ async fn main(_peripherals: Peripherals) {
 
 # Advanced Logging Solutions
 
-vexide takes a fairly unopinionated approach on how you should use the terminal, providing a similar API surface to what's given to you in normal rust programs in a `std`-enviornment through macros and writers. If you need a more advanced logging solution, crates in the rust ecosystem such as [log](https://crates.io/crates/log) may be of interest to you.
+vexide takes a fairly unopinionated approach on how you should use the terminal, providing a similar API surface to what's given to you in normal rust programs in a `std`-environment through macros and writers. If you need a more advanced logging solution, crates in the rust ecosystem such as [log](https://crates.io/crates/log) may be of interest to you.

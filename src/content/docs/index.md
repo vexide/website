@@ -40,7 +40,7 @@ vexide projects are just regular Rust projects. By using vexide, you gain full a
 
 Rust as a language aims to make make it very difficult to write software that fails in unpredictable ways. This is especially important when programming robots. Many competitors can attest to the truth of [Murphy's law](https://en.wikipedia.org/wiki/Murphy%27s_law). **If something works 99.5% of the time, but very rarely fails unexplainably, then it isn't worth using at all.**
 
-Likewise, programming in an enviornment that makes it exceedingly easy to shoot yourself in the foot isn't much better either. vexide promotes safe programming practices like error handling and memory safety, while also preventing common pitfalls like race conditions and undefined behavior. **This decreases the risk of something going wrong when it matters the most, while also making you a better programmer in the process.**
+Likewise, programming in an environment that makes it exceedingly easy to shoot yourself in the foot isn't much better either. vexide promotes safe programming practices like error handling and memory safety, while also preventing common pitfalls like race conditions and undefined behavior. **This decreases the risk of something going wrong when it matters the most, while also making you a better programmer in the process.**
 
 vexide also takes [undefined behavior](https://en.wikipedia.org/wiki/Undefined_behavior) very seriously. **It should not be possible to cause memory errors in vexide when only using safe Rust.** If you ever encounter anything along the lines of a `Memory Permission Error`, `Prefetch Error`, or `Undefined Error` in your program with no `unsafe` code, then this is immediately considered a serious and high-priority bug in vexide itself.
 
@@ -51,7 +51,7 @@ vexide also takes [undefined behavior](https://en.wikipedia.org/wiki/Undefined_b
 
 ![hearts](/docs/hearts.svg)
 
-vexide is one of the only VEX programming enviornments that is *fully* open source. This means that anyone is free to contribute to, research, modify, or build vexide themselves from [its source code on GitHub](http://github.com/vexide/vexide). vexide and its associated tools are [MIT licensed](https://github.com/vexide/vexide/blob/main/LICENSE) and do not link to any proprietary code or SDKs.
+vexide is one of the only VEX programming environments that is *fully* open source. This means that anyone is free to contribute to, research, modify, or build vexide themselves from [its source code on GitHub](http://github.com/vexide/vexide). vexide and its associated tools are [MIT licensed](https://github.com/vexide/vexide/blob/main/LICENSE) and do not link to any proprietary code or SDKs.
 
 vexide's development is entirely community-driven, meaning it is not maintained by a single person or entity and is developed entirely in the open. Many active VRC and VEXU competitors from around the world have submitted bug reports and patches to vexide. This model of development promotes a level of transparency and community involvement that isn't seen anywhere else.
 

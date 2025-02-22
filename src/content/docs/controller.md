@@ -1,7 +1,7 @@
 ---
 title: Controller
 category: 02. Hardware
-page: 9
+page: 10
 ---
 
 ![controller sketch](/docs/controller.svg)
@@ -87,7 +87,7 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-Or if we're in a [competition enviornment](/docs/competition/), we'll put this loop inside our `driver` function.
+Or if we're in a [competition environment](/docs/competition/), we'll put this loop inside our `driver` function.
 
 ```rs
 // @fold start
@@ -162,7 +162,7 @@ This is a pretty common scenario. Rather than repeatedly running code if a butto
 You can use the [`is_now_pressed`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_pressed) and [`is_now_released`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_released) methods for this exact purpose. These method returns `true` if the button was pressed in the last update (i.e., it was released the last time [`Controller::state`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html#method.state) was called and is now pressed) and `false` otherwise. This is quite useful for implementing actions like toggling a pneumatic piston or changing the state of a subsystem.
 
 > [!WARNING]
-> Do note that if a button was quickly pressed and released in-between two updates in our loop, the press will not be detected by `is_now_pressed` and will be dropped.
+> Do note that if a button was pressed and released quickly enough between two updates in our loop, the event will not be picked up by `is_now_pressed`.
 
 ```rs
 // @fold start

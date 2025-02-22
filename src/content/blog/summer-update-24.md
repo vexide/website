@@ -106,7 +106,7 @@ An important change here is that competition functions are now *infallible*, mea
 
 ## Floating-point Math Support
 
-Embedded Rust is a little weird. If you're coming from a typical Rust project with the standard library, you may find many things just *missing* in a `no_std` enviornment. One of those things is support for math on floating-point numbers.
+Embedded Rust is a little weird. If you're coming from a typical Rust project with the standard library, you may find many things just *missing* in a `no_std` environment. One of those things is support for math on floating-point numbers.
 
 <div class="code-split">
 
