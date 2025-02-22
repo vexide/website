@@ -30,9 +30,11 @@ The V5 Brain is an *embedded platform*, meaning the code that you write runs wit
 
 ![ferris standing next to some crates](/docs/crates.svg)
 
-Rust is a modern language that is growing in popularity every year. It has many applications, from networking to embedded systems. If you've been looking for a chance to learn and use it in a project also enjoy robotics, then vexide is the perfect opportunity for you to pick it up! vexide's API takes heavy inspiration from widely used packages such as [`tokio`](https://crates.io/crates/tokio), [`embassy`](https://embassy.dev/), and [`cortex-m`](https://github.com/rust-embedded/cortex-m), offering you a realistic look into the embedded and async Rust ecosystem.
+Rust is a modern language that is growing in popularity every year. It has many applications, from networking to embedded systems. If you've been looking for a chance to learn and use it in a project while also enjoying robotics, then vexide is the perfect opportunity for you to pick it up! vexide's API takes heavy inspiration from widely used packages such as [`tokio`](https://crates.io/crates/tokio), [`embassy`](https://embassy.dev/), and [`cortex-m`](https://github.com/rust-embedded/cortex-m), offering you a realistic look into the embedded and async Rust ecosystem.
 
-vexide projects are just regular Rust projects. By using vexide, you gain full access to the entirety of the [crates.io](https://crates.io/) ecosystem's 150,000+ packages to use in your code. [Cargo](https://doc.rust-lang.org/cargo/), Rust's package manager makes it extremely easy to install third-party dependencies and integrate them into your code. In fact, `vexide` itself is just a regular library that's installed through Cargo!
+vexide projects are just regular Rust projects. By using vexide, you gain full access to the entirety of the [crates.io](https://crates.io/) ecosystem's 150,000+ packages to use in your code[^1]. [Cargo](https://doc.rust-lang.org/cargo/), Rust's package manager makes it extremely easy to install third-party dependencies and integrate them into your code. In fact, `vexide` itself is just a regular library that's installed through Cargo!
+
+[^1]: Not all Cargo crates can be used in embedded contexts. Look for crates with the `no_std` attribute.
 
 ## Safety, Predictability, and Fault Tolerance
 
