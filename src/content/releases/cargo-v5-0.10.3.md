@@ -1,5 +1,5 @@
 ---
-title: cargo-v5 0.10.2
+title: cargo-v5 0.10.3
 project: cargo-v5
 date: 2025-02-22
 ---
