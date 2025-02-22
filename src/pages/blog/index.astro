@@ -3,21 +3,20 @@ import { getCollection } from "astro:content";
 
 import PageLayout from "layouts/PageLayout.astro";
 import PageSection from "components/PageSection.astro";
-import BlogsSearch from "components/BlogsSearch.svelte";
+import BlogSearch from "components/BlogSearch.svelte";
 
 const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 ---
 
-<PageLayout title="vexide blogs">
-	<PageSection id="blogs">
-		<h1 class="title" style="align-self: center;">Blogs</h1>
+<PageLayout title="vexide blog">
+	<PageSection id="blog">
+		<h1 class="title" style="align-self: center;">Blog</h1>
 		<a id="content"></a>
-		<BlogsSearch
+		<BlogSearch
 			client:load
 			blogs={blogPosts
 				.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 				.map((post, n) => {
-					const animationDelay = `${n * 0.1 + 0.3}s`;
 					return {
 						url: `/blog/posts/${post.slug}/`,
 						title: post.data.title,
@@ -27,11 +26,10 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 						thumbnail: post.data.thumbnail?.url,
 						thumbnailAlt: post.data.thumbnail?.alt,
 						tag: post.data.tags[0],
-						style: `animation: slide-up-blog 500ms backwards ${animationDelay};`,
 					};
 				})}
 		/>
-		<div class="blogs-grid"></div>
+		<div class="blog-grid"></div>
 	</PageSection>
 </PageLayout>
 
@@ -49,8 +47,8 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 		}
 	}
 
-	#blogs {
-		min-height: 100vh;
+	#blog {
+		min-height: calc(100vh - 48px);
 		z-index: 1;
 		/* border-bottom: 1px solid #6e59ff; */
 		--grid-color: hsl(var(--base-hue), 12%, 18%);
@@ -63,7 +61,7 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 			linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
 	}
 
-	#blogs > :global(.page-section-inner) {
+	#blog > :global(.page-section-inner) {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -72,14 +70,12 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 		padding-block: 128px;
 	}
 	@media screen and (max-width: 800px) {
-		#blogs > :global(.page-section-inner) {
+		#blog > :global(.page-section-inner) {
 			width: 100%;
 		}
 	}
-	#sim-hero::after {
-	}
 
 	.title {
-		animation: slide-up-regular 500ms backwards 150ms;
+		animation: slide-up-regular 500ms backwards;
 	}
 </style>

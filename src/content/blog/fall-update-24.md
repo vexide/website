@@ -2,11 +2,11 @@
 title: "Fall Updates: vexide 0.4.0, cargo-v5 0.8.0, Simulator, Docs, and more!"
 description: Important project updates for Fall 2024!
 author: tropix126
-tags: ["blog"]
+tags: ["news"]
 date: 2024-10-05
 thumbnail: {
     url: "/images/thumbnails/y2k.png",
-    alt: "Thumbnail Image"
+    alt: "vexide logo in the style of the Windows ME boxart."
 }
 ---
 
@@ -16,7 +16,7 @@ We've got some important updates to share with you regarding the vexide project,
 
 # Releasing vexide 0.4.0
 
-vexide 0.4.0 has just released, containing our last 3 months of work on the vexide runtime. [If bullet points are more your style, the full changelog can be viewed here.](/blog/posts/vexide-040/)
+vexide 0.4.0 has just released, containing our last 3 months of work on the vexide runtime. [If bullet points are more your style, the full changelog can be viewed here.](/releases/#vexide-040)
 
 This new version of vexide will require you to update to the latest version of `cargo-v5`. You can do that with the following terminal command:
 
@@ -81,7 +81,7 @@ async fn main(_peripherals: Peripherals) {}
 
 ## Math Got Even Faster
 
-[Last release](/blog/posts/vexide-030/), we improved floating point math performance by over 100 times by switching to a more optimized build of `libm`. This release, we made some adjustments to our platform target to use the [ARM Hard-float ABI (`eabihf`)](https://wiki.debian.org/ArmHardFloatPort), which brings in additional floating-point performance improvements.
+[Last release](/releases/#vexide-030), we improved floating point math performance by over 100 times by switching to a more optimized build of `libm`. This release, we made some adjustments to our platform target to use the [ARM Hard-float ABI (`eabihf`)](https://wiki.debian.org/ArmHardFloatPort), which brings in additional floating-point performance improvements.
 
 Here's a crude benchmark computing `f64::sin(35.0)` 10,000 times with our old `libm` (+softfp) and our new `libm` (+hard):
 
@@ -282,7 +282,7 @@ Both our GUI and CLI client implementations of the simulator use the host crate 
 
 This summer, we announced that progress was made on [a port of the Rust Standard Library](https://github.com/vexide/rust/tree/armv7a-vex-v5) (`libstd`) to the V5 Brain. Well, that work is nearing completion and we are going to attempt to upstream this platform support into `rust-lang/rust` in the near future. This will open the door to much of the wider Rust ecosystem to vexide and allow the use of many more crates.
 
-Work has already begun on a rewritten version of `vexide` that works in a `std`-enabled enviornment. You can track development of that [here](https://github.com/vexide/vexide/tree/feat/rust-std).
+Work has already begun on a rewritten version of `vexide` that works in a `std`-enabled environment. You can track development of that [here](https://github.com/vexide/vexide/tree/feat/rust-std).
 
 # Documentation Improvements
 

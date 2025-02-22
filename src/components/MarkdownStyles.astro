@@ -44,8 +44,12 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		page-break-after: avoid;
 	}
 
+	.markdown-body :global(h2) {
+		margin-block-start: 48px;
+	}
+
 	.markdown-body :global(.icon-link) {
-		display: none;
+		visibility: hidden;
 		position: absolute;
 		top: 0;
 		right: 100%;
@@ -54,14 +58,18 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 
 	@media screen and (max-width: 768px) {
 		.markdown-body :global(.icon-link) {
-			left: 100%;
-			padding-left: 8px;
-			padding-right: 0;
+			position: static;
+			padding-inline-end: 0;
+			padding-inline-start: 16px;
 		}
 	}
 
-	.markdown-body :global(:hover .icon-link) {
-		display: inline;
+	.markdown-body :global(a:has(.icon-link)) {
+		border: none;
+	}
+
+	.markdown-body :global(:hover > a .icon-link) {
+		visibility: visible;
 	}
 
 	.markdown-body :global(.icon-link::before) {
@@ -140,11 +148,6 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		margin-left: -24px;
 		padding-left: 24px;
 		width: calc(100% + 48px);
-	}
-
-	/* There seems to be a bug where shaku always inserts an extra line at the end of our codeblocks */
-	.markdown-body :global(pre.shaku code > .line:last-of-type) {
-		display: none;
 	}
 
 	.markdown-body :global(.shaku-callout) {
@@ -241,7 +244,7 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		border-top: none;
 	}
 
-	.markdown-body :global(.shaku-expand):nth-last-child(2) {
+	.markdown-body :global(.shaku-expand):last-child {
 		margin-block-start: 24px;
 		margin-block-end: -24px;
 		border-bottom: none;
@@ -334,6 +337,11 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		color: var(--foreground-accent-red);
 	}
 
+	.markdown-body :global(.markdown-alert.thanks) {
+		background-color: hsl(322deg, 58%, 69%, 0.25);
+		color: hsl(322deg, 58%, 85%);
+	}
+
 	.markdown-body :global(.markdown-alert.important) {
 		border: 1px solid var(--foreground-accent-yellow);
 		color: var(--foreground-accent-yellow);
@@ -356,6 +364,15 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(ul) {
 		list-style-type: square;
 	}
+
+	.markdown-body :global(li) {
+		margin-block-end: 8px;
+	}
+
+	.markdown-body :global(ul),
+    .markdown-body :global(ol) {
+        padding-inline-start: 24px;
+    }
 
 	.markdown-body :global(a) {
 		color: var(--foreground-accent-red);
@@ -403,6 +420,9 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		text-align: left;
 		border-collapse: collapse;
 		margin-block: 24px;
+		max-width: 100%;
+		display: inline-block;
+		overflow: auto;
 	}
 
 	.markdown-body :global(table th),
@@ -419,6 +439,12 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 	.markdown-body :global(table tr) {
 		background-color: var(--background-primary);
 		border-top: 1px solid var(--background-secondary);
+	}
+
+	.markdown-body :global(iframe) {
+		max-width: 100%;
+		margin: 0 auto;
+		display: block;
 	}
 
 	@media print {

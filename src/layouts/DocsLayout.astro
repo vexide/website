@@ -1,19 +1,16 @@
 ---
 import Navigation from "components/Navigation.astro";
+import NavigationItem from "components/NavigationItem.astro";
 
 import Button from "components/Button.svelte";
+import DocsSearch from "components/DocsSearch.svelte";
 import MarkdownStyles from "components/MarkdownStyles.astro";
 import { GITHUB_ORG_URL } from "config";
 import BaseLayout from "./BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { categorize } from "utils";
 
 const { page: currentPage } = Astro.props;
-
-const categorize = (array: any[], fn: (arg: any) => any) =>
-	array.reduce(
-		(r, v, _i, _a, k = fn(v)) => ((r[k] || (r[k] = [])).push(v), r),
-		{},
-	);
 
 const pages = (await getCollection("docs")).sort(
 	(a: any, b: any) => a.data.page - b.data.page,
@@ -48,6 +45,54 @@ const nextPage =
 			alt="vexide Logo"
 		/>
 		<span slot="title" class="navigation-docs-chip">Docs</span>
+		<NavigationItem selected href="/docs/">Tutorials</NavigationItem>
+		<NavigationItem href="https://docs.rs/vexide/" external>API</NavigationItem>
+		<NavigationItem href="https://github.com/vexide/vexide/tree/main/examples" external>Examples</NavigationItem>
+		<DocsSearch slot="right" client:load />
+		<Fragment slot="mobile">
+			{
+				Object.keys(categories)
+					.sort((a: string, b: string) => a.localeCompare(b))
+					.map((category) => (
+						<>
+							<strong class="docs-category-label">
+								{category}
+							</strong>
+							<ul class="docs-category">
+								{categories[category]
+									.sort(
+										(a: any, b: any) =>
+											a.data.page - b.data.page,
+									)
+									.map((page: any) => {
+										return (
+											<li
+												class:list={[
+													"docs-sidebar-item",
+													{
+														selected:
+															page.slug ===
+															currentPage.slug,
+													},
+												]}
+											>
+												<a
+													href={
+														page.slug == "index"
+															? "/docs/"
+															: `/docs/${page.slug}/`
+													}
+												>
+													{page.data.title}
+												</a>
+											</li>
+										);
+									})}
+							</ul>
+						</>
+					))
+			}
+		</Fragment>
 	</Navigation>
 	<main class="docs-layout">
 		<aside class="docs-sidebar">
@@ -181,6 +226,11 @@ const nextPage =
 </BaseLayout>
 
 <style>
+	:global(.navigation:has(.docs-search input:focus)) {
+		position: sticky;
+		top: 0;
+	}
+	
 	.navigation-docs-chip {
 		align-self: center;
 		font-size: 1.2rem;
@@ -205,14 +255,26 @@ const nextPage =
 	.docs-sidebar {
 		width: 280px;
 		height: 100vh;
+		padding-block-end: 48px;
 		flex: 0 0 auto;
+		overflow: auto;
 		position: sticky;
+		scrollbar-width: thin;
+		scrollbar-color: hsl(var(--base-hue), 12%, 30%) #282a34;
 		top: 0;
+	}
+
+	:global(.navigation:has(.docs-search input:focus)) + .docs-layout .docs-sidebar {
+		top: 48px;
 	}
 
 	@media screen and (max-width: 768px) {
 		.docs-sidebar {
 			display: none;
+		}
+
+		.docs-header .docs-header-inner h1 {
+			font-size: 3.6rem;
 		}
 	}
 
@@ -241,7 +303,7 @@ const nextPage =
 	}
 
 	.docs-page #content {
-		max-inline-size: 1120px;
+		max-inline-size: 960px;
 		margin: 0 auto;
 	}
 
@@ -258,7 +320,7 @@ const nextPage =
 	}
 
 	.docs-header-inner {
-		max-inline-size: 1024px;
+		max-inline-size: 864px;
 		margin: 0 auto;
 	}
 
@@ -377,5 +439,16 @@ const nextPage =
 	.page-action svg {
 		flex: 0 0 auto;
 		fill: currentColor;
+	}
+
+	:global(.mobile-navigation .mobile-navigation-flyout .mobile-navigation-items) {
+		display: flex;
+		gap: 16px;
+		padding: 16px;
+		padding-block-end: 0;
+	}
+
+	:global(.mobile-navigation .mobile-navigation-flyout) {
+		padding: 0;
 	}
 </style>

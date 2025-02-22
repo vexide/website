@@ -37,7 +37,7 @@ const {
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- Favicon & Page Theme -->
-		<link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+		<link rel="icon" type="image/svg+xml" href="/images/favicon.png" />
 		<meta name="color-scheme" content="dark" />
 		<meta name="theme-color" content="#e54643" />
 
@@ -138,6 +138,7 @@ const {
 		--background-secondary: hsl(var(--base-hue), 12%, 24%);
 		--background-accent-red: hsl(var(--accent-red-hue), 76%, 58%);
 		--background-accent-yellow: hsl(var(--accent-yellow-hue), 73%, 63%);
+		--grid-color: hsl(var(--base-hue), 12%, 18%);
 
 		--foreground-primary: hsl(var(--base-hue), 27%, 88%);
 		--foreground-secondary: hsl(var(--base-hue), 20%, 68%);
@@ -154,7 +155,7 @@ const {
 			"Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
 			"Droid Sans", "Helvetica Neue", Arial, sans-serif;
 
-		/* --breakpoint-large: 1380px;
+		/* --breakpoint-large: 1280px;
 		--breakpoint-medium: 1024px;
 		--breakpoint-small: 768px; */
 	}
@@ -169,6 +170,7 @@ const {
 
 	html,
 	body {
+        scroll-padding-block-start: 24px;
 		color-scheme: dark;
 		font-family: var(--font-primary);
 		background-color: var(--background-primary);

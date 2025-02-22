@@ -1,29 +1,31 @@
 ---
 title: Display
 category: 02. Hardware
-page: 15
+page: 11
 ---
 
-Since there is only one screen on a Brain and it is always connected, you can take a `Screen` directly from `Peripherals`.
+Since there is only one screen on a Brain and it is always connected, you can take a `Display` directly from `Peripherals`.
+
 ```rust
-let mut screen = peripherals.screen;
+let mut display = peripherals.display;
 ```
+
 Great! Now we have a screen, but how do we draw to it?
 
-# Drawing to the Screen
+# Drawing to the Display
 
 Currently, there are three options for drawing to the screen:
-- vexide's `Screen` API
+- vexide's `Display` API
 - [Slint](https://crates.io/crates/slint)
 - [embedded-graphics](https://crates.io/crates/embedded-graphics)
 
 Each option has some drawbacks and advantages so I'll give a description of all three.
 
-## `Screen`
+## vexide's `Display` API
 
-The `Screen` API is the simplest to use, and carries no additional runtime cost or external libraries. It's also the most limited, however.
+The `Display` API is the simplest to use, and carries no additional runtime cost or external libraries. It's also the most limited, however.
 
-Here is some example code:
+Here is some example code that draws a rectangle to the screen:
 
 ```rs
 // @fold start
@@ -32,17 +34,15 @@ Here is some example code:
 
 use vexide::prelude::*;
 // @fold end
-use vexide::devices::{screen::*, color::Rgb};
+use vexide::devices::{display::*, color::Rgb};
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-    let mut screen = peripherals.screen;
+    let mut display = peripherals.display;
     
     let rectangle = Rect::from_dimensions((50, 50), 25, 25);
-    let text = Text::new("Hello, World!", (100, 50));
     
-    screen.stroke(&rectangle, Rgb::WHITE);
-    screen.fill(&text, Rgb::LIME);
+    display.stroke(&rectangle, Rgb::WHITE);
 }
 ```
 
@@ -65,7 +65,7 @@ To use Slint you have to enable the `slint` feature on the vexide crate. This ca
 vexide = "0.3.0"
 # @diff + start
 vexide = { version = "0.3.0", features = ["slint"] }
-slint = { version = "1.5.1", default-features = false, optional = true, features = [
+slint = { version = "1.5.1", default-features = false, features = [
     "compat-1-2",
     "unsafe-single-threaded",
     "libm",
@@ -87,7 +87,7 @@ use vexide::graphics::slint::initialize_slint_platform;
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-    initialize_slint_platform(peripherals.screen);
+    initialize_slint_platform(peripherals.display);
 }
 ```
 
@@ -123,6 +123,6 @@ use vexide::graphics::embedded_graphics::BrainDisplay;
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
-    let display = BrainDisplay::new(peripherals.screen);
+    let display = BrainDisplay::new(peripherals.display);
 }
 ```

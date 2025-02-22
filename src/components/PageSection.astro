@@ -8,7 +8,7 @@ interface Props {
 const { element: Element = "section", class: className, ...rest } = Astro.props;
 ---
 
-<Element class:list={["page-section", { className }]} {...rest}>
+<Element class:list={["page-section", className]} {...rest}>
 	<div class="page-section-inner">
 		<slot />
 	</div>
@@ -25,12 +25,15 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		display: block;
 		position: relative;
 		box-sizing: border-box;
-		max-inline-size: 1380px;
+		inline-size: 100%;
+		max-inline-size: 1280px;
 		padding-inline: 48px;
+		padding-block: 128px;
 		margin-inline: auto;
 	}
 
 	.page-section :global(.title) {
+		line-height: 1.4;
 		color: var(--foreground-primary);
 		font-family: var(--font-monospace);
 		font-weight: 200;
@@ -38,12 +41,17 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 	}
 
 	.page-section :global(h1.title) {
-		font-size: 6.4rem;
+		font-size: 5.6rem;
+		margin: 0;
+	}
+
+	.page-section :global(h2.title) {
+		font-size: 4.8rem;
 		margin: 0;
 	}
 
 	.page-section :global(.subtitle) {
-		font-size: 2.2rem;
+		font-size: 2.0rem;
 		line-height: 2;
 		font-weight: 400;
 		max-inline-size: 50ch;
@@ -61,13 +69,19 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		opacity: 0.8;
 	}
 
+	@media screen and (max-width: 1280px) {
+		.page-section :global(h1.title) {
+			font-size: 5.6rem;
+		}
+	}
+
 	@media screen and (max-width: 1024px) {
 		.page-section :global(h1.title) {
 			font-size: 4.8rem;
 		}
 
 		.page-section :global(p.subtitle) {
-			font-size: 1.8rem;
+			font-size: 2.0rem;
 		}
 	}
 	

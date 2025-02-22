@@ -1,7 +1,7 @@
 ---
 title: Competition
 category: 01. Getting Started
-page: 6
+page: 7
 ---
 
 There's a pretty good chance that you're using vexide for competition purposes. When programming for a competition robot, we need to have a way to hook into the different *competition modes* (such as driver and autonomous) and run different pieces of code depending on what mode we are in.
@@ -177,7 +177,7 @@ async fn main(_peripherals: Peripherals) {
     match competition::mode() {
 //                    ^
 //     [Get the current that mode we are in.]
-//     [This will always be Driver if we are disconnected to competition control.]
+//     [This will always be Driver if we are disconnected from competition control.]
         CompetitionMode::Disabled => {
             println!("Currently running disabled.");
         },
