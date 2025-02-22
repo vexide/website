@@ -17,7 +17,7 @@ export const EXAMPLES: Example[] = [
 		code: `#[vexide::main]
 async fn main(peripherals: Peripherals) {
 	// Create a green motor on port 1.
-	let my_motor = Motor::new(
+	let mut my_motor = Motor::new(
 		peripherals.port_1,
 		Gearset::Green,
 		Direction::Forward,
