@@ -82,15 +82,14 @@ async fn main(peripherals: Peripherals) {
 Likewise, if we wanted to create a `Vec` (which allocates memory on the heap), we can declare the `alloc` crate using `extern crate alloc` and use its `Vec` type in place of the standard library's `std::vec::Vec`.
 
 ```rs
-// @fold start
 #![no_std]
 #![no_main]
 
+// @highlight
 extern crate alloc;
 
 use vexide::prelude::*;
-
-// @fold end
+// @highlight
 use alloc::vec::Vec;
 
 #[vexide::main]
