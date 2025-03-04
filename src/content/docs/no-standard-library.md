@@ -140,7 +140,6 @@ Most of these modules should look familiar if you've worked with their equivalen
 <!--
 ## Floating Point Math
 
-TODO
 -->
 
 # Recap
