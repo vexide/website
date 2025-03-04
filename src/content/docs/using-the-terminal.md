@@ -98,7 +98,7 @@ println!("Hello world!");
 
 ```rs
 {
-    use ::vexide::core::io::{Write, stdout};
+    use ::vexide::io::{Write, stdout};
     if let Err(e) = stdout().write_fmt(format_args!("Hello world!")) {
         panic!("failed printing to stdout: {e}");
     }
@@ -125,7 +125,7 @@ To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, 
 
 use vexide::prelude::*;
 // @fold end
-use vexide::core::io::{Write, stdout};
+use vexide::io::{Write, stdout};
 
 #[vexide::main]
 async fn main(_peripherals: Peripherals) {

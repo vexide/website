@@ -100,7 +100,7 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-## Operating System APIs in vexide
+## Operating System APIs in `vexide`
 
 Combined together, the `core` and `alloc` crates fill up almost all of the gaps left by our lack of a standard library. `core` and `alloc` are still missing many OS-specific features that you might want to use like I/O, timekeeping, filesystem access, threads, program control, and floating-point math.
 
@@ -113,7 +113,7 @@ Luckily, vexide itself fills in most of these remaining gaps! For example, `vexi
 
 use vexide::prelude::*;
 // @fold end
-use vexide::core::time::Instant; // rather than std::time::Instant
+use vexide::time::Instant; // rather than std::time::Instant
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
@@ -125,18 +125,23 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-Most of these "`std`-equivalent" APIs live in the [`vexide::core` module](https://docs.rs/vexide-core/latest/vexide_core/). This module provides APIs for interacting with VEXos like you would in a `libstd`-enabled environment.
+Most of these "`std`-equivalent" APIs live in vexide's [top-level modules](https://docs.rs/vexide). These modules provide APIs for interacting with VEXos like you would in a `libstd`-enabled environment.
 
-- I/O types and traits are provided by `vexide::core::io`.
-- Timekeeping is provided by `vexide::core::time::Instant`.
-- Synchronization primitives are provided by `vexide::core::sync`.
-- Program control is provided by `vexide::core::program`.
-- Filesystem access to SDCards is provided by `vexide::core::fs`.
-- Synchronization primitives are provided by `vexide::core::sync`.
+- I/O types and traits are provided by `vexide::io`.
+- Timekeeping is provided by `vexide::time::Instant`.
+- Synchronization primitives are provided by `vexide::sync`.
+- Program control is provided by `vexide::program`.
+- Filesystem access to SDCards is provided by `vexide::fs`.
 - Panicking features are provided by `vexide::panic`.
 - Threads don't exist in vexide, but we do have multitasking using [`async` rust](/docs/async-introduction/).
 
 Most of these modules should look familiar if you've worked with their equivalents in `std` before.
+
+<!--
+## Floating Point Math
+
+TODO
+-->
 
 # Recap
 

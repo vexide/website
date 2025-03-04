@@ -142,7 +142,7 @@ This includes:
 
 use vexide::prelude::*
 // @fold end
-use vexide::core::competition::{
+use vexide::competition::{
     self,
     CompetitionMode,
     CompetitionSystem,
