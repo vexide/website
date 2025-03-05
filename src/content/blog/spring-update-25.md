@@ -207,3 +207,24 @@ async fn main(peripherals: Peripherals) {
 ```sh
 cargo add autons
 ```
+
+# Community Showcase
+
+> [!THANKS]
+> These are some new packages made by our community using vexide that we'd like to recognize!
+
+## `vexide-motorgroup`
+
+[`vexide-motorgroup`](http://crates.io/crates/vexide-motorgroup) provides a `MotorGroup` type for `vexide` similar to the one found in VEXcode and PROS. `vexide` intentionally doesn't include motor groups, since we believe that users should have control over the underlying collection and error handling strategy, but if you need something quick and easy then this library is for you!
+
+## `veranda`
+
+[`veranda`](https://crates.io/crates/veranda) is a library that provides a random number generation (RNG) entropy source for vexide projects for use with the [`rand`](https://crates.io/crates/rand) crate. This is useful for anything involving random numbers or non-determinstic execution (such as particle filters).
+
+## `shrewnit`
+
+[`shrewnit`]((https://crates.io/crates/shrewnit)) is a new units library that allows you to strongly type units of measure at compile time in stable rust. This library isn't specific to vexide, but is developed by one of our maintainers with vexide and its projects in mind.
+
+## `doxa-selector`
+
+This is an auton selector made by team 99484 developed for `vexide` using the `slint` GUI library. Check it out on [GitHub](https://github.com/doxa-robotics/doxa-selector-rs).
