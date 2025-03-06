@@ -224,7 +224,7 @@ cargo add autons
 
 ## `shrewnit`
 
-[`shrewnit`]((https://crates.io/crates/shrewnit)) is a new units library that allows you to strongly type units of measure at compile time in stable rust. This library isn't specific to vexide, but is developed by one of our maintainers with vexide and its projects in mind.
+[`shrewnit`](https://crates.io/crates/shrewnit) is a new units library that allows you to strongly type units of measure at compile time in stable rust. This library isn't specific to vexide, but is developed by one of our maintainers with vexide and its projects in mind.
 
 ## `doxa-selector`
 
