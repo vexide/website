@@ -3,7 +3,7 @@ title: "Spring Updates: vexide 0.7.0, Auton Selectors, Docs & Ecosystem"
 description: An quick recap of recent developments in vexide.
 author: tropix126
 tags: ["news"]
-date: 2025-03-02
+date: 2025-03-05
 thumbnail: {
     url: "/images/thumbnails/plastic-death.png",
     alt: "vexide logo next to two wireframe models."
@@ -150,6 +150,7 @@ async fn main(peripherals: Peripherals) {
 - SDCard file write operations will now be synced when dropped out of scope.
 - Three-wire Encoders had a bug in them where they could sometimes be configured on the wrong port pairing or be randomly reset back to 0 degrees. That bug has been fixed.
 - The reliability of the `println!()` macro has been significantly improved this release when trying to print large amounts of data at once.
+- Writing to the controller screen or rumbling the controller previously had a bug that would sometimes cause a crash. That has been fixed.
 
 # Announcing `autons` - Auton selectors for `vexide`!
 

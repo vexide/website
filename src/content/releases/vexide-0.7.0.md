@@ -23,6 +23,7 @@ date: 2025-03-05
 - Fixed an issue where printing large amounts of data to `Stdout` without ticking the executor would immediately exit the program. (#296)
 - `StdoutRaw::flush` now flushes the outgoing serial buffer (#296)
 - Fixed an issue with `AdiEncoder` potentially configuring the wrong port. (#301)
+- Fixed flipped assert logic when writing to the controller screen. (#300)
 
 ## Changed
 
