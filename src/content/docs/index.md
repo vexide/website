@@ -53,7 +53,7 @@ vexide also takes [undefined behavior](https://en.wikipedia.org/wiki/Undefined_b
 
 vexide is one of the only VEX programming environments that is *fully* open source. This means that anyone is free to contribute to, research, modify, or build vexide themselves from [its source code on GitHub](http://github.com/vexide/vexide). vexide and its associated tools are [MIT licensed](https://github.com/vexide/vexide/blob/main/LICENSE) and do not link to any proprietary code or SDKs.
 
-vexide's development is entirely community-driven, meaning it is not maintained by a single person or entity and is developed entirely in the open. Many active VRC and VEXU competitors from around the world have submitted bug reports and patches to vexide. This model of development promotes a level of transparency and community involvement that isn't seen anywhere else.
+vexide's development is entirely community-driven, meaning it is not maintained by a single person or entity and is developed entirely in the open. Many active VRC and VEX U competitors from around the world have submitted bug reports and patches to vexide. This model of development promotes a level of transparency and community involvement that isn't seen anywhere else.
 
 ## Hardware APIs and Documentation
 

@@ -406,8 +406,8 @@ pub struct Drivetrain {
 
 impl Drivetrain {
     pub fn run(&mut self, voltage: f64) -> Result<(), MotorError> {
-        self.left_motor.get_mut().set_voltage(voltage)?;
-        self.right_motor.get_mut().set_voltage(voltage)?;
+        self.left_motor.borrow_mut().set_voltage(voltage)?;
+        self.right_motor.borrow_mut().set_voltage(voltage)?;
     }
 }
 // @fold start

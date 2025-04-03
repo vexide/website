@@ -40,9 +40,9 @@ Computers can do this too. They often need to perform long-running operations th
 
 Well, what if we had the ability to *yield* the execution of a function while it waits for something to happen and go do something else? This is done through a practice called *cooperative scheduling*, and it's what `async` Rust models.
 
-![two tasks - "A" and "B" rapidly switching between eachother](/docs/context-switch.svg)
+![two tasks - "A" and "B" rapidly switching between each other](/docs/context-switch.svg)
 
-With asynchronous code, we can split the job of function execution into tiny pieces split up by *`await` points* (the "yields") and overlap running these pieces on top of each other, giving the *apperance* of two things actually happening in parallel. We are still only executing one instruction at a time, but we rapidly switch contexts between different tasks allowing them to be run *concurrently*.
+With asynchronous code, we can split the job of function execution into tiny pieces split up by *`await` points* (the "yields") and overlap running these pieces on top of each other, giving the *appearance* of two things actually happening in parallel. We are still only executing one instruction at a time, but we rapidly switch contexts between different tasks allowing them to be run *concurrently*.
 
 CPUs are *very* fast, so this approach ends up looking like we're doing two things exactly at the same time, while also allowing us to efficiently wait for stuff to happen while still running other tasks in the background.
 
@@ -405,7 +405,7 @@ fn multiply(a: f64, b: f64) -> impl Future {
 Above is an `async fn`, and below we have a regular function returning an `async` block (a struct implementing the `Future` trait).
 
 > [!TIP]
-> Even though the function on the right is not marked as `async`, we can still `await` it as if it was, because in both casses we are awaiting a `Future`.
+> Even though the function on the right is not marked as `async`, we can still `await` it as if it was, because in both cases we are awaiting a `Future`.
 
 ## `await` points and *yielding*
 
