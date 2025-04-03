@@ -1,5 +1,5 @@
 ---
-title: No Standard Library 
+title: No Standard Library
 category: 01. Getting Started
 page: 6
 ---
@@ -137,13 +137,61 @@ Most of these "`std`-equivalent" APIs live in vexide's [top-level modules](https
 
 Most of these modules should look familiar if you've worked with their equivalents in `std` before.
 
-<!--
-## Floating Point Math
+## Floating Point Math in `vexide`
 
--->
+`libcore` also lacks support for floating point arithmetic. This is because these math functions are typically implemented by the platform's `libm` library. In a `no_std` environment, Rust isn't able to make assumptions that such a library exists, so you most floating-point functionality is missing.
+
+```rs
+#![no_std]
+
+fn main() {
+//  (err         )
+    f64::sin(3.0);
+// ^
+// [error[E0599]: no function or associated item named `sin` found for type `f64` in the current scope]<<
+
+}
+```
+
+Fortunately, `vexide` provides its own implementation of floating point math functions through the `vexide::float::Float` trait. Bringing this trait into scope provides us with all of the math functions missing from `libcore`.
+
+```rs
+#![no_std]
+#![no_main]
+
+// @highlight
+use vexide::float::Float;
+
+#[vexide::main]
+async fn main() {
+    f64::sin(3.0);
+}
+```
+
+> [!NOTE]
+> By default, vexide's `Float` trait is implemented on top of [newlib's](https://sourceware.org/newlib/) `libm` library, which is the fastest implementation we could find for the V5's target platform.
+
+The `Float` trait is also re-exported through vexide's `prelude` module, meaning you don't need to explicitly import it if using the prelude.
+
+```rs
+#![no_std]
+#![no_main]
+
+// @diff -
+use vexide::float::Float;
+// @diff +
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main() {
+    f64::sin(3.0);
+}
+```
+
 
 # Recap
 
 - vexide projects are `no_std` environments, meaning we cannot use Rust's `std` crate.
 - Instead, we have the `core` and `alloc` crates. These are subsets of the standard library that aren't dependent on a specific operating system.
 - Most of the remaining OS-specific features missing from `core` are provided by vexide itself in `vexide::core`.
+- Floating point math is provided by the `vexide::float::Float` trait.
