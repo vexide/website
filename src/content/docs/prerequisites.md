@@ -20,7 +20,7 @@ Before we setup a project, there are some tools you'll need to have installed to
 > [!NOTE]
 > Before we start, make sure you have rustc and cargo installed on your machine. You can get that [here](https://www.rust-lang.org/tools/install) from the official Rust site.
 
-vexide relies on some features that are only availble in Rust's nightly release channel, so you'll need to switch to using nightly:
+vexide relies on some features that are only available in Rust's nightly release channel, so you'll need to switch to using nightly:
 
 ```sh
 rustup default nightly
