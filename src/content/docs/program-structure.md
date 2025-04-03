@@ -69,4 +69,4 @@ async fn main(peripherals: Peripherals) {
 If you're familiar with Rust, you might notice some key differences in vexide's version of the `main` function compared to a normal `main` function in Rust:
 1. **`main` is an `async fn`.** vexide ships with its own async runtime that serves as the basis for its multitasking features. In order to run other async functions, `main` itself must also be async.
 2. **`main` takes a `peripherals` argument.** This is an instance of the [`Peripherals` struct](https://docs.rs/vexide-devices/latest/vexide_devices/peripherals/struct.Peripherals.html) that allows you to create devices and interact with hardware. You can read more about that [here](../peripherals/).
-3. **`main` is annotated with `#[vexide::main]`.** This is a special *attribute macro* that sets up the real program entrypoint. Behind the scenes, it performs some lowlevel startup and sets up vexide's async executor running your code.
+3. **`main` is annotated with `#[vexide::main]`.** This is a special *attribute macro* that sets up the real program entrypoint. Behind the scenes, it performs some low level startup and sets up vexide's async executor running your code.

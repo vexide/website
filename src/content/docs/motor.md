@@ -85,7 +85,7 @@ Note how the arrow with the plus in its center is pointing in the **clockwise** 
 
 Whether or not a motor should be reversed is ultimately in the eye of the beholder. If it *feels* like whatever mechanism you're controlling should spin a certain way when giving it positive values, then feel free to adjust the `Direction` of your `Motor` as you see fit.
 
-There are also some cases (such as in drivetrains), where you want lots of motors in different orientations to all spin together in the same direction when given the same velocity or voltage values. This is another usecase for direction, where some of your motors may need to be reversed in order to all spin together in the same direction given the same value.
+There are also some cases (such as in drivetrains), where you want lots of motors in different orientations to all spin together in the same direction when given the same velocity or voltage values. This is another use case for direction, where some of your motors may need to be reversed in order to all spin together in the same direction given the same value.
 
 ## 5.5W Smart Motors (EXP motors)
 
