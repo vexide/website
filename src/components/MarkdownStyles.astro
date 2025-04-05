@@ -19,6 +19,10 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
 		line-height: 2;
 	}
 
+	.markdown-body :global(figure) {
+		text-align: center;
+	}
+
 	.markdown-body :global(code) {
 		background: var(--background-secondary);
 	}
