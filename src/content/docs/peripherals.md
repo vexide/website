@@ -30,7 +30,7 @@ This `peripherals` argument is the gateway to all of your brain’s available I/
 
 ## Smart Ports
 
-![placeholder]()
+![smart ports on a brain](/docs/smart-ports.svg)
 
 The brain has 21 accessible smart ports (numbered 1-21 on the brain) for connecting V5 devices to. Let's explore how to use these ports through vexide.
 
@@ -75,7 +75,7 @@ async fn main(peripherals: Peripherals) {
 
 In addition to smart ports, the brain also features eight three-wire ports (labeled A-H) for compatibility with older sensors and simple devices such as solenoids or LEDs. These ports are called *ADI (Analog-Digital Interface) ports*.
 
-![placeholder]()
+![adi ports on a brain](/docs/adi-ports.svg)
 
 ADI devices work very similarly to smart devices in vexide. Your `Peripherals` struct has eight fields for each port named `adi_a` through `adi_h` alphabetically. In order to create a device, we can move these ports out of `peripherals` and into a device's `new` function.
 
