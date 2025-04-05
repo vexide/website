@@ -30,6 +30,8 @@ Rust's standard library (also known as `libstd`) requires integration with an op
 
 Attempting to use anything from the standard library in a `no_std` environment will throw a compiler error.
 
+<div class="code-split error">
+
 ```rs
 // @fold start
 #![no_std]
@@ -40,15 +42,24 @@ use vexide::prelude::*;
 // @fold end
 //(err                   )<<
 use std::time::Duration;
-// ^<<<
-// [error[E0433]: failed to resolve: use of unresolved module or unlinked crate `std`]<<<
-
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let three_seconds = Duration::from_secs(3);
 }
 ```
+
+```ansi
+[0m[1m[38;5;9merror[E0433][0m[0m[1m: failed to resolve: use of unresolved module or unlinked crate `std`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mexamples/basic.rs:4:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::time::Duration;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9muse of unresolved module or unlinked crate `std`[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: if you wanted to use a crate named `std`, use `cargo add std` to add it to your `Cargo.toml`[0m
+```
+
+</div>
 
 ## The `core` and `alloc` crates
 
@@ -85,11 +96,11 @@ Likewise, if we wanted to create a `Vec` (which allocates memory on the heap), w
 #![no_std]
 #![no_main]
 
-// @highlight
+// @diff +
 extern crate alloc;
 
 use vexide::prelude::*;
-// @highlight
+// @diff +
 use alloc::vec::Vec;
 
 #[vexide::main]
@@ -139,32 +150,45 @@ Most of these modules should look familiar if you've worked with their equivalen
 
 ## Floating Point Math in `vexide`
 
-`libcore` also lacks support for floating point arithmetic. This is because these math functions are typically implemented by the platform's `libm` library. In a `no_std` environment, Rust isn't able to make assumptions that such a library exists, so you most floating-point functionality is missing.
+`libcore` also lacks support for floating point arithmetic. This is because these math functions are typically implemented by the platform's `libm` library. In a `no_std` environment, Rust isn't able to make assumptions that such a library exists, so most floating-point functionality is missing.
+
+<div class="code-split error">
 
 ```rs
 #![no_std]
 
-fn main() {
-//  (err         )
-    f64::sin(3.0);
-// ^
-// [error[E0599]: no function or associated item named `sin` found for type `f64` in the current scope]<<
-
+fn stuff() -> f64 {
+//  (err        )
+    f64::sin(3.0)
 }
 ```
+
+```ansi
+[0m[1m[38;5;9merror[E0599][0m[0m[1m: no function or associated item named `sin` found for type `f64` in the current scope[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mexamples/basic.rs:4:10[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    f64::sin(3.0)[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;9m^^^[0m[0m [0m[0m[1m[38;5;9mfunction or associated item not found in `f64`[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;14mhelp[0m[0m: there is a method `min` with a similar name[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[38;5;9m- [0m[0m    f64::[0m[0m[38;5;9msin[0m[0m(3.0)[0m
+[0m[1m[38;5;12m4[0m[0m [0m[0m[38;5;10m+ [0m[0m    f64::[0m[0m[38;5;10mmin[0m[0m(3.0)[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+```
+
+</div>
 
 Fortunately, `vexide` provides its own implementation of floating point math functions through the `vexide::float::Float` trait. Bringing this trait into scope provides us with all of the math functions missing from `libcore`.
 
 ```rs
 #![no_std]
-#![no_main]
 
-// @highlight
+// @diff +
 use vexide::float::Float;
 
-#[vexide::main]
-async fn main() {
-    f64::sin(3.0);
+fn stuff() -> f64 {
+    f64::sin(3.0)
 }
 ```
 
@@ -182,16 +206,14 @@ use vexide::float::Float;
 // @diff +
 use vexide::prelude::*;
 
-#[vexide::main]
-async fn main() {
-    f64::sin(3.0);
+fn stuff() -> f64 {
+    f64::sin(3.0)
 }
 ```
-
 
 # Recap
 
 - vexide projects are `no_std` environments, meaning we cannot use Rust's `std` crate.
 - Instead, we have the `core` and `alloc` crates. These are subsets of the standard library that aren't dependent on a specific operating system.
 - Most of the remaining OS-specific features missing from `core` are provided by vexide itself in `vexide::core`.
-- Floating point math is provided by the `vexide::float::Float` trait.
+- To use floating point math, you must have the `vexide::float::Float` trait in scope.

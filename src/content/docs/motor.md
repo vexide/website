@@ -1,6 +1,6 @@
 ---
 title: Motor
-category: 02. Hardware
+category: 02. Devices
 page: 9
 ---
 
@@ -13,10 +13,9 @@ V5 motors are rather special in that they are both fairly fault-tolerant and pro
 > [!NOTE]
 > For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview).
 
-
 # Creating Motors
 
-On the [previous page](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
+[Two pages ago](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
 
 Motors can be created from any one of the 21 `SmartPort` instances in `peripherals`, along with a provided `Gearset` and `Direction`:
 
@@ -89,7 +88,7 @@ There are also some cases (such as in drivetrains), where you want lots of motor
 
 ## 5.5W Smart Motors (EXP motors)
 
-In 2023, VEX legalized the [Smart Motor (5.5W)](https://www.vexrobotics.com/276-4842.html) for competition as a lightweight and less powerful alternative to the standard 11W smart motors. These motors come with a few notable differences internally, but use the same `Motor` API under the hood. As a result, most of what you will see on this page is also applicable to these less powerful motors. 
+In 2023, VEX legalized the [Smart Motor (5.5W)](https://www.vexrobotics.com/276-4842.html) for competition as a lightweight and less powerful alternative to the standard 11W smart motors. These motors come with a few notable differences internally, but use the same `Motor` API under the hood. As a result, most of what you will see on this page is also applicable to these less powerful motors.
 
 To create a 5.5W EXP motor, you can use the `Motor::new_exp` method instead of `Motor::new`:
 
@@ -117,7 +116,7 @@ Now that we have a motor, what should we do with it? Let's go over some basic me
 
 ## Voltage Control
 
-*Voltage control* is one of the simplest methods of controlling a motor. By adjusting the amount of voltage we send to the motor, we can roughly control the output speed and torque of a motor. The more voltage we give to the motor, the faster and stronger it will spin. 
+*Voltage control* is one of the simplest methods of controlling a motor. By adjusting the amount of voltage we send to the motor, we can roughly control the output speed and torque of a motor. The more voltage we give to the motor, the faster and stronger it will spin.
 
 We can control the voltage sent into the motor using the [`set_voltage`](https://docs.rs/vexide/latest/vexide/prelude/struct.Motor.html#method.set_voltage) method:
 
@@ -293,8 +292,8 @@ Holding is a special type of braking where the motor will actively try to **hold
 `Brake` and `Hold` are both types of braking, but they differ in how they behave when the motor is not being powered. `Brake` will actively try to stop the motor from spinning, but if there's a lot of force being applied, the motor will still be able to be turned. On the other hand, `Hold` will actively try to keep the motor in a certain position using the motor's internal PID controller.
 
 > [!TIP]
-> Use **coast** when you want the motor to keep spinning unpowered.  
-> Use **brake** when you want the motor to stop spinning quickly.  
+> Use **coast** when you want the motor to keep spinning unpowered.
+> Use **brake** when you want the motor to stop spinning quickly.
 > Use **hold** when you want the motor to actively resist being turned.
 
 ## Current Limiting

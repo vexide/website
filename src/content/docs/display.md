@@ -1,6 +1,6 @@
 ---
 title: Display
-category: 02. Hardware
+category: 02. Devices
 page: 11
 ---
 
@@ -39,9 +39,9 @@ use vexide::devices::{display::*, color::Rgb};
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut display = peripherals.display;
-    
+
     let rectangle = Rect::from_dimensions((50, 50), 25, 25);
-    
+
     display.stroke(&rectangle, Rgb::WHITE);
 }
 ```

@@ -1,7 +1,7 @@
 ---
 title: Competition
 category: 01. Getting Started
-page: 7
+page: 8
 ---
 
 There's a pretty good chance that you're using vexide for competition purposes. When programming for a competition robot, we need to have a way to hook into the different *competition modes* (such as driver and autonomous) and run different pieces of code depending on what mode we are in.
