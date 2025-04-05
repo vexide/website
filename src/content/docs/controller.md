@@ -1,6 +1,6 @@
 ---
 title: Controller
-category: 02. Hardware
+category: 02. Devices
 page: 10
 ---
 
@@ -141,7 +141,7 @@ async fn main(peripherals: Peripherals) {
 
     loop {
         let state = controller.state().unwrap_or_default();
-    
+
         // Use an if-statement to spam out prints depending
         // on if the "A" button is being pressed or not.
         //               (           )
