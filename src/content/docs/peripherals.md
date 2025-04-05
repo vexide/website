@@ -674,7 +674,7 @@ Cool. What we've just done is safely circumvented the restriction that a device 
 For the completeness of this tutorial, we're going to go over the various cursed ways that you can completely ignore the rules of ownership through the use of `unsafe` code.
 
 > [!CAUTION]
-> **DO NOT DO THIS!** Seriously. If you are considering doing any of the things below this point of the page, it's a sign that your code should be structured in a different way. `unsafe` circumvents the guarantees of device validity and soundness provided by vexide. These methods are intended for cases where it is *literally impossible* to pass an existing owned device, such in a [panic handler](https://doc.rust-lang.org/nomicon/panic-handler.html). They are *NOT* intended as an escape hatch to get around ownership rules.
+> **DO NOT DO THIS!** Seriously. If you are considering doing any of the things below this point of the page, it's a sign that your code should be structured in a different way. `unsafe` circumvents the guarantees of device validity and soundness provided by vexide. These methods are intended for cases where it is *literally impossible* to pass an existing owned device, such as in a [panic handler](https://doc.rust-lang.org/nomicon/panic-handler.html). They are *NOT* intended as an escape hatch to get around ownership rules.
 
 `Peripherals` is a singleton type, meaning we are only allowed one instance of it per-program. But what if we could get another? Well, we can unsafely **steal** a new instance of `Peripherals` to get an instance separate from the one given to us in `main`.
 
