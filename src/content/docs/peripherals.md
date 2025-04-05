@@ -171,7 +171,7 @@ Something that you'll quickly notice when using the Peripherals API is that `per
 
 > What even is a singleton?
 
-*Simply put, a singleton piece of data that you can only have one instance of.* vexide takes this definition a step further by treating our hardware like we treat our data (we'll elaborate more on this sentence later).
+*Simply put, a singleton is piece of data that you can only have one instance of.* vexide takes this definition a step further by treating our hardware like we treat our data (we'll elaborate more on this sentence later).
 
 This means a few (important) things:
 
@@ -674,4 +674,102 @@ Cool. What we've just done is safely circumvented the restriction that a device 
 For the completeness of this tutorial, we're going to go over the various cursed ways that you can completely ignore the rules of ownership through the use of `unsafe` code.
 
 > [!CAUTION]
-> **DO NOT DO THIS!** Seriously. If you are considering doing any of the things below, it's a sign that your code should be structured in a different way. `unsafe` circumvents the guarantees of device validity and soundness provided by vexide. These methods are intended for cases where it is *literally impossible* to pass an existing owned device, such in a [panic handler](https://doc.rust-lang.org/nomicon/panic-handler.html). They are *NOT* intended as an escape hatch to get around ownership rules.
+> **DO NOT DO THIS!** Seriously. If you are considering doing any of the things below this point of the page, it's a sign that your code should be structured in a different way. `unsafe` circumvents the guarantees of device validity and soundness provided by vexide. These methods are intended for cases where it is *literally impossible* to pass an existing owned device, such in a [panic handler](https://doc.rust-lang.org/nomicon/panic-handler.html). They are *NOT* intended as an escape hatch to get around ownership rules.
+
+`Peripherals` is a singleton type, meaning we are only allowed one instance of it per-program. But what if we could get another? Well, we can unsafely **steal** a new instance of `Peripherals` to get an instance separate from the one given to us in `main`.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(first_peripherals: Peripherals) {
+    // @highlight
+    let second_peripherals = unsafe { Peripherals::steal() };
+}
+```
+
+We now have two instances of `Peripherals` and therefore two instances of every port. This means we can unsafely create two motors on the same port.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(first_peripherals: Peripherals) {
+    let second_peripherals = unsafe { Peripherals::steal() };
+
+    //                       (                      )
+    let motor_1 = Motor::new(first_peripherals.port_1, Gearset::Green, Direction::Forward);
+    //                       (                       )
+    let motor_2 = Motor::new(second_peripherals.port_1, Gearset::Green, Direction::Forward);
+}
+```
+
+Or even two different devices on the same port.
+
+```rs
+// @fold start
+#![no_std]
+#![no_main]
+
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(first_peripherals: Peripherals) {
+    let second_peripherals = unsafe { Peripherals::steal() };
+
+    let motor = Motor::new(first_peripherals.port_1, Gearset::Green, Direction::Forward);
+    //  ^
+    // [Motor on port 1.]
+    let optical = OpticalSensor::new(second_peripherals.port_1);
+    //  ^
+    // [Optical sensor on port 1.]
+}
+```
+
+## Unsafe Peripheral Construction
+
+Along with stealing new instances of `Peripherals`, can also unsafely create new `SmartPort`s separate from the ones provided to us through the `Peripherals` struct.
+
+```rs
+use vexide::devices::smart::SmartPort;
+
+//           (                          )
+let port_1 = unsafe { SmartPort::new(1) };
+//                    ^
+//          [Make a new port 1.]
+```
+
+Note that this is *particularly bad* because it has no bounds checking, meaning we are able to create completely nonsensically-numbered ports that don't exist in real life.
+
+```rs
+use vexide::devices::smart::SmartPort;
+
+// Sure, why not.
+let port_32 = unsafe { SmartPort::new(32) };
+```
+
+> [!CAUTION]
+> If you used this port to create a device, you could potentially run into unexpected behavior or bugs.
+
+We are also able to do this with other peripherals such as `AdiPort`, `Display`, and `Controller`.
+
+```rs
+use vexide::prelude::*;
+
+let smart_port = unsafe { SmartPort::new(1) };
+let adi_port = unsafe { AdiPort::new(1) };
+let display = unsafe { Display::new() };
+let primary_controller = unsafe { Controller::new(ControllerId::Primary) };
+let partner_controller = unsafe { Controller::new(ControllerId::Partner) };
+```
