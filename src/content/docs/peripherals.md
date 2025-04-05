@@ -739,7 +739,7 @@ async fn main(first_peripherals: Peripherals) {
 
 ## Unsafe Peripheral Construction
 
-Along with stealing new instances of `Peripherals`, can also unsafely create new `SmartPort`s separate from the ones provided to us through the `Peripherals` struct.
+Along with stealing new instances of `Peripherals`, you can *(but really shouldn't)* also unsafely create new `SmartPort`s separate from the ones provided to you through the `Peripherals` struct.
 
 ```rs
 use vexide::devices::smart::SmartPort;
@@ -766,9 +766,10 @@ We are also able to do this with other peripherals such as `AdiPort`, `Display`,
 
 ```rs
 use vexide::prelude::*;
+use vexide::devices::controller::ControllerId;
 
 let smart_port = unsafe { SmartPort::new(1) };
-let adi_port = unsafe { AdiPort::new(1) };
+let adi_port = unsafe { AdiPort::new(1, None) };
 let display = unsafe { Display::new() };
 let primary_controller = unsafe { Controller::new(ControllerId::Primary) };
 let partner_controller = unsafe { Controller::new(ControllerId::Partner) };
