@@ -171,7 +171,7 @@ Something that you'll quickly notice when using the Peripherals API is that `per
 
 > What even is a singleton?
 
-*Simply put, a singleton is piece of data that you can only have one instance of.* vexide takes this definition a step further by treating our hardware like we treat our data (we'll elaborate more on this sentence later).
+*Simply put, a singleton is piece of data that you can only have one instance of.* vexide uses singletons to model our data around our real-life hardware (we'll elaborate more on this sentence later).
 
 This means a few (important) things:
 
@@ -280,7 +280,7 @@ async fn main(peripherals: Peripherals) {
 
 Nope. Because `motor_1` takes complete ownership of the port (which isn't copyable or cloneable), we can't clone or copy motors either. That would require cloning the `SmartPort` instance now owned by the motor, which is something the compiler already yelled at us for earlier.
 
-## Treat your hardware like you treat your data.
+## Model your data around your hardware.
 
 > Okay, what gives? This seems kind of arbitrary...
 
