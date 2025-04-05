@@ -94,7 +94,7 @@ async fn main(peripherals: Peripherals) {
     //                                    (               )
     let mut solenoid = AdiDigitalOut::new(peripherals.adi_f);
     //                                   ^
-    //             [Pass adi_a to AdiDigitalOut::new to control a solenoid.]
+    //             [Pass adi_f to AdiDigitalOut::new to control a solenoid.]
 }
 ```
 
