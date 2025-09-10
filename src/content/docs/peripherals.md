@@ -1,6 +1,6 @@
 ---
 title: Peripherals
-category: 01. Getting Started
+category: 02. Devices
 page: 7
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Controller
 category: 02. Devices
-page: 10
+page: 9
 ---
 
 ![controller sketch](/docs/controller.svg)

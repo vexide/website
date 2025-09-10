@@ -1,7 +1,7 @@
 ---
 title: Async Rust
 category: 03. Multitasking
-page: 12
+page: 11
 ---
 
 `async` is a feature of the Rust language that allows you to express when code *waits for things to happen*. By doing this, we write code that cooperates with other parts of our program to multitask, or do more than one thing concurrently.

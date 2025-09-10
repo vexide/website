@@ -5,7 +5,7 @@ page: 2
 ---
 
 
-Before we setup a project, there are some tools you'll need to have installed to build and upload vexide projects. Have a command-line of your choice ready, since we'll be running some terminal commands.
+Before you start programming, you'll need to install install some tools in order to build and upload your code. Get a command-line of your choice ready, since we'll be running some terminal commands.
 
 <div style="display: block; text-align: center; margin: 0 auto;">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8lf5uh8Se2g?si=yXhixtAme-q_FIpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -15,18 +15,19 @@ Before we setup a project, there are some tools you'll need to have installed to
 </small>
 </div>
 
+# Installing Rust
+
+In order to use vexide, you'll need a Rust toolchain (`cargo`, `rustc`, etc...) installed on your computer. To install Rust on your system, follow the instructions [here](https://www.rust-lang.org/tools/install). If you use a Windows computer, the installer may also prompt you to install Visual Studio Build Tools.
+
 # Tooling
 
-> [!NOTE]
-> Before we start, make sure you have rustc and cargo installed on your machine. You can get that [here](https://www.rust-lang.org/tools/install) from the official Rust site.
-
-vexide relies on some features that are only available in Rust's nightly release channel, so you'll need to switch to using nightly:
+vexide uses on some unstable features that are currently only available in Rust's nightly release channel, so you'll need to switch to that:
 
 ```sh
 rustup default nightly
 ```
 
-We also need some additional build tooling in order to properly build/upload to the V5's platform target. You can install those components with the following terminal commands:
+We also need some additional tools to help us properly build/upload to VEX brains. You can install those components with the following terminal commands:
 
 ```sh
 rustup component add rust-src
@@ -35,13 +36,13 @@ cargo install cargo-v5
 
 # Setting up a Project
 
-To make a new vexide project, we'll use the `cargo v5 new <NAME>` command. This will create a project in the current directory containing a barebones template that we can start with.
+To make a new vexide project, we'll use the `cargo v5 new <NAME>` command. This will create a project in the current directory containing a barebones template that we can start out with.
 
 ```sh
 cargo v5 new my-project
 ```
 
-This will leave you with a folder named `my-project`. Open that folder in an editor of your choice (if you aren't sure what to use, it's hard to go wrong with [VSCode](https://code.visualstudio.com/)).
+After running this, you should have a new folder named `my-project` (or whatever you named your project). Open that folder in a code editor of your choice. If you don't have a code editor, we recommend starting with [VSCode](https://code.visualstudio.com/).
 
 ![vexide-template folder structure](/docs/vexide-template-structure.png)
 

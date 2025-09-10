@@ -1,7 +1,7 @@
 ---
 title: Motor
 category: 02. Devices
-page: 9
+page: 8
 ---
 
 ![Sketch of two different V5 motors](/docs/motors.svg)

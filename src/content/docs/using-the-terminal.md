@@ -4,16 +4,13 @@ category: 01. Getting Started
 page: 5
 ---
 
-One of the most useful debugging tools available to you is the terminal, which allows you to print live data from the brain to your computer.
+One of the most useful debugging tools available to you is the terminal, which allows you to print live data from the brain to your computer as your program runs.
 
 # `print` and `println`
 
 The easiest way to send some data to the terminal in a vexide program is through the `print` family of macros. You might recall `println` from our "Hello World" example:
 
 ```rs
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 #[vexide::main]
@@ -29,9 +26,6 @@ We also have a `print` macro, which is the same as `println` except it won't end
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -64,16 +58,12 @@ When you run your program, you should be greeted by vexide's startup banner alon
   </video>
 </div>
 
-
 # Disabling the vexide Banner
 
 In the video above, vexide printed a startup banner along with your `Hello world!` message. If you don't want this banner to be printed, you can disable this in your program:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -120,9 +110,6 @@ To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 // @fold end
 use vexide::io::{Write, stdout};
