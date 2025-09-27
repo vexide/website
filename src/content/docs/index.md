@@ -16,7 +16,7 @@ These resources serve as an introduction and set of tutorials for using vexide a
 
 # What is vexide?
 
-vexide is a Rust library for programming VEX robots. It provides a platform for running Rust code on the VEX brain that controls your robot's hardware and devices. You can think of it as an alternative to [VEXcode](https://www.vexrobotics.com/vexcode) or [PROS](https://pros.cs.purdue.edu/), but for the Rust programming language (rather than C or C++). vexide implements low-level features like task scheduling, memory allocation, and competition state so that you can write competitive, performant, and safe code!
+vexide is a Rust library for programming VEX robots: it provides a platform for running Rust code on the VEX brain that controls your robot's hardware and devices. You can think of it as an alternative to [VEXcode](https://www.vexrobotics.com/vexcode) or [PROS](https://pros.cs.purdue.edu/), but for the Rust programming language (rather than C or C++). vexide implements low-level features like task scheduling, memory allocation, and competition state so that you can write competitive, performant, and reliable code!
 
 ![Diagram of vexide's architecture. Boxes labeled "VEXos interfaces", "Devices", "Async Runtime", and "Startup code" are connected to a single "vexide" box](/docs/vexide-overview.svg)
 
@@ -28,7 +28,7 @@ vexide is a Rust library for programming VEX robots. It provides a platform for 
 
 ![ferris standing next to some crates](/docs/crates.svg)
 
-Rust is a modern programming language that is growing in popularity. It has many practical uses, such as networking, graphics, programming, and embedded systems. If you've been looking for a chance to learn and use it in a project also enjoy robotics, then vexide is the perfect opportunity for you to pick it up! vexide's API takes heavy inspiration from widely used packages such as [`tokio`](https://crates.io/crates/tokio), [`embassy`](https://embassy.dev/), and [`cortex-m`](https://github.com/rust-embedded/cortex-m). This gives you a realistic look into the embedded and async Rust scene while also offering practical experience.
+Rust is a modern programming language that is growing in popularity due to its reliability, speed, and developer experience. Because of this, it's used today in fields like networking, graphics & systems programming, and embedded platforms development. If you've been looking for a chance to learn and use it in a project also enjoy robotics, then vexide is the perfect opportunity for you to pick it up! vexide's API takes heavy inspiration from widely used packages such as [`tokio`](https://crates.io/crates/tokio), [`embassy`](https://embassy.dev/), and [`cortex-m`](https://github.com/rust-embedded/cortex-m). This gives you a realistic look into the embedded and async Rust scene while also offering practical experience.
 
 vexide projects are just regular Rust projects. By using vexide, you gain full access to the entirety of the [crates.io](https://crates.io/) ecosystem's 150,000+ packages to use in your code. [Cargo](https://doc.rust-lang.org/cargo/), Rust's package manager makes it extremely easy to install third-party libraries and integrate them into your project. Even `vexide` itself is just another library that's installed through Cargo!
 
@@ -36,9 +36,9 @@ vexide projects are just regular Rust projects. By using vexide, you gain full a
 
 ![message boxes depicting various memory errors](/docs/aborts.svg)
 
-Rust as a language aims to make make as difficult as possible to write software that fails in unpredictable ways. This is especially important when programming robots. Many competitors can attest to the truth of [Murphy's law](https://en.wikipedia.org/wiki/Murphy%27s_law). **If something works 99.5% of the time, but very rarely fails unexplainably, then it isn't worth using at all.**
+Rust as a language aims to make it as difficult as possible to write unpredictable software that fails at runtime. This is especially important when programming robots. Many competitors can attest to the truth of [Murphy's law](https://en.wikipedia.org/wiki/Murphy%27s_law). **If something works 99.5% of the time, but very rarely fails unexplainably, then it isn't worth using at all.**
 
-Likewise, programming in an environment that makes it exceedingly easy to shoot yourself in the foot isn't much better either. vexide promotes safe programming practices like result-based error handling and memory safety, while also preventing common pitfalls like race conditions and undefined behavior. **This decreases the risk of something going wrong when it matters the most, while also making you a better programmer in the process.**
+Likewise, programming in an environment that makes it exceedingly easy to shoot yourself in the foot isn't much better either. vexide is designed to encourage safe programming practices, such as memory safety and explicit, result-oriented error handling, while often completely preventing common pitfalls like race conditions and undefined behavior. **This decreases the risk of something going wrong when it matters the most, while also making you a better programmer in the process.** Often times, if your program compiles, you can be reasonably confident it will function.
 
 vexide also takes [undefined behavior](https://en.wikipedia.org/wiki/Undefined_behavior) very seriously. **It should not be possible to cause memory errors in vexide when only using safe Rust.** If you ever encounter anything along the lines of a `Memory Permission Error`, `Prefetch Error`, or `Undefined Error` in your program with no `unsafe` code, then this is immediately considered a serious and high-priority bug in vexide itself.
 

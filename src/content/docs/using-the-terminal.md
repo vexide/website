@@ -4,11 +4,11 @@ category: 01. Getting Started
 page: 5
 ---
 
-One of the most useful debugging tools available to you is the terminal, which allows you to print live data from the brain to your computer as your program runs.
+One of the most useful debugging tools available to you is the serial terminal, which allows you to view live data from a VEX brain on your computer as your program runs.
 
 # `print` and `println`
 
-The easiest way to send some data to the terminal in a vexide program is through the `print` family of macros. You might recall `println` from our "Hello World" example:
+The easiest way to send some data to the terminal is through the `print` family of macros. You might recall `println` from our "Hello World" example:
 
 ```rs
 use vexide::prelude::*;
@@ -43,6 +43,8 @@ That will send the data `HelloHello` to your computer.
 > That's cool and all but... where am I supposed to be seeing all this?
 
 Simply running all of this code with no connection to a computer won't visibly do anything, so let's change that.
+
+![Connect the brain to your computer using a USB cable](/docs/connect-brain.svg)
 
 Terminal data can be read over a USB connection to a V5 brain or controller using `cargo-v5` (one of the [prerequisites](../prerequisites/) that you should already have installed). To open a terminal connection with the brain, we'll simply run the following command:
 
@@ -88,7 +90,7 @@ println!("Hello world!");
 
 ```rs
 {
-    use ::vexide::io::{Write, stdout};
+    use ::std::io::{Write, stdout};
     if let Err(e) = stdout().write_fmt(format_args!("Hello world!")) {
         panic!("failed printing to stdout: {e}");
     }
@@ -97,32 +99,29 @@ println!("Hello world!");
 
 </div>
 
-The brain communicates with your computer through two buffers: [`Stdin`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.Stdin.html) and [`Stdout`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.Stdout.html). `Stdout`, or "standard output" is what's being used to print our "Hello world!" message here, as it represents the outgoing message from the brain to your computer.
-
-> [!NOTE]
-> `Stdout` is part of vexide's [`io`](https://docs.rs/vexide-core/latest/vexide_core/io/index.html) API.
+The brain communicates with your computer through two streams: [`Stdin`](https://doc.rust-lang.org/stable/std/io/struct.Stdin.html) delivers data to the brain and [`Stdout`](https://doc.rust-lang.org/stable/std/io/struct.Stdout.html) delivers data to your computer. `Stdout`, or "standard output," is what's being used to print our "Hello world!" message because it's an outgoing message from the brain to your computer.
 
 ## Example: Printing Without Macros
 
 To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, which will give us exclusive access to the buffer until we release the lock (either by explicitly `drop`ping it or having it fall out of scope). This ensures that we won't get interrupted by another print attempt while we are writing to our buffer.
 
-[`StdoutLock`](https://docs.rs/vexide-core/latest/vexide_core/io/struct.StdoutLock.html) implements the [`Write`](https://docs.rs/vexide-core/latest/vexide_core/io/trait.Write.html) trait, which provides some methods for writing to the buffer:
+[`StdoutLock`](https://doc.rust-lang.org/stable/std/io/struct.StdoutLock.html) implements the [`Write`](https://doc.rust-lang.org/stable/std/io/trait.Write.html) trait, which provides some methods for writing to the buffer:
 
 ```rs
 // @fold start
 use vexide::prelude::*;
 // @fold end
-use vexide::io::{Write, stdout};
+use std::io::{Write, stdout};
 
 #[vexide::main]
 async fn main(_peripherals: Peripherals) {
-    let lock = stdout().lock();
+    let mut lock = stdout().lock();
 //                    ^
 //        [Obtain a lock of Stdout.]
-  
+
     lock.write(b"Hello World!\n").unwrap();
-    
-    core::mem::drop(lock);
+
+    std::mem::drop(lock);
 //                 ^
 // [Bring the lock out of scope to release it.]
 }
