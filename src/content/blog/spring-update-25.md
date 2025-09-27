@@ -1,6 +1,6 @@
 ---
 title: "Spring Updates: vexide 0.7.0, Auton Selectors, Docs & Ecosystem"
-description: An quick recap of recent developments in vexide.
+description: A quick recap of recent developments in vexide.
 author: {
     name: "Tropical",
     github: "tropix126",

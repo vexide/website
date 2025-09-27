@@ -1,6 +1,6 @@
 ---
 title: "Winter Updates: Instant wireless uploads on vexide 0.6.0 & cargo-v5"
-description: vexide update!!!!!!!!!! yippee!!!!
+description: vroom vroom
 author: {
     name: "Tropical",
     github: "tropix126",
