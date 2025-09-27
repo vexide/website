@@ -17,6 +17,7 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 			blogs={blogPosts
 				.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 				.map((post, n) => {
+
 					return {
 						url: `/blog/posts/${post.slug}/`,
 						title: post.data.title,
