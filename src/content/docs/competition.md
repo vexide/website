@@ -180,7 +180,7 @@ async fn main(_peripherals: Peripherals) {
 
 ## Bad Assumptions
 
-A common misconception that many competitors have is that `driver` or `autonomous` will only run once during a match. While this may be true in many scenarios, **it is not always the case, assuming this can lead to catastrophic failures**.
+A common misconception that many competitors have is that `driver` or `autonomous` will only run once during a match. While this may be true in many scenarios, **it is not always the case and assuming this can lead to catastrophic failures**.
 
 > [!WARNING]
 > Any method in `Compete` may or may not run any number of times in a single match in any order! Your code should be designed around this. For example, you should **NEVER** assume that a function like `driver` will only run once after `autonomous`.
