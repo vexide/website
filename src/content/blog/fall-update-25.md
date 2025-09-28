@@ -73,7 +73,7 @@ However, this posed a challenge when we were porting the standard library. Shipp
 
 ## Bring Your Own SDK
 
-Instead, we picked a third option — if you use the standard library, you are expected to link your own SDK. If you use vexide, it will provide one for you. This led to us completely modularizing how vexide links to its SDK, and you now have the choice of three different "backends" (providers) for an SDK that vexide run on:
+Instead, we picked a third option — if you use the standard library, you are expected to link your own SDK. If you use vexide, it will provide one for you. This led to us completely modularizing how vexide links to its SDK, and you now have the choice of three different "backends" (providers) for an SDK that vexide can run on:
 
 - [`vex-sdk-jumptable`](https://crates.io/crates/vex-sdk-jumptable) is the custom reimplementation of the SDK used by previous vexide versions.
 - [`vex-sdk-vexcode`](https://crates.io/crates/vex-sdk-vexcode) will download the official proprietary SDK from VEX themselves, and link your project to it. This is downloaded from VEX's servers, and not directly distributed with vexide due to licensing restrictions.
@@ -144,4 +144,12 @@ mod tests {
 ```
 
 # Error Reporting Improvements
+
+If you've ever encountered this screen, you know you're in for a fun time:
+
+![memory permission error](/blog/memory-permission-error.png)
+
+This is a [data abort exception](https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/Exceptions/Data-Abort-exception). It can happen when your program accesses memory in some way that the brain's CPU doesn't allow, and it often indicates that your program has undefined behavior. Think of it as the VEX equivalent of a [segfault](https://en.wikipedia.org/wiki/Segmentation_fault). These *really suck* to debug, and the error that VEXos throws up on screen often isn't very helpful.
+
+As of vexide 0.8.0, we now provide a more detailed report of many different CPU faults including data aborts, prefetch aborts, undefined instruction exceptions, and more.
 
