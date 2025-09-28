@@ -9,74 +9,92 @@ const blogPosts = await getCollection("blog", ({ data }) => !data?.draft);
 ---
 
 <PageLayout title="vexide blog">
-	<PageSection id="blog">
-		<h1 class="title" style="align-self: center;">Blog</h1>
-		<a id="content"></a>
-		<BlogSearch
-			client:load
-			blogs={blogPosts
-				.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-				.map((post, n) => {
-
-					return {
-						url: `/blog/posts/${post.slug}/`,
-						title: post.data.title,
-						description: post.data.description,
-						author: post.data.author,
-						date: new Date(post.data.date),
-						thumbnail: post.data.thumbnail?.url,
-						thumbnailAlt: post.data.thumbnail?.alt,
-						tag: post.data.tags[0],
-					};
-				})}
-		/>
-		<div class="blog-grid"></div>
-	</PageSection>
+    <PageSection id="blog">
+        <h1 class="title">
+            <img
+                width="56"
+                height="56"
+                src="/images/logo.svg"
+                alt="vexide Logo"
+                style="
+			vertical-align: middle;
+			margin-right: 12px;
+		"
+            /><strong>vexide</strong> blog
+        </h1>
+        <a id="content"></a>
+        <BlogSearch
+            client:load
+            blogs={blogPosts
+                .sort(
+                    (a, b) =>
+                        new Date(b.data.date).getTime() -
+                        new Date(a.data.date).getTime(),
+                )
+                .map((post, n) => {
+                    return {
+                        url: `/blog/posts/${post.slug}/`,
+                        title: post.data.title,
+                        description: post.data.description,
+                        author: post.data.author,
+                        date: new Date(post.data.date),
+                        thumbnail: post.data.thumbnail?.url,
+                        thumbnailAlt: post.data.thumbnail?.alt,
+                        tag: post.data.tags[0],
+                    };
+                })}
+        />
+        <div class="blog-grid"></div>
+    </PageSection>
 </PageLayout>
 
 <style>
-	@keyframes slide-up-blog {
-		from {
-			transform: translateY(32px);
-			opacity: 0;
-		}
-	}
-	@keyframes slide-up-regular {
-		from {
-			transform: translateY(8px);
-			opacity: 0;
-		}
-	}
+    @keyframes slide-up-blog {
+        from {
+            transform: translateY(32px);
+            opacity: 0;
+        }
+    }
+    @keyframes slide-up-regular {
+        from {
+            transform: translateY(8px);
+            opacity: 0;
+        }
+    }
 
-	#blog {
-		min-height: calc(100vh - 48px);
-		z-index: 1;
-		/* border-bottom: 1px solid #6e59ff; */
-		--grid-color: hsl(var(--base-hue), 12%, 18%);
-		background-size: 20px 20px;
-		background-image: linear-gradient(
-				to right,
-				var(--grid-color) 1px,
-				transparent 1px
-			),
-			linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
-	}
+    #blog {
+        min-height: calc(100vh - 48px);
+        z-index: 1;
+        /* border-bottom: 1px solid #6e59ff; */
+        --grid-color: hsl(var(--base-hue), 12%, 18%);
+        background-size: 20px 20px;
+        background-image:
+            linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+    }
 
-	#blog > :global(.page-section-inner) {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 80rem;
-		gap: 30px;
-		padding-block: 128px;
-	}
-	@media screen and (max-width: 800px) {
-		#blog > :global(.page-section-inner) {
-			width: 100%;
-		}
-	}
+    #blog > :global(.page-section-inner) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80rem;
+        gap: 30px;
+        padding-block: 72px;
+    }
+    @media screen and (max-width: 800px) {
+        #blog > :global(.page-section-inner) {
+            width: 100%;
+        }
+    }
 
-	.title {
-		animation: slide-up-regular 500ms backwards;
-	}
+    #blog .title {
+        color: var(--foreground-secondary);
+        font-family: var(--font-primary);
+        font-size: 48px;
+        animation: slide-up-regular 500ms backwards;
+    }
+
+    #blog .title strong {
+        color: var(--foreground-primary);
+    }
 </style>
