@@ -51,15 +51,15 @@ Please don't try this at home.
 
 In the past, vexide attempted to "fill in the gaps" left by our lack of a standard library with equivalent APIs. Now that we have the real thing, these APIs are redundant and have been removed.
 
-| `vexide` 0.7.0 API | Equivalent `std` API |
+| Removed `vexide` 0.7.0 API | Equivalent `std` API |
 | -- | -- |
-| `vexide::io::*` | `std::io::*` |
-| `vexide::fs::*` | `std::fs::*` |
-| `vexide::path:*` |`std::path:*` |
-| `vexide::program::{exit, abort}` |`std::process::{exit, abort}` |
-| `vexide::time::Instant` | `std::time::Instant` |
-| `vexide::panic::*` | `std::panic::*` |
-| `vexide::float::*` | `std::{f32, f64}::*` |
+| [`vexide::io::*`](https://docs.rs/vexide/0.7.0/vexide/io/index.html) | [`std::io::*`](https://doc.rust-lang.org/stable/std/io/index.html) |
+| [`vexide::fs::*`](https://docs.rs/vexide/0.7.0/vexide/fs/index.html) | [`std::fs::*`](https://doc.rust-lang.org/stable/std/fs/index.html) |
+| [`vexide::path:*`](https://docs.rs/vexide/0.7.0/vexide/path/index.html) |[`std::path:*`](https://doc.rust-lang.org/stable/std/path/index.html) |
+| [`vexide::program::{exit, abort}`](https://docs.rs/vexide/0.7.0/vexide/program/index.html) | [`std::process::{exit, abort}`](https://doc.rust-lang.org/stable/std/process/index.html) |
+| [`vexide::time::Instant`](https://docs.rs/vexide/0.7.0/vexide/time/struct.Instant.html) | [`std::time::Instant`](https://doc.rust-lang.org/stable/std/time/struct.Instant.html) |
+| [`vexide::panic::*`](https://docs.rs/vexide/0.7.0/vexide/panic/index.html) | [`std::panic::*`](https://doc.rust-lang.org/stable/std/panic/index.html) |
+| [`vexide::float::*`](https://docs.rs/vexide/0.7.0/vexide/float/index.html) | [`std::f32::*`](https://doc.rust-lang.org/stable/std/primitive.f32.html), [`std::f64::*`](https://doc.rust-lang.org/stable/std/primitive.f64.html) |
 
 # SDK Shenanigans
 
