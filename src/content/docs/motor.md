@@ -15,7 +15,7 @@ V5 motors are rather special in that they are both fairly fault-tolerant and pro
 
 # Creating Motors
 
-[Two pages ago](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
+[Last page](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
 
 Motors can be created from any one of the 21 `SmartPort` instances in `peripherals`, along with a provided `Gearset` and `Direction`:
 
