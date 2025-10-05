@@ -209,4 +209,6 @@ This new error reporting system (which is enabled by default with the `abort-han
 - The ability to print this data to the terminal and re-print it if your terminal wasn't open when the program crashed.
 
 > [!TIP]
-> As a reminder, vexide is designed to [explicitly prevent these kinds of errors  from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should be impossible to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+> As a reminder, vexide is designed to [explicitly prevent these kinds of errors  from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+
+![colored stars](/blog/stars.svg)
