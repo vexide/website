@@ -209,6 +209,28 @@ This new error reporting system (which is enabled by default with the `abort-han
 - The ability to print this data to the terminal and re-print it if your terminal wasn't open when the program crashed.
 
 > [!TIP]
-> As a reminder, vexide is designed to [explicitly prevent these kinds of errors  from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+> As a reminder, vexide is designed to [explicitly prevent these kinds of errors from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+
+# Other Changes in `vexide` 0.8.0
+
+## Custom Encoder Support
+
+## Task-local Storage (TLS)
+
+## New Addressable LED API
+
+## Low-level User Program Information
+
+# `cargo-v5` 0.12.0
+
+# New Contributors
+
+> [!THANKS]
+> vexide is a community project maintained for free by open-source contributors. We'd like to thank the following new contributors to the project:
+
+- [fibonacci61](http://github.com/fibonacci61) wrote an initial implementation of our new async Task-local Storage system in vexide's async runtime.
+- [slipperking](http://github.com/slipperking) fixed some bugs in vexide's AI Vision API and helped with documentation.
+
+Thanks again for your contributions!
 
 ![colored stars](/blog/stars.svg)
