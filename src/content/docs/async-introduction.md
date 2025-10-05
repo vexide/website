@@ -171,7 +171,7 @@ So far, we've just made a regular function `async` for seemingly no reason. Sinc
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -225,7 +225,7 @@ If we call and `await` these functions directly in `main` we would only ever run
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -277,7 +277,7 @@ We can do this with vexide's `spawn` function. This will poll a future in a back
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -348,7 +348,7 @@ This is useful because it allows us to spawn tasks without needing entirely sepa
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -390,7 +390,7 @@ async fn multiply(a: f64, b: f64) {
 ```
 
 ```rs
-use core::future::Future;
+use std::future::Future;
 
 fn multiply(a: f64, b: f64) -> impl Future {
     async {
