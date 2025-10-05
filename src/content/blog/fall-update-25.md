@@ -1,5 +1,5 @@
 ---
-title: "Fall 2025 Updates: Standard Library support with vexide 0.8.0!"
+title: "Fall Updates: Standard Library Support with vexide 0.8.0!"
 description: "vexide 0.8.0 brings support for the Rust Standard Library, an improved development experience, and various API improvements."
 author: {
     name: "Tropical",
@@ -8,7 +8,7 @@ author: {
 tags: ["news"]
 date: 2025-09-30
 thumbnail: {
-    url: "/images/thumbnails/summer-night.png",
+    url: "/images/thumbnails/twilight.png",
     alt: "vexide logo drawn over a night sky"
 }
 ---
@@ -73,13 +73,13 @@ However, this posed a challenge when we were porting the standard library. Shipp
 
 ## Bring Your Own SDK
 
-Instead, we picked a third option — if you use the standard library, you are expected to link your own SDK. If you use vexide, it will provide one for you. This led to us completely modularizing how vexide links to its SDK, and you now have the choice of three different "backends" (providers) for an SDK that vexide can run on:
+Instead, we picked a third option — if you use the standard library, you are expected to link your own SDK. If you use vexide, it will provide one for you. This led to us completely modularizing how vexide links to its SDK. You can now pick from three different "backends" (providers) for an SDK that vexide can run on:
 
 - [`vex-sdk-jumptable`](https://crates.io/crates/vex-sdk-jumptable) is the custom reimplementation of the SDK used by previous vexide versions.
 - [`vex-sdk-vexcode`](https://crates.io/crates/vex-sdk-vexcode) will download the official proprietary SDK from VEX themselves, and link your project to it. This is downloaded from VEX's servers, and not directly distributed with vexide due to licensing restrictions.
 - [`vex-sdk-pros`](https://crates.io/crates/vex-sdk-pros) will use the partner SDK inside of the [PROS kernel](http://pros.cs.purdue.edu/) as a provider for vexide's SDK functions.
 
-You can specify which SDK to use in your `Cargo.toml` file by editing vexide's feature flags:
+You can specify which backend to use in your `Cargo.toml` file by editing vexide's feature flags:
 
 ```toml title="Cargo.toml"
 # @diff -
@@ -90,9 +90,9 @@ vexide = { version = "0.8.0", features = ["full", "vex-sdk-jumptable"] }
 
 All of these options should provide equivalent functionality, but this setup ensures vexide remains future-proof.
 
-# Native Compilation & Unit Testing 
+# Host Compilation & Unit Testing 
 
-Another advantage of modularizing the SDK in vexide is that we can now *mock* the underlying platform that vexide runs on. With vexide 0.8.0, you can now *natively compile and run* your robot's codebase on your computer. Here's a screenshot of me running the [clawbot example](https://github.com/vexide/vexide/blob/main/examples/clawbot.rs) on my laptop without a robot:
+Another advantage of modularizing the SDK in vexide is that we can now fake the underlying platform that vexide runs on. With vexide 0.8.0, you can now *natively compile and run* your robot's codebase on your own computer. Here's a screenshot of me running the [clawbot example](https://github.com/vexide/vexide/blob/main/examples/clawbot.rs) on my laptop without a robot:
 
 ![clawbot example](/blog/native-compilation.png)
 
@@ -110,7 +110,7 @@ vexide = { version = "0.8.0", features = ["full", "vex-sdk-jumptable", "vex-sdk-
 Being able to run our robot code on an actual host system means we can also support Rust's testing features. You can now write and run unit tests against your robot logic without needing hardware on hand, integrate with CI pipelines, and catch bugs in your code earlier.
 
 > [!WARNING]
-> At this point in time, devices won't do anything and will simply be disconnected at all times when using native compilation. This will change in the future, and we hope to add the ability to mock robot devices and entire subsystems in unit tests soon. We also hope to support emulating your robot's brain screen, for testing GUIs and autonomous selectors without physical access to a brain.
+> At this point in time, devices won't do anything and will simply be disconnected at all times when using host compilation. This will change in the future, and we hope to add the ability to mock robot devices and entire subsystems in unit tests soon. We also hope to support emulating your robot's brain screen, for testing GUIs and autonomous selectors without physical access to a brain.
 
 ```rs
 use vexide::prelude::*;
@@ -149,7 +149,64 @@ If you've ever encountered this screen, you know you're in for a fun time:
 
 ![memory permission error](/blog/memory-permission-error.png)
 
-This is a [data abort exception](https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/Exceptions/Data-Abort-exception). It can happen when your program accesses memory in some way that the brain's CPU doesn't allow, and it often indicates that your program has undefined behavior. Think of it as the VEX equivalent of a [segfault](https://en.wikipedia.org/wiki/Segmentation_fault). These *really suck* to debug, and the error that VEXos throws up on screen often isn't very helpful.
+This is a [data abort exception](https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/Exceptions/Data-Abort-exception). It can happen when your program accesses memory in some way that the brain's CPU doesn't allow, and it often indicates that your program has undefined behavior. Think of it as the VEX equivalent of a [segfault](https://en.wikipedia.org/wiki/Segmentation_fault). These types of errors *really suck* to debug, and the error that VEXos throws up on screen often doesn't give you all of the necessary information you need to find what caused it.
 
-As of vexide 0.8.0, we now provide a more detailed report of many different CPU faults including data aborts, prefetch aborts, undefined instruction exceptions, and more.
+As of vexide 0.8.0, we'll now optionally provide a more detailed report of many different CPU faults including data aborts, prefetch aborts, and undefined instruction exceptions.
 
+![improved abort handler](/blog/abort-handler.png)
+
+<div class="code-split error">
+
+```sh
+cargo v5 run --release
+```
+
+```ansi
+    Finished `release` profile [optimized] target(s) in 0.19s
+     [1;92mObjcopy[0m /home/tropical/Documents/GitHub/vexide/target/armv7a-vex-v5/release/examples/basic.bin
+     [1;92mRunning[0m `slot_1.bin`
+go go gadget null pointer dereference
+
+Data Abort exception at 0x3800ed0:
+Permission fault (MMU) while writing to 0x0
+
+registers at time of fault:
+ r0: 0x0
+ r1: 0x0
+ r2: 0x0
+ r3: 0x0
+ r4: 0x1
+ r5: 0x0
+ r6: 0x0
+ r7: 0x7a00024
+ r8: 0x7a00034
+ r9: 0x7a0001c
+r10: 0x380fba8
+r11: 0x132
+r12: 0x3692594
+ sp: 0x79ffe60
+ lr: 0x3800e8c
+ pc: 0x3800ed0
+
+stack backtrace:
+  0: 0x3800ecf
+  1: 0x3801a83
+  2: 0x38003f7
+
+help: this CPU fault indicates the misuse of unsafe code.
+      Use a symbolizer tool to determine the location of the crash.
+      (e.g. llvm-symbolizer -e ./target/armv7a-vex-v5/release/program_name 0x3800ed0)
+```
+
+</div>
+
+This new error reporting system (which is enabled by default with the `abort-handler` feature flag) provides more helpful information for debugging and finding the location of these types of crashes, including:
+
+- The full cause of the CPU exception (including the type of operation that caused the fault).
+- A stack backtrace leading up to the function causing the exception. The addresses in this trace can be passed to a symbolizer program like [`llvm-symbolizer`](https://llvm.org/docs/CommandGuide/llvm-symbolizer.html) to find the exact line of code causing the abort.
+- For undefined instruction exceptions, the invalid instruction that caused the abort.
+- The CPU's registers at the time of the fault.
+- The ability to print this data to the terminal and re-print it if your terminal wasn't open when the program crashed.
+
+> [!TIP]
+> As a reminder, vexide is designed to [explicitly prevent these kinds of errors  from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should be impossible to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
