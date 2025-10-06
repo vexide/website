@@ -1,7 +1,7 @@
 ---
 title: "Summer Updates: Announcing cargo-v5 and vexide 0.3.0"
 description: Important project updates for Summer 2024!
-author: tropix126
+author: tropicaaal
 tags: ["news"]
 date: 2024-07-16
 thumbnail: {

@@ -1,7 +1,7 @@
 ---
 title: "Winter Updates: Instant wireless uploads on vexide 0.6.0 & cargo-v5"
 description: vexide update!!!!!!!!!! yippee!!!!
-author: tropix126
+author: tropicaaal
 tags: ["news"]
 date: 2025-01-26
 thumbnail: {
