@@ -51,15 +51,15 @@ Please don't try this at home.
 
 In the past, vexide attempted to "fill in the gaps" left by our lack of a standard library with equivalent APIs. Now that we have the real thing, these APIs are redundant and have been removed.
 
-| Removed `vexide` 0.7.0 API | Equivalent `std` API |
-| -- | -- |
-| [`vexide::io::*`](https://docs.rs/vexide/0.7.0/vexide/io/index.html) | [`std::io::*`](https://doc.rust-lang.org/stable/std/io/index.html) |
-| [`vexide::fs::*`](https://docs.rs/vexide/0.7.0/vexide/fs/index.html) | [`std::fs::*`](https://doc.rust-lang.org/stable/std/fs/index.html) |
-| [`vexide::path:*`](https://docs.rs/vexide/0.7.0/vexide/path/index.html) |[`std::path:*`](https://doc.rust-lang.org/stable/std/path/index.html) |
-| [`vexide::program::{exit, abort}`](https://docs.rs/vexide/0.7.0/vexide/program/index.html) | [`std::process::{exit, abort}`](https://doc.rust-lang.org/stable/std/process/index.html) |
-| [`vexide::time::Instant`](https://docs.rs/vexide/0.7.0/vexide/time/struct.Instant.html) | [`std::time::Instant`](https://doc.rust-lang.org/stable/std/time/struct.Instant.html) |
-| [`vexide::panic::*`](https://docs.rs/vexide/0.7.0/vexide/panic/index.html) | [`std::panic::*`](https://doc.rust-lang.org/stable/std/panic/index.html) |
-| [`vexide::float::*`](https://docs.rs/vexide/0.7.0/vexide/float/index.html) | [`std::f32::*`](https://doc.rust-lang.org/stable/std/primitive.f32.html), [`std::f64::*`](https://doc.rust-lang.org/stable/std/primitive.f64.html) |
+| Removed `vexide` 0.7.0 API                                                                 | Equivalent `std` API                                                                                                                               |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`vexide::io::*`](https://docs.rs/vexide/0.7.0/vexide/io/index.html)                       | [`std::io::*`](https://doc.rust-lang.org/stable/std/io/index.html)                                                                                 |
+| [`vexide::fs::*`](https://docs.rs/vexide/0.7.0/vexide/fs/index.html)                       | [`std::fs::*`](https://doc.rust-lang.org/stable/std/fs/index.html)                                                                                 |
+| [`vexide::path:*`](https://docs.rs/vexide/0.7.0/vexide/path/index.html)                    | [`std::path:*`](https://doc.rust-lang.org/stable/std/path/index.html)                                                                              |
+| [`vexide::program::{exit, abort}`](https://docs.rs/vexide/0.7.0/vexide/program/index.html) | [`std::process::{exit, abort}`](https://doc.rust-lang.org/stable/std/process/index.html)                                                           |
+| [`vexide::time::Instant`](https://docs.rs/vexide/0.7.0/vexide/time/struct.Instant.html)    | [`std::time::Instant`](https://doc.rust-lang.org/stable/std/time/struct.Instant.html)                                                              |
+| [`vexide::panic::*`](https://docs.rs/vexide/0.7.0/vexide/panic/index.html)                 | [`std::panic::*`](https://doc.rust-lang.org/stable/std/panic/index.html)                                                                           |
+| [`vexide::float::*`](https://docs.rs/vexide/0.7.0/vexide/float/index.html)                 | [`std::f32::*`](https://doc.rust-lang.org/stable/std/primitive.f32.html), [`std::f64::*`](https://doc.rust-lang.org/stable/std/primitive.f64.html) |
 
 # SDK Shenanigans
 
@@ -214,6 +214,44 @@ This new error reporting system (which is enabled by default with the `abort-han
 # Other Changes in `vexide` 0.8.0
 
 ## Custom Encoder Support
+
+It's fairly common for VEXU teams to use off-the-shelf shaft encoders rather than buying sensors sold by VEX. vexide currently supports VEX's old [Optical Shaft Encoders](https://www.vexrobotics.com/276-2156.html) through the [`AdiEncoder` API](https://docs.rs/vexide/latest/vexide/devices/adi/struct.AdiEncoder.html), and while this is *sort of* compatible with custom hardware already, commonly used sensors like the [AMT102-V](https://www.sameskydevices.com/product/motion-and-control/rotary-encoders/incremental/modular/amt102-v) often have much higher resolution than VEX's optical encoders (which have a resolution of 360 ticks/rev). In the past, you'd have to multiply the output of `AdiEncoder` by a constant to get a usable angle reading, which was rather annoying.
+
+In `vexide` 0.8.0, we now provide support for encoders with custom resolutions. `AdiEncoder` now takes a const-generic argument for the number of encoder ticks in a full revolution. The position reading will be automatically scaled appropriately for the encoder's TPR.
+
+For example, you can read from an encoder with a resolution of 8192 ticks/rev like this:
+
+```rs
+use vexide::prelude::*;
+
+const ENCODER_TPR: u32 = 8192;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let enc = AdiEncoder::<ENCODER_TPR>::new(
+        peripherals.adi_a,
+        peripherals.adi_b
+    );
+
+    println!("encoder position: {:?}", enc.position().unwrap().as_degrees());
+}
+```
+
+We also provide an `AdiOpticalEncoder` type alias for if you're using VEX's optical encoder. This simply resolves to `AdiEncoder<360>`, and should behave identically to the previous `AdiEncoder` API in vexide 0.7.0 and below.
+
+```rs
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let enc = AdiOpticalEncoder::new(
+        peripherals.adi_a,
+        peripherals.adi_b
+    );
+
+    println!("encoder position: {:?}", enc.position().unwrap().as_degrees());
+}
+```
 
 ## Task-local Storage (TLS)
 
