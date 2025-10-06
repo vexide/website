@@ -318,9 +318,20 @@ Spawned task count: 6
 > [!TIP]
 > Task-local `static`s have a few advantages over regular global `static`s. Because each task gets its own isolated instance, they don't require any form of synchronization  (no need for a `Mutex`). They can also safely store types that wouldn’t be allowed in global statics, such as types that don't implement `Sync`.
 
-## New Addressable LED API
-
 ## Low-level User Program Information
+
+
+We've added new functions for retrieving some niche information about the current user program. The new `code_signature` and `linked_file` functions in `vexide::program` allow you to read the currently running program's code signature and file link address:
+
+```rs
+let code_sig = vexide::program::code_signature();
+let linked_file_ptr = vexide::program::linked_file();
+
+println!("Program owner: {:?}", code_sig.owner());
+println!("Link address: {:#x}", linked_file_ptr as usize);
+```
+
+These functions aren't something that you should realistically need to use or care about in most cases, but are useful to have for low-level development.
 
 # `cargo-v5` 0.12.0
 

@@ -21,18 +21,16 @@ Motors can be created from any one of the 21 `SmartPort` instances in `periphera
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
+    // @focus
     //                            (                )  (            )  (                )
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
     //            ^
-    //         [Create a motor on port 1 that spins forwards using the green gearset.]
+    //         [Create a Motor on port 1 that spins forwards using the green gearset.]
 }
 ```
 
@@ -52,9 +50,6 @@ Here's an example where we create three motors on ports 1, 2, and 3. Each one ha
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -94,9 +89,6 @@ To create a 5.5W EXP motor, you can use the `Motor::new_exp` method instead of `
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -122,9 +114,6 @@ We can control the voltage sent into the motor using the [`set_voltage`](https:/
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -145,9 +134,6 @@ We can also run the motor in reverse by passing in a negative voltage:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -178,9 +164,6 @@ Let's tell our motor to spin at 200RPM (the maximum rated speed for the `Green` 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -199,9 +182,6 @@ As with `set_voltage`, `set_velocity` can also accept negative values to spin th
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -229,9 +209,6 @@ You can also control the position of a motor using the `set_position_target` met
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -256,9 +233,6 @@ In vexide, you can brake using the `Motor::brake` method:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -337,9 +311,6 @@ As an example, let's read out a bunch of this data and log it to the [terminal](
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*
 
 // @fold end

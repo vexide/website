@@ -66,9 +66,6 @@ Well, let's try treating it like a normal function and calling it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -91,9 +88,6 @@ In order to actually execute our `wow` function, we need to `await` it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
@@ -120,9 +114,6 @@ To demonstrate this behavior, we can store the return value (the "future") of ou
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
