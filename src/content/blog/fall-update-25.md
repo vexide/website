@@ -233,7 +233,7 @@ async fn main(peripherals: Peripherals) {
         peripherals.adi_b
     );
 
-    println!("encoder position: {:?}", enc.position().unwrap().as_degrees());
+    println!("Encoder position: {:?}", enc.position().unwrap().as_degrees());
 }
 ```
 
@@ -249,11 +249,74 @@ async fn main(peripherals: Peripherals) {
         peripherals.adi_b
     );
 
-    println!("encoder position: {:?}", enc.position().unwrap().as_degrees());
+    println!("Encoder position: {:?}", enc.position().unwrap().as_degrees());
 }
 ```
 
 ## Task-local Storage (TLS)
+
+vexide now supports the ability to create **async task-local static data**. That's a lot of of word salad, so let's look at what this practically means.
+
+You can define a task-local static variable by wrapping it in the new `task_local!` macro. Let's make a counter:
+
+```rs
+use std::cell::Cell;
+
+vexide::task::task_local! {
+    static COUNT: Cell<u32> = Cell::new(1);
+}
+```
+
+This looks a lot like a normal static, but when we spawn an [async task](http://localhost:4321/docs/async-introduction/), each task will get its own unique version of `COUNT` starting at `1`. In other words, value of `COUNT` is *local* to each task accessing it.
+
+<div class="code-split">
+
+```rs
+// @fold start
+use vexide::prelude::*;
+use std::{cell::Cell, std::time::Duration};
+
+vexide::task::task_local! {
+    static COUNT: Cell<u32> = Cell::new(1);
+}
+
+//@fold end
+let task = spawn(async {
+    loop {
+        println!("Spawned task count: {}", COUNT.get());
+        COUNT.set(COUNT.get() + 1);
+        
+        sleep(Duration::from_millis(100)).await;
+    }
+});
+
+loop {
+    println!("Main task count: {}", COUNT.get());
+    COUNT.set(COUNT.get() + 1);
+
+    sleep(Duration::from_millis(100)).await;
+}
+```
+
+```
+Main task count: 1
+Spawned task count: 1
+Main task count: 2
+Spawned task count: 2
+Main task count: 3
+Spawned task count: 3
+Main task count: 4
+Spawned task count: 4
+Main task count: 5
+Spawned task count: 5
+Main task count: 6
+Spawned task count: 6
+```
+
+</div>
+
+> [!TIP]
+> Task-local `static`s have a few advantages over regular global `static`s. Because each task gets its own isolated instance, they don't require any form of synchronization  (no need for a `Mutex`). They can also safely store types that wouldn’t be allowed in global statics, such as types that don't implement `Sync`.
 
 ## New Addressable LED API
 
