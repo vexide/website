@@ -3,7 +3,7 @@ title: "Fall Updates: Standard Library Support with vexide 0.8.0!"
 description: "vexide 0.8.0 brings support for the Rust Standard Library, an improved development experience, and various API improvements."
 author: {
     name: "Tropical",
-    github: "tropix126",
+    github: "tropicaaal",
 }
 tags: ["news"]
 date: 2025-09-30
