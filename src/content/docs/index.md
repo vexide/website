@@ -14,6 +14,9 @@ These resources serve as an introduction and set of tutorials for using vexide a
 > [!TIP]
 > It should be stated that this is NOT a Rust tutorial, so it's recommended for you to go through at least the first half of the [Rust Book](https://doc.rust-lang.org/book/) or some other learning resource if you aren't familiar with Rust. We'll try to keep things as simple as possible, but this documentation assumes that you have a basic understanding of [variables](https://doc.rust-lang.org/book/ch03-01-variables-and-mutability.html), [functions](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html), [data types](https://doc.rust-lang.org/book/ch03-02-data-types.html), [control flow](https://doc.rust-lang.org/book/ch03-05-control-flow.html), [ownership/borrowing](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html), and [traits](https://doc.rust-lang.org/book/ch10-00-generics.html).
 
+> [!WARNING]
+> **These docs are still under construction!** Many features of vexide [exist](https://docs.rs/vexide), but are not yet documented in these pages. If you wish to contribute, please reach out to us on [GitHub](https://github.com/vexide/website) or through our [Discord server](https://discord.com/invite/d4uazRf2Nh).
+> 
 # What is vexide?
 
 vexide is a Rust library for programming VEX robots: it provides a platform for running Rust code on the VEX brain that controls your robot's hardware and devices. You can think of it as an alternative to [VEXcode](https://www.vexrobotics.com/vexcode) or [PROS](https://pros.cs.purdue.edu/), but for the Rust programming language (rather than C or C++). vexide implements low-level features like task scheduling, memory allocation, and competition state so that you can write competitive, performant, and reliable code!

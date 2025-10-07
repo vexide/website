@@ -72,8 +72,8 @@ The third argument that we pass to `Motor::new` is a `Direction`. This determine
 
 Note how the arrow with the plus in its center is pointing in the **clockwise** direction when the motor is facing **right-side up**.
 
-- When `Direction::Forward` is specified, positive velocity/voltage values will cause the motor to rotate **with the arrow**. Position will **increase** as the motor rotates with the arrow.
-- When `Direction::Reverse` is specified, positive velocity/voltage values will cause the motor to rotate **against the arrow**. Position will **increase** as the motor rotates against the arrow.
+- When `Direction::Forward` is specified, positive velocity/voltage values will cause the motor to rotate **with the arrow**. Position will **increase** when the motor rotates with the arrow.
+- When `Direction::Reverse` is specified, positive velocity/voltage values will cause the motor to rotate **against the arrow**. Position will **decrease** when the motor rotates with the arrow.
 
 > How do I know if my motor should be reversed or not?
 
@@ -96,8 +96,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     //                     (     )
     let mut motor = Motor::new_exp(peripherals.port_1, Direction::Forward);
-    motor.motor_type() // -> MotorType::Exp
-    //    ^
+    let motor_type = motor.motor_type(); // -> MotorType::Exp
+    //              ^
     // [You can check the type of motor using the `motor_type` method.]
 }
 ```

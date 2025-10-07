@@ -76,57 +76,6 @@ async fn main(_peripherals: Peripherals) {
 }
 ```
 
-# Low-level Standard I/O: `Stdin` and `Stdout`
-
-`print!` and `println!` are *macros*, meaning they expand to some larger block of code at compile-time. If you're familiar with Rust, you've probably used them before in other programs to print out some program output. There are a few subtle differences in the behavior of vexide's printing macros from what you'd encounter in `std`'s versions though.
-
-To understand this behavior, lets look into what underlying APIs these macros actually expand to:
-
-<div class="code-split">
-
-```rs
-println!("Hello world!");
-```
-
-```rs
-{
-    use ::std::io::{Write, stdout};
-    if let Err(e) = stdout().write_fmt(format_args!("Hello world!")) {
-        panic!("failed printing to stdout: {e}");
-    }
-}
-```
-
-</div>
-
-The brain communicates with your computer through two streams: [`Stdin`](https://doc.rust-lang.org/stable/std/io/struct.Stdin.html) delivers data to the brain and [`Stdout`](https://doc.rust-lang.org/stable/std/io/struct.Stdout.html) delivers data to your computer. `Stdout`, or "standard output," is what's being used to print our "Hello world!" message because it's an outgoing message from the brain to your computer.
-
-## Example: Printing Without Macros
-
-To manually print to `Stdout` we can write to its buffer by obtaining a *lock*, which will give us exclusive access to the buffer until we release the lock (either by explicitly `drop`ping it or having it fall out of scope). This ensures that we won't get interrupted by another print attempt while we are writing to our buffer.
-
-[`StdoutLock`](https://doc.rust-lang.org/stable/std/io/struct.StdoutLock.html) implements the [`Write`](https://doc.rust-lang.org/stable/std/io/trait.Write.html) trait, which provides some methods for writing to the buffer:
-
-```rs
-// @fold start
-use vexide::prelude::*;
-// @fold end
-use std::io::{Write, stdout};
-
-#[vexide::main]
-async fn main(_peripherals: Peripherals) {
-    let mut lock = stdout().lock();
-//                    ^
-//        [Obtain a lock of Stdout.]
-
-    lock.write(b"Hello World!\n").unwrap();
-
-    std::mem::drop(lock);
-//                 ^
-// [Bring the lock out of scope to release it.]
-}
-```
-
 # Advanced Logging Solutions
 
-vexide takes a fairly unopinionated approach on how you should use the terminal, providing a similar API surface to what's given to you in normal rust programs in a `std`-environment through macros and writers. If you need a more advanced logging solution, crates in the rust ecosystem such as [log](https://crates.io/crates/log) may be of interest to you.
+If you need a more advanced logging solution, crates in the rust ecosystem such as [`log`](https://crates.io/crates/log) may be of interest to you.

@@ -1,12 +1,12 @@
 ---
 title: Distance Sensor
 category: 02. Devices
-page: 10
+page: 12
 ---
 
-<img width="400" alt="distance sensor sketch" align="center" src="/docs/distance-sensor.svg" />
+<img height="200" alt="distance sensor sketch" align="center" src="/docs/distance-sensor.svg" />
 
-The V5 Distance Sensor is a device that measures an object's distance, relative size, and approach speed using a [Class 1 VCSEL Laser](https://en.wikipedia.org/wiki/Vertical-cavity_surface-emitting_laser). Distance sensors are commonly used for object detection and robot localization.
+The V5 Distance Sensor is a [Time of Flight (ToF) sensor](https://en.wikipedia.org/wiki/Time-of-flight_camera) that measures an object's distance, relative size, and approach speed using a [VCSEL Class 1 Laser](https://en.wikipedia.org/wiki/Vertical-cavity_surface-emitting_laser) that reflects off of nearby objects. Distance sensors are commonly used for object detection and robot localization (position tracking).
 
 > [!NOTE]
 > For more information on the specific features/hardware details of Distance Sensors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360050696511-Using-the-Distance-Sensor-with-VEX-V5).
@@ -35,11 +35,11 @@ async fn main(peripherals: Peripherals) {
 If a distance sensor is within range of an object, it will report four things:
 - The object's distance from the front of the sensor in millimeters.
 - The object's approach velocity in meters per second.
-- A guess at the object's "relative size". This value a unitless score from 0-400, where an 18“ x 30“ grey card will return a value of approximately 75 in typical room lighting.
+- A guess at the object's "relative size". This value is a unitless score from 0-400, where an 18“ x 30“ grey card will return a value of approximately 75 in typical room lighting.
 - A "confidence score" of how accurate its measurements are from 0.0 to 1.0.
 
 > [!NOTE]
-> Distance Sensors will report new readings once every 33 milliseconds. When in close range of an object (less than 8 inches), they have an FOV of roughly ±18°. At farther ranges than 8 inches, the distance sensor switches to an alternative algorithm with a smaller FOV (roughly ±12°).
+> Distance Sensors will report new readings once every 33 milliseconds, and have a maximum specified range of 2000mm (78.74in). When in close range of an object (less than 8 inches), they have an FOV of roughly ±18°. At ranges farther than 8 inches, the distance sensor switches to an alternative algorithm with a smaller FOV (roughly ±12°).
 
 To read data about an object from a distance sensor, we can use the [`object` method](https://docs.rs/vexide/latest/vexide/devices/smart/distance/struct.DistanceSensor.html#method.object).
 
