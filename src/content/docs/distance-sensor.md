@@ -1,7 +1,7 @@
 ---
 title: Distance Sensor
 category: 02. Devices
-page: 12
+page: 14
 ---
 
 <img height="200" alt="distance sensor sketch" align="center" src="/docs/distance-sensor.svg" />
@@ -13,7 +13,7 @@ The V5 Distance Sensor is a [Time of Flight (ToF) sensor](https://en.wikipedia.o
 
 # Creating a Distance Sensor
 
-Distance Sensors can be created from any one of the 21 `SmartPort` instances in `peripherals`.
+Using the `Peripherals` struct passed to our `main` function, we can a Distance Sensor from any one of the 21 `SmartPort` fields on it.
 
 ```rs
 // @fold start
@@ -23,10 +23,10 @@ use vexide::prelude::*;
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     // @focus
-    //                               (                )
-    let sensor = DistanceSensor::new(peripherals.port_1);
-    //                              ^
-    //             [Create a Distance Sensor on port 1.]
+    //                                   (                )
+    let mut sensor = DistanceSensor::new(peripherals.port_1);
+    //                                  ^
+    //                 [Create a Distance Sensor on port 1.]
 }
 ```
 
@@ -38,7 +38,7 @@ If a distance sensor is within range of an object, it will report four things:
 - A guess at the object's "relative size". This value is a unitless score from 0-400, where an 18“ x 30“ grey card will return a value of approximately 75 in typical room lighting.
 - A "confidence score" of how accurate its measurements are from 0.0 to 1.0.
 
-> [!NOTE]
+> [!TIP]
 > Distance Sensors will report new readings once every 33 milliseconds, and have a maximum specified range of 2000mm (78.74in). When in close range of an object (less than 8 inches), they have an FOV of roughly ±18°. At ranges farther than 8 inches, the distance sensor switches to an alternative algorithm with a smaller FOV (roughly ±12°).
 
 To read data about an object from a distance sensor, we can use the [`object` method](https://docs.rs/vexide/latest/vexide/devices/smart/distance/struct.DistanceSensor.html#method.object).

@@ -10,14 +10,14 @@ Motors serve as the foundation for most robot subsystems, and are very likely th
 
 V5 motors are rather special in that they are both fairly fault-tolerant and provide extra features such as builtin velocity/position control, temperature sensors, and encoders. This is why they're commonly referred to as **Smart Motors**.
 
-> [!NOTE]
-> For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview).
+> [!TIP]
+> For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview) and the [Purdue SIGBots Wiki](https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors).
 
 # Creating Motors
 
 [Last page](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
 
-Motors can be created from any one of the 21 `SmartPort` instances in `peripherals`, along with a provided `Gearset` and `Direction`:
+Using the `Peripherals` struct passed to our `main` function, we can a Motor from any one of the 21 `SmartPort` fields on it, along with a provided `Gearset` and `Direction`:
 
 ```rs
 // @fold start
