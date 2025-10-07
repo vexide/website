@@ -20,7 +20,7 @@
     interface Blog {
         title: string;
         description: string;
-        author: string;
+        author: { name?: string, github: string } | string;
         date: Date;
         url: string;
         thumbnail?: string;
@@ -39,7 +39,7 @@
         if (query == "") return filtered;
 
         const results = fuzzysort.go(query, filtered, {
-            keys: ["title", "description", "author"],
+            keys: ["title", "description"],
         });
 
         return results

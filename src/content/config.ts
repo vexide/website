@@ -6,7 +6,10 @@ const blog = defineCollection({
       title: z.string(),
       date: z.date(),
       description: z.string(),
-      author: z.string(),
+      author: z.object({
+        name: z.string().optional(),
+        github: z.string(),
+      }).or(z.string()),
       thumbnail: z.object({
         url: z.string(),
         alt: z.string()
