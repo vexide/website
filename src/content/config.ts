@@ -25,6 +25,7 @@ const docs = defineCollection({
       title: z.string(),
       category: z.string(),
       page: z.number(),
+      links: z.record(z.string()).optional()
     })
 });
 

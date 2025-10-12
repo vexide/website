@@ -24,21 +24,21 @@ const nextPage =
 ---
 
 <script>
-	document.addEventListener("astro:page-load", () => {
-		const sidebar = document.querySelector(".docs-sidebar")!;
-		const storedState = sessionStorage.getItem("docsSidebarScrollPosition");
+    document.addEventListener("astro:page-load", () => {
+        const sidebar = document.querySelector(".docs-sidebar")!;
+        const storedState = sessionStorage.getItem("docsSidebarScrollPosition");
 
-		if (storedState) {
-			sidebar.scrollTop = parseInt(storedState);
-		}
+        if (storedState) {
+            sidebar.scrollTop = parseInt(storedState);
+        }
 
-		sidebar.addEventListener("scroll", () => {
-			sessionStorage.setItem(
-				"docsSidebarScrollPosition",
-				sidebar.scrollTop.toString(),
-			);
-		});
-	});
+        sidebar.addEventListener("scroll", () => {
+            sessionStorage.setItem(
+                "docsSidebarScrollPosition",
+                sidebar.scrollTop.toString(),
+            );
+        });
+    });
 </script>
 
 <BaseLayout
@@ -167,12 +167,13 @@ const nextPage =
         <div class="docs-page">
             <header class="docs-header">
                 <div class="docs-header-inner">
+                    <span class="docs-breadcrumbs">Tutorials > {currentPage.data.category} > {currentPage.data.title}</span>
                     <h1>{currentPage.data.title}</h1>
-                    <a
+                    <Button
                         class="edit-on-github"
                         href={`${GITHUB_ORG_URL}/website/tree/main/src/content/docs/${currentPage.id}`}
                     >
-                        Edit this page on GitHub
+                        Edit This Page
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="16"
@@ -182,9 +183,38 @@ const nextPage =
                             <path
                                 fill="currentColor"
                                 d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
-                            ></path>
+                            />
                         </svg>
-                    </a>
+                    </Button>
+                    {
+                        currentPage.data.links && (
+                            <div class="docs-header-links">
+
+                                {Object.entries(currentPage.data.links).map(
+                                    ([name, href]) => (
+                                        <a
+                                            href={href as string}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                        >
+                                            {name}
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 32 32"
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
+                                                />
+                                            </svg>
+                                        </a>
+                                    ),
+                                )}
+                            </div>
+                        )
+                    }
                 </div>
             </header>
             <MarkdownStyles element="article" id="content">
@@ -284,9 +314,13 @@ const nextPage =
         flex: 0 0 auto;
         overflow: auto;
         position: sticky;
-        scrollbar-width: thin;
+        scrollbar-width: none;
         scrollbar-color: hsl(var(--base-hue), 12%, 30%) #282a34;
         top: 0;
+    }
+    
+    .docs-sidebar:hover {
+        scrollbar-width: thin;
     }
 
     :global(.navigation:has(.docs-search input:focus))
@@ -341,14 +375,53 @@ const nextPage =
     }
 
     .docs-header h1 {
+        align-self: flex-end;
+        grid-area: title;
         font-weight: 400;
         font-size: 4.8rem;
         margin: 0;
     }
 
     .docs-header-inner {
+        grid-template-columns: 1fr auto; /* Example: one column for sidebar, three for main content */
+        grid-template-areas:
+            "breadcrumbs edit"
+            "title links";
+
+        display: grid;
+        justify-content: space-between;
+        gap: 16px;
         max-inline-size: 864px;
         margin: 0 auto;
+    }
+
+    .docs-breadcrumbs {
+        grid-area: breadcrumbs;
+        font-size: 14px;
+        color: var(--foreground-secondary);
+        font-family: var(--font-monospace);
+        text-transform: uppercase;
+    }
+    
+    .docs-header-links {
+        grid-area: links;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .docs-header-links a {
+        color: var(--foreground-accent-red);
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        transition: 0.25s ease;
+        display: inline-block;
+        margin-block-start: 16px;
+        font-size: 1.6rem;
+    }
+
+    .docs-header-links a:hover {
+        opacity: 0.8;
     }
 
     .docs-sidebar {
@@ -357,7 +430,8 @@ const nextPage =
     }
 
     .docs-category-label {
-        font-size: 16px;
+        font-size: 14px;
+        text-transform: uppercase;
         color: var(--foreground-primary);
         font-family: var(--font-monospace);
         font-weight: normal;
@@ -398,21 +472,16 @@ const nextPage =
         border-left-color: var(--background-accent-yellow);
     }
 
-    .edit-on-github {
-        color: var(--foreground-accent-red);
-        text-decoration: none;
-        border-bottom: 1px solid currentColor;
-        transition: 0.25s ease;
+    .button.edit-on-github {
+        grid-area: edit;
+        font-size: 14px;
+        padding: 8px 16px;
+        margin-block-end: 16px;
     }
 
-    .edit-on-github:hover {
-        opacity: 0.8;
-    }
-
-    .edit-on-github {
-        display: inline-block;
-        margin-block-start: 16px;
-        font-size: 1.6rem;
+    .button.edit-on-github svg {
+        width: 14px;
+        height: 14px;
     }
 
     .docs-page-actions {

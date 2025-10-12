@@ -2,6 +2,11 @@
 title: Optical Sensor
 category: 02. Devices
 page: 15
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/optical/struct.OpticalSensor.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/optical-sensor",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360051005291-Using-the-Optical-Sensor-with-VEX-V5",
+}
 ---
 
 <img height="200" alt="optical sensor sketch" align="center" src="/docs/optical-sensor.svg" />
@@ -9,10 +14,6 @@ page: 15
 The V5 Optical Sensor is a combination of an ambient light, color, proximity, and gesture sensor. Optical sensors report data about the light intensity, color, and proximity of a single point within their field of view. The sensor is also able to detect hand gestures in four directions.
 
 Because of their color sensing capabilities, Optical Sensors are most often used in sorting mechanisms.
-
-> [!TIP]
-> For more information on the specific features/hardware details of Inertial Sensors, see [VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360051005291-Using-the-Optical-Sensor-with-VEX-V5) and the [Purdue SIGBots Wiki](https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/optical-sensor).
-
 
 # Creating an Optical Sensor
 

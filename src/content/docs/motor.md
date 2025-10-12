@@ -2,6 +2,11 @@
 title: Motor
 category: 02. Devices
 page: 8
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/motor/struct.Motor.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview",
+}
 ---
 
 ![Sketch of two different V5 motors](/docs/motors.svg)
@@ -9,9 +14,6 @@ page: 8
 Motors serve as the foundation for most robot subsystems, and are very likely the most common device you'll be interacting with in vexide.
 
 V5 motors are rather special in that they are both fairly fault-tolerant and provide extra features such as builtin velocity/position control, temperature sensors, and encoders. This is why they're commonly referred to as **Smart Motors**.
-
-> [!TIP]
-> For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview) and the [Purdue SIGBots Wiki](https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors).
 
 # Creating Motors
 

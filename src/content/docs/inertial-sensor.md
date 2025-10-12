@@ -2,16 +2,18 @@
 title: Inertial Sensor
 category: 02. Devices
 page: 12
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/imu",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360037382272-Using-the-Inertial-Sensor-with-VEX-V5",
+}
 ---
 
 <img height="200" alt="inertial sensor sketch" align="center" src="/docs/inertial-sensor.svg" />
 
-The V5 Inertial Sensor combines a gyroscope and accelerometer to measure a robot's orientation, angular velocity, and acceleration on three axes. The Inertial Sensor is more formally called the [IMU (Inertial Measurement Unit)](https://en.wikipedia.org/wiki/Inertial_measurement_unit).
+The V5 Inertial Sensor combines a gyroscope and accelerometer provided by an [ICM-20602](https://invensense.tdk.com/products/motion-tracking/6-axis/icm-20602/) chip to measure a robot's orientation, angular velocity, and acceleration on three axes. The Inertial Sensor is more formally called the [IMU (Inertial Measurement Unit)](https://en.wikipedia.org/wiki/Inertial_measurement_unit).
 
 Inertial Sensors are one of the most widely used VEX sensors in competition, because they allow a robot to accurately determine its absolute heading on the field. This is an important step in robot localization (position tracking) and motion control for accurate turns. Inertial sensors can also be used to detect collisions, tips, and measure actions that involve tilting the robot (such as driving up a ramp or climbing).
-
-> [!TIP]
-> For more information on the specific features/hardware details of Inertial Sensors, see [VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360037382272-Using-the-Inertial-Sensor-with-VEX-V5) and the [Purdue SIGBots Wiki](https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/imu).
 
 # Creating an Inertial Sensor
 
@@ -47,7 +49,7 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let mut sensor = InertialSensor::new(peripherals.port_1);
     // @highlight
-    sensor.calibrate().await;
+    _ = sensor.calibrate().await;
 }
 ```
 
@@ -175,7 +177,7 @@ This issue can be detected in software by periodically checking if the sensor ha
 // @fold start
 use vexide::prelude::*;
 // @fold end
-use std::time::Duration
+use std::time::Duration;
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
@@ -195,14 +197,80 @@ async fn main(peripherals: Peripherals) {
 
 In the event that the sensor disconnects, you may wish to switch to a backup source for your readings. For example, if you were using the sensor to measure heading, you could switch to a secondary sensor or swap to measuring wheel travel for a less accurate approximation.
 
+> [!TIP]
+> If you have access to a second IMU, having one available as a backup to switch to is a good idea in the event that this happens.
+
 ## Calibration Failure
 
-During calibration, there are several things that can go wrong. By far the most common cause of calibration failure is movement or vibrations during the calibration period. If the robot is not at rest when `sensor.calibrate().await` is called, the sensor will believe that it is rotating while the robot is sitting still.
+During calibration, there are several things that can go wrong. By far the most common cause of calibration failure is movement or vibrations during the calibration period. If the robot is not at rest when `sensor.calibrate().await` is running, the sensor will believe that it is rotating while the robot is sitting still.
 
-## Vibrations
+When a bad calibration occurs, vexide has no way of reporting it to you directly since VEXos has no error reporting mechanisms for this, however a common indicator of a failed calibration is the calibration timing out or taking longer than usual. By timing how long the calibration attempt takes, we can establish an "expected time" for a successful calibration and have the user manually restart the program if the calibration took longer than expected. Here is a sample function that times how long a calibration attempt took and prints it to the controller screen:
 
-## Inclined Mounting
+```rs
+use vexide::prelude::*;
+use std::time::Instant;
 
-## Housing Pressure
+pub async fn calibrate_imu(
+    controller: &mut Controller,
+    display: &mut Display,
+    imu: &mut InertialSensor,
+) {
+    println!("Calibrating IMU");
+    _ = controller
+        .screen
+        .try_set_text("Calibrating...", 1, 1);
+    let imu_calibration_start = Instant::now();
+    
+    if imu.calibrate().await.is_err() {
+        eprintln!("Calibration fail!");
+        _ = controller
+            .screen
+            .try_set_text("Calibration fail!    ", 1, 1);
+        return;
+    }
 
-## Static Electricity
+    let imu_calibration_elapsed = imu_calibration_start.elapsed();
+
+    println!("Calibration completed in {:?}.", imu_calibration_elapsed);
+
+    _ = controller
+        .screen
+        .try_set_text(format!("{:?}    ", imu_calibration_elapsed), 1, 1);
+}
+```
+
+To effectively use this, you should familiarize yourself with how much time a successful calibration takes. This can vary from sensor to sensor, but in testing usually took ~1.72 seconds. If the sensor took significantly longer than the expected time to calibrate, simply restart the program to re-calibrate until the sensor calibrates successfully.
+
+## Mounting Considerations
+
+A poorly mounted Inertial Sensor will not perform well. As previously mentioned, the sensor must not be mounted at an incline or tilt from the ground. It may be mounted upside-down or sideways on any of its faces, but must stay level with the ground during calibration.
+
+![Good and bad mounting positions for an IMU](/docs/imu-good-bad-mount.svg)
+
+If the Inertial Sensor is mounted near a mechanism on the robot that causes vibrations or sudden mechanical shock (such as a flywheel, catapult, or puncher), the sensor will lose accuracy faster. Care should be taken to mount the sensor at a structurally secure location away from such mechanisms. You may wish to mount the sensor on a shock-absorbent material, such as mesh or rubber (ensuring that the sensor is still level with the ground).
+
+![Mounting the IMU on top of a shock-absorbent material](/docs/imu-softmount.svg)
+
+Additionally, excessive pressure on the sensor's outer housing has been found to cause issues with calibration and connection reliability. Avoid over-tightening the sensor's mounting screw or pressure-mounting the sensor inside of a C-channel flange.
+
+## Static Charge & Electromagnetic Interference
+
+The presence of electrical noise as a result of nearby EMI, line noise, or statically charged objects may temporarily impact the readings of an Inertial Sensor's gyroscope. The MEMS gyroscope inside of the sensor uses the [Coriolis effect](https://en.wikipedia.org/wiki/Vibrating_structure_gyroscope#MEMS_gyroscopes) to detect rotational motion. In the presence of significant interference, these delicate measurements may be masked by noise causing the sensor to report incorrect or skewed readings. Electrostatic discharge (ESD) also poses a risk of permanent damage to both the IMU and the Brain.
+
+<iframe style="display: block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/0OVC0t9Guu4?si=RDLj0_JPnmVZu0XP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+Many factors can lead to a buildup of static electricity when driving a robot, with the main causes being cold temperature and low humidity. Shielding the IMU entirely from interference and ESD is not an option in most cases, but there are ways to mitigate it:
+- Avoid mounting the IMU extremely close to the ground, especially when driving on foam field tiles or carpeted floor.
+- Avoid mounting the IMU near devices that emit significant [line noise](https://wiki.purduesigbots.com/electronics/general/line-noise) or maintain a magnetic field.
+- Avoid using older wheels sold by VEX. Newer revisions use a more static-resistant material.
+- Ensure the robot is being driven on newer VEX anti-static field tiles.
+- Use anti-static spray or a similar compound.
+
+## Poor Factory Calibration
+
+![poor factory calibration causes pitch and roll error](/docs/imu-factory-calibration.png)
+
+A small number of Inertial Sensors ship with a defect that causes error in their *pitch* and *roll* readings, making the robot think it's slightly tipping or tilted when it's level with the ground. This is a result of poor factory calibration in the sensor's accelerometer, and can be fixed by following the instructions [here](https://kb.vex.com/hc/en-us/articles/360053918032-Understanding-the-Alignment-of-the-V5-Inertial-Sensor).
+
+> [!WARNING]
+> This process should be done with care, and only when **absolutely** necessary! Please read the VEX article carefully before doing this, as it may damage the sensor or make the problem worse if done improperly.
