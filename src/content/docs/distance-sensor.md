@@ -2,14 +2,16 @@
 title: Distance Sensor
 category: 02. Devices
 page: 14
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/distance/struct.DistanceSensor.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/distance",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360050696511-Using-the-Distance-Sensor-with-VEX-V5",
+}
 ---
 
 <img height="200" alt="distance sensor sketch" align="center" src="/docs/distance-sensor.svg" />
 
 The V5 Distance Sensor is a [Time of Flight (ToF) sensor](https://en.wikipedia.org/wiki/Time-of-flight_camera) that measures an object's distance, relative size, and approach speed using a [VCSEL Class 1 Laser](https://en.wikipedia.org/wiki/Vertical-cavity_surface-emitting_laser) that reflects off of nearby objects. Distance sensors are commonly used for object detection and robot localization (position tracking).
-
-> [!NOTE]
-> For more information on the specific features/hardware details of Distance Sensors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360050696511-Using-the-Distance-Sensor-with-VEX-V5).
 
 # Creating a Distance Sensor
 
