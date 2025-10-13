@@ -159,7 +159,37 @@ This gives us values for each axis in *degrees per second*. For example, positiv
 
 ## Heading & Rotation
 
+Here's what you're probably here for. If we want to determine the robot's absolute heading or orientation, we can use the sensor’s integrated gyroscope, which continuously tracks how far the robot has turned since the sensor was last calibrated or reset. This is accessed using the `rotation()` and `heading()` functions.
+
+- `rotation()` gives the total accumulated rotation of the robot in degrees, which can exceed 360° or go negative.
+- `heading()` gives the current compass-like heading, which is always wrapped between 0° and 360°.
+
+```rs
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut sensor = InertialSensor::new(peripherals.port_1);
+    sensor.calibrate().await.unwrap();
+
+    if let Ok(rotation) = sensor.rotation() && let Ok(heading) = sensor.heading() {
+        println!("Rotation: {:.2}°, Heading: {:.2}°", rotation, heading);
+    }
+}
+```
+
+![heading and rotation](/docs/imu-heading-rotation.svg)
+
+> [!WARNING]
+> Because the sensor uses a Z-down frame of reference, the robot's heading will *increase as the robot turns clockwise*. This goes against the typical unit circle system of angles, where counterclockwise rotation results in a positive angle change. When using the IMU in a system that uses cartesian coordinates or trig functions like `sin`/`cos`, you must convert the raw IMU heading into a standard angle system by inverting it. This can be done as follows:
+>
+> ```rs
+> (360.0 - raw_imu_heading).rem_euclid(360.0)
+> ```
+
 ## Euler Angles & Quaternions
+
+When using `heading` and `rotation`, we measure the rotation of the robot on one axis — the *yaw*, or the rotation about the Z-axis. We can also do the same for the other axes.
 
 # Troubleshooting
 

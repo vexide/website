@@ -2,6 +2,9 @@
 title: Peripherals
 category: 02. Devices
 page: 7
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/peripherals/struct.Peripherals.html",
+}
 ---
 
 Until this point, everything we've done with vexide has focused on doing things with the brain itself rather than the whole robot. In this section, we'll learn how to interact with the devices on our robot.
