@@ -31,8 +31,8 @@ async fn main(peripherals: Peripherals) {
     // @focus
     //                            (                )  (            )  (                )
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
-    //            ^
-    //         [Create a Motor on port 1 that spins forwards using the green gearset.]
+    //                ^
+    //             [Create a Motor on port 1 that spins forwards using the green gearset.]
 }
 ```
 

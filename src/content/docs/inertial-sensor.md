@@ -36,9 +36,9 @@ async fn main(peripherals: Peripherals) {
 
 ## Calibration
 
-Before we can use the Inertial Sensor, we have to calibrate it first. Calibration ensures that the gyroscope and accelerometer readings are accurate by having the sensor measure its baseline while completely still.
+Before we can use the Inertial Sensor, we have to calibrate it first. Calibration ensures that the orientation readings are accurate by having the sensor measure its baseline acceleration and angular velocity while completely still.
 
-To perform calibration, call the `calibrate()` method and `await` it:
+To perform calibration, call the [`calibrate()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.calibrate) method and `await` it:
 
 ```rs
 // @fold start
@@ -73,7 +73,7 @@ During calibration, the Inertial Sensor determines which direction is “up” b
 > [!WARNING]
 > The Inertial Sensor should always be mounted flat and level. Mounting it at an incline relative to gravity will lead to inaccurate readings. **Don't do that.**
 
-After calibration, you can check the orientation the sensor detected using the `physical_orientation()` method:
+After calibration, you can check the orientation the sensor detected using the [`physical_orientation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.physical_orientation) method:
 
 ```rs
 // @fold start
@@ -89,7 +89,7 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-This method returns one of six possible orientations, based on how the sensor is mounted relative to the axis labels printed on its casing. For example, an orientation of `XDown` indicates that the direction labeled "X" on the top of the sensor is facing downward toward gravity.
+This method returns one of [six possible orientations](https://docs.rs/vexide/latest/vexide/devices/smart/imu/enum.InertialOrientation.html), based on how the sensor is mounted relative to the axis labels printed on its casing. For example, an orientation of `XDown` indicates that the direction labeled "X" on the top of the sensor is facing downward toward gravity.
 
 > [!TIP]
 > The axis labels on the sensor shouldn't be confused with axes we measure from after calibration, though. The Z-axis will still always point downwards, regardless of if the *physical orientation* is `XDown`.
@@ -105,7 +105,7 @@ As mentioned earlier, the Inertial Sensor combines a *gyroscope* and an *acceler
 
 ## Acceleration
 
-To measure the robot's raw acceleration with the IMU's accelerometer, we can use the `acceleration` method.
+To measure the robot's raw acceleration with the IMU's accelerometer, we can use the [`acceleration`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.acceleration) method.
 
 ```rs
 // @fold start
@@ -132,7 +132,7 @@ The `acceleration.x`, `acceleration.y`, and `acceleration.z` values give us the 
 
 ## Angular Velocity ("Gyro Rate")
 
-We can use the sensor's gyroscope to measure the robot's angular velocity (how fast it is rotating) on each axis using the `gyro_rate` function.
+We can use the sensor's gyroscope to measure the robot's angular velocity (how fast it is rotating) on each axis using the [`gyro_rate`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.gyro_rate) function.
 
 ```rs
 // @fold start
@@ -159,19 +159,22 @@ This gives us values for each axis in *degrees per second*. For example, positiv
 
 ## Heading & Rotation
 
-Here's what you're probably here for. If we want to determine the robot's absolute heading or orientation, we can use the sensor’s integrated gyroscope, which continuously tracks how far the robot has turned since the sensor was last calibrated or reset. This is accessed using the `rotation()` and `heading()` functions.
+Here's what you're probably here for. If we want to determine the robot's absolute heading or orientation, we can use the sensor’s integrated gyroscope, which continuously tracks how far the robot has turned since the sensor was last calibrated or reset. This is accessed using the [`rotation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.rotation) and [`heading()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.heading) functions.
 
-- `rotation()` gives the total accumulated rotation of the robot in degrees, which can exceed 360° or go negative.
-- `heading()` gives the current compass-like heading, which is always wrapped between 0° and 360°.
+- [`rotation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.rotation) gives the total accumulated rotation of the robot in degrees, which can exceed 360° or go negative.
+- [`heading()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.heading) gives the current compass-like heading, which is always wrapped between 0° and 360°.
 
 ```rs
+// @fold start
 use vexide::prelude::*;
 
+// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut sensor = InertialSensor::new(peripherals.port_1);
     sensor.calibrate().await.unwrap();
 
+    //                    (               )                      (              )
     if let Ok(rotation) = sensor.rotation() && let Ok(heading) = sensor.heading() {
         println!("Rotation: {:.2}°, Heading: {:.2}°", rotation, heading);
     }
@@ -187,9 +190,80 @@ async fn main(peripherals: Peripherals) {
 > (360.0 - raw_imu_heading).rem_euclid(360.0)
 > ```
 
-## Euler Angles & Quaternions
+vexide also keeps internal offsets to allow for setting and resetting the sensor's heading and rotation without fully recalibrating. This means you can “zero out” the robot’s orientation at any time to get a new source of truth for where you're facing.
 
-When using `heading` and `rotation`, we measure the rotation of the robot on one axis — the *yaw*, or the rotation about the Z-axis. We can also do the same for the other axes.
+For instance, if we want the robot’s initial orientation to be 90 degrees instead of 0, we can use the [`set_heading`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.set_heading) and [`set_rotation`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.set_rotation) methods to offset the initial heading/rotation values.
+
+```rs
+// @fold start
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut sensor = InertialSensor::new(peripherals.port_1);
+    sensor.calibrate().await.unwrap();
+
+    _ = sensor.set_heading(90.0);
+    _ = sensor.set_rotation(90.0);
+}
+```
+
+Similarly, if we wanted to reset the heading or rotation to zero, we can use [`reset_heading`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.reset_heading) and [`reset_rotation`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.reset_rotation).
+
+```rs
+// @fold start
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut sensor = InertialSensor::new(peripherals.port_1);
+    sensor.calibrate().await.unwrap();
+
+    _ = sensor.reset_heading(); // equivalent to `_ = sensor.set_heading(0.0)`
+    _ = sensor.reset_rotation(); // equivalent to `_ = sensor.set_rotation(0.0)`
+}
+```
+
+> [!NOTE]
+> Heading and rotation are tracked separately in vexide. Using `set_heading`/`reset_heading` will not have any effect on the angle returned by the `rotation` method.
+
+## Euler Angles
+
+When using `heading` and `rotation`, we measure the rotation of the robot on one axis — the *yaw*, or the rotation about the Z-axis. We can also do the same for the other axes using the [`euler`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.euler) method. This gives us a set of *Euler Angles* as three angles in degrees:
+
+- `a` is the **yaw** of the robot. This is effectively the same as `heading`.
+- `b` is the **pitch** of the robot, or how tilted forward/backward it is.
+- `c` is the **roll** of the robot, or how tilted left/right it is.
+
+```rs
+use vexide::prelude::*;
+use std::time::Duration;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut sensor = InertialSensor::new(peripherals.port_1);
+    sensor.calibrate().await.unwrap();
+
+    //                  (            )
+    if let Ok(angles) = sensor.euler() {
+        println!(
+            "yaw: {}°, pitch: {}°, roll: {}°",
+        //  (      )
+            angles.a, // yaw
+        //  (      )
+            angles.b, // pitch
+        //  (      )
+            angles.c, // roll
+        );
+    }
+}
+```
+
+While the robot's roll and pitch are less often used, they can be useful for detecting tipping and traversing field elements that require the robot to tilt itself. For example, we can use the `b` component (pitch) reported by the sensor to detect the robot's angle when climbing up a ramp.
+
+![A robot drivetrain on a ramp tiled up 22 degrees](/docs/imu-pitch.svg)
 
 # Troubleshooting
 
@@ -204,9 +278,7 @@ This is fundamentally a hardware problem. The first thing that you should do is 
 This issue can be detected in software by periodically checking if the sensor has started calibration again without you explicitly telling it to:
 
 ```rs
-// @fold start
 use vexide::prelude::*;
-// @fold end
 use std::time::Duration;
 
 #[vexide::main]
