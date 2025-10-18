@@ -466,6 +466,18 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         display: block;
     }
 
+    .markdown-body :global(details[open] summary) {
+        display: none;
+    }
+
+    .markdown-body :global(details summary) {
+        /* list-style: none; */
+        cursor: pointer;
+        /* &::before {
+            content: "";
+        } */
+    }
+
     @media print {
         .markdown-body :global(.markdown-alert),
         .markdown-body :global(blockquote),
