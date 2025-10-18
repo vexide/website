@@ -4,7 +4,7 @@
 	interface Props {
 		title: string;
 		description: string;
-		author: string;
+		author: { name?: string, github: string } | string;
 		date: Date;
 		url: string;
 		thumbnail?: string | undefined;
@@ -22,6 +22,9 @@
 		thumbnailAlt = undefined,
 		style = "",
 	}: Props = $props();
+
+	const authorGithub = ((author as any)?.github) ?? (author as string);
+	const authorName = ((author as any)?.name) ?? authorGithub;
 </script>
 
 <div class="blog-card" {style}>
@@ -35,13 +38,13 @@
 	<div class="blog-card-metadata">
 		<a
 			class="blog-card-author"
-			href={`https://github.com/${author}`}
+			href={`https://github.com/${authorGithub}`}
 			target="_blank"
 			rel="noreferrer noopeners"
 		>
-			<img src={`https://github.com/${author}.png`} alt="Author Profile" />
+			<img src={`https://github.com/${authorGithub}.png`} alt="Author Profile" />
 			<span>
-				<strong>{author}</strong> • {date.toLocaleDateString("en-US", { timeZone: 'UTC' })}
+				<strong>{authorName}</strong> • {date.toLocaleDateString("en-US", { timeZone: 'UTC' })}
 			</span>
 		</a>
 		<Button class="blog-card-button" variant="accent" href={url}>
