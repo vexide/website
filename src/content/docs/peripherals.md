@@ -1,7 +1,10 @@
 ---
 title: Peripherals
-category: 01. Getting Started
+category: 02. Devices
 page: 7
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/peripherals/struct.Peripherals.html",
+}
 ---
 
 Until this point, everything we've done with vexide has focused on doing things with the brain itself rather than the whole robot. In this section, we'll learn how to interact with the devices on our robot.
@@ -12,9 +15,6 @@ We refer to external hardware connected to the brain as *peripherals*. These can
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -38,9 +38,6 @@ The `Peripherals` struct provided to you has 21 fields each corresponding to a p
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -56,9 +53,6 @@ We can then pass this port to a device's `new` function to create a device. Let'
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -83,9 +77,6 @@ Let's make a solenoid for controlling pneumatics on ADI port F.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -102,9 +93,6 @@ Some ADI devices such as encoders and range finders require two wires connected 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -123,9 +111,6 @@ Both the primary and partner controller are accessed through `peripherals`.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -147,9 +132,6 @@ Finally, the brain's integrated display can also be accessed through `peripheral
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -186,9 +168,6 @@ These rules are best demonstrated when we try to break them. Let's try to create
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -222,9 +201,6 @@ Alright, back to the drawing board. The next step that many people might try is 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -254,9 +230,6 @@ Alright, this is a bit of a problem. Our two motors are similar enough, so maybe
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -312,9 +285,6 @@ Finally, you would have a `Robot` struct that owns instances of all of these sub
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 pub struct Intake {
@@ -428,9 +398,6 @@ This ends up looking pretty nasty, since we've had to introduce lifetime annotat
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 pub struct Drivetrain<'a> {
@@ -511,10 +478,7 @@ Combining these two types together gives us an `Rc<RefCell<T>>`, a fairly common
 
 ```rs
 // @diff + start
-extern crate alloc;
-
-use alloc::rc::Rc;
-use core::cell::RefCell;
+use std::{rc::Rc, cell::RefCell};
 // @diff + end
 use vexide::prelude::*;
 
@@ -546,9 +510,6 @@ Now when we create our motor arrays, we will wrap them in `Rc<RefCell<T>>`. This
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 pub struct Drivetrain {
@@ -563,10 +524,7 @@ pub struct Odometry {
 }
 
 // @fold end
-extern crate alloc;
-
-use alloc::rc::Rc;
-use core::cell::RefCell;
+use std::{rc::Rc, cell::RefCell};
 
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
@@ -609,13 +567,7 @@ In order to access our motors from the smart pointer, we can use the `borrow` an
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
-extern crate alloc;
-
-use alloc::rc::Rc;
-use core::cell::RefCell;
+use std::{rc::Rc, cell::RefCell};
 use vexide::prelude::*;
 
 pub struct Drivetrain {
@@ -680,9 +632,6 @@ For the completeness of this tutorial, we're going to go over the various cursed
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -697,9 +646,6 @@ We now have two instances of `Peripherals` and therefore two instances of every 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -718,9 +664,6 @@ Or even two different devices on the same port.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end

@@ -1,7 +1,7 @@
 ---
 title: Async Rust
 category: 03. Multitasking
-page: 12
+page: 11
 ---
 
 `async` is a feature of the Rust language that allows you to express when code *waits for things to happen*. By doing this, we write code that cooperates with other parts of our program to multitask, or do more than one thing concurrently.
@@ -66,9 +66,6 @@ Well, let's try treating it like a normal function and calling it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -91,9 +88,6 @@ In order to actually execute our `wow` function, we need to `await` it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
@@ -120,9 +114,6 @@ To demonstrate this behavior, we can store the return value (the "future") of ou
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
@@ -171,7 +162,7 @@ So far, we've just made a regular function `async` for seemingly no reason. Sinc
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -225,7 +216,7 @@ If we call and `await` these functions directly in `main` we would only ever run
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -277,7 +268,7 @@ We can do this with vexide's `spawn` function. This will poll a future in a back
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -348,7 +339,7 @@ This is useful because it allows us to spawn tasks without needing entirely sepa
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -390,7 +381,7 @@ async fn multiply(a: f64, b: f64) {
 ```
 
 ```rs
-use core::future::Future;
+use std::future::Future;
 
 fn multiply(a: f64, b: f64) -> impl Future {
     async {

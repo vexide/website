@@ -3,11 +3,12 @@ import PageSection from './PageSection.astro';
 interface Props {
 	title: string;
 	date: Date;
-	author: string;
+	authorName?: string,
+	authorGithub: string,
 	tag: "release" | "blog";
 }
 
-const { title, date, author, tag } = Astro.props;
+const { title, date, authorName, authorGithub, tag } = Astro.props;
 ---
 
 <div class="blog-tile-container">
@@ -17,7 +18,7 @@ const { title, date, author, tag } = Astro.props;
 		<div id="subtitle-container">
 			<p class="text">{date.toLocaleDateString("en-US", { timeZone: 'UTC' })}</p>
 			<p class="text">•</p>
-			<p class="text">{author}</p>
+			<p class="text">{authorName ?? authorGithub}</p>
 			<p class="text nonesential">•</p>
 			<p class="text nonesential">{tag}</p>
 		</div>

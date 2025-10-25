@@ -1,7 +1,12 @@
 ---
 title: Controller
 category: 02. Devices
-page: 10
+page: 9
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/vex-joystick",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360035589632-V5-Controller-Overview",
+}
 ---
 
 ![controller sketch](/docs/controller.svg)
@@ -14,18 +19,17 @@ We covered the [`Peripherals` API](/docs/peripherals/) earlier as a safe way to 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
+    // @focus start
     //                           (                )
     let controller = peripherals.primary_controller;
     //                                   (                )
     let partner_controller = peripherals.partner_controller;
+    // @focus end
 }
 ```
 
@@ -35,9 +39,6 @@ Every 25 milliseconds or so, the controller will update the brain with new infor
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -61,15 +62,10 @@ This function returns an instance of the [`ControllerState`](https://docs.rs/vex
 > [!CAUTION]
 > When using `button_power`, you will STILL turn off your program and eventually your controller if you hold it down!
 
-When reading data from a controller, we almost always want to do so repeatedly so we can constantly get new updates from the controller. After all, getting the controller's state once at only one point in time wouldn't be very useful.
-
-To do this, we can use an infinite loop:
+When reading data from a controller, we almost always want to do so repeatedly so we can constantly get new updates from the controller. After all, getting the controller's state only once at one point in time wouldn't be very useful. To do this, we can place an infinite loop in our `driver` function:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -91,9 +87,6 @@ Or if we're in a [competition environment](/docs/competition/), we'll put this l
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -129,9 +122,6 @@ To check whether a button is _currently pressed down_, you can use the `is_press
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -157,7 +147,7 @@ async fn main(peripherals: Peripherals) {
 
 > Wait, but I want to know when a button was _just_ pressed!
 
-This is a pretty common scenario. Rather than repeatedly running code if a button is *currently being pressed*, we want to run code *once* when the button is pressed and *once* when the button is released. This is useful for things like toggles.
+This is a pretty common scenario. Rather than repeatedly running code if a button is *currently being pressed*, we want to run code *once* when the button is pressed and *once* when the button is released. This is useful for things like toggle controls.
 
 You can use the [`is_now_pressed`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_pressed) and [`is_now_released`](https://docs.rs/vexide/0.5.1/vexide/devices/controller/struct.ButtonState.html#method.is_now_released) methods for this exact purpose. These method returns `true` if the button was pressed in the last update (i.e., it was released the last time [`Controller::state`](https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html#method.state) was called and is now pressed) and `false` otherwise. This is quite useful for implementing actions like toggling a pneumatic piston or changing the state of a subsystem.
 
@@ -166,9 +156,6 @@ You can use the [`is_now_pressed`](https://docs.rs/vexide/0.5.1/vexide/devices/c
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -199,9 +186,6 @@ For fun, let's try implementing a simple tank drive program using the controller
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -239,9 +223,6 @@ Here's how you can use the [`set_text`](https://docs.rs/vexide/0.5.1/vexide/devi
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -272,9 +253,6 @@ You can use the [`rumble`](https://docs.rs/vexide/latest/vexide/devices/controll
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end

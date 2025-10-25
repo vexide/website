@@ -1,7 +1,10 @@
 ---
 title: "Fall Updates: vexide 0.4.0, cargo-v5 0.8.0, Simulator, Docs, and more!"
 description: Important project updates for Fall 2024!
-author: tropicaaal
+author: {
+    name: "Tropical",
+    github: "tropicaaal",
+}
 tags: ["news"]
 date: 2024-10-05
 thumbnail: {

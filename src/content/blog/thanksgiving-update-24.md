@@ -1,7 +1,10 @@
 ---
 title: "Thanksgiving Updates: vexide 0.5.0, AI Vision, Java/Kotlin on V5, evian"
 description: Happy thanksgiving everyone!
-author: tropicaaal
+author: {
+    name: "Tropical",
+    github: "tropicaaal",
+}
 tags: ["news"]
 date: 2024-11-28
 thumbnail: {
