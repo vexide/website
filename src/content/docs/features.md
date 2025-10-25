@@ -40,7 +40,7 @@ These features control access to vexide's core modules. They are enabled by defa
 
 ## Support Modules
 
-These features enable functionality that help robot programs compile and run properly. They can either be enabled individually or all at once by using the `full` feature.
+These features enable functionality that helps robot programs compile and run properly. They can either be enabled individually or all at once by using the `full` feature.
 
 These features should only be disabled if you are writing a library or if you have set up an alternative to them.
 
