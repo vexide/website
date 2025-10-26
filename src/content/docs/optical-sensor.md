@@ -27,7 +27,7 @@ use vexide::prelude::*;
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     // @focus
-    //                                 (                )
+    //                                  (                )
     let mut sensor = OpticalSensor::new(peripherals.port_1);
     //                                 ^
     //                [Create an Optical Sensor on port 1.]
