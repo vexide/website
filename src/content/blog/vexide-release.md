@@ -1,7 +1,10 @@
 ---
 title: vexide has been released to crates.io!
 description: All about the first version of vexide
-author: gavin-niederman
+author: {
+    name: "Tropical",
+    github: "tropix126",
+}
 thumbnail: {
     url: "/images/thumbnails/flower.png",
     alt: "Thumbnail Image"

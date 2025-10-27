@@ -1,7 +1,10 @@
 ---
 title: "Fall Updates: vexide 0.4.0, cargo-v5 0.8.0, Simulator, Docs, and more!"
 description: Important project updates for Fall 2024!
-author: tropicaaal
+author: {
+    name: "Tropical",
+    github: "tropicaaal",
+}
 tags: ["news"]
 date: 2024-10-05
 thumbnail: {
@@ -9,6 +12,8 @@ thumbnail: {
     alt: "vexide logo in the style of the Windows ME boxart."
 }
 ---
+
+import SplitCodeblock from "components/SplitCodeblock.astro";
 
 It's that time of the year — and by "that time", I mean... early October! Hey, fall is a nice season.
 
@@ -51,8 +56,7 @@ We've got a fancy new startup banner inspired by `neofetch`. It looks like this:
 
 This makes better use of space in the terminal, and prints some useful information along with it for debugging. It also supports a bunch of custom themes!
 
-<div class="code-split">
-
+<SplitCodeblock>
 ```rs
 // @fold start
 #![no_std]
@@ -76,8 +80,7 @@ async fn main(_peripherals: Peripherals) {}
 [1;38;2;115;207;244m          +%%%*:   .+###%#[0m     ├─[1;33m🔋 Battery:[0m 100%
 [1;38;2;115;207;244m           .%:[0m                 ╰─[1;33m⌚ Uptime:[0m 60.18ms
 ```
-
-</div>
+</SplitCodeblock>
 
 ## Math Got Even Faster
 
@@ -167,7 +170,7 @@ note: Use a symbolizer to convert stack frames to human-readable function names.
 
 This is a useful debugging feature that gives you the memory location of each function call leading up to the panic. You can retrieve the human-readable function names by putting these addresses through a symbolizer like [`llvm-symbolizer`](https://llvm.org/docs/CommandGuide/llvm-symbolizer.html):
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```sh
 llvm-symbolizer --obj ./target/armv7a-vex-v5/debug/examples/basic -p 0x380978b 0x382effb 0x382f1ef 0x382f17b 0x38022eb 0x380517f 0x3803377 0x381694b 0x381736f 0x3806773 0x3808b87 0x38022ab
@@ -189,7 +192,7 @@ vexide_async::block_on::h89430167eae07d09 at /home/tropical/Documents/GitHub/vex
 _start at /home/tropical/Documents/GitHub/vexide/packages/vexide/examples/basic.rs:7:1
 ```
 
-</div>
+</SplitCodeblock>
 
 > [!NOTE]
 > This was made possible by compiling a custom version of [`libunwind`](https://github.com/llvm/llvm-project/tree/main/libunwind) for the V5 brain, then [writing our own bindings to the library for retrieving backtrace context](https://github.com/vexide/vex-libunwind). Thanks to [Lewis](https://github.com/doinkythederp/) for his work on this!
@@ -198,7 +201,7 @@ _start at /home/tropical/Documents/GitHub/vexide/packages/vexide/examples/basic.
 
 Since vexide's release, we had this stupid line of code in our linkerscript (a file that lays out memory regions for your program):
 
-```linkerscript
+```
 /*
 It's currently unclear why subtracting anything is necessary, but it fixes memory permission errors.
 0x100 is an arbitrary number that works.
@@ -250,7 +253,7 @@ Work has been started on a GUI interface for the QEMU simulator. It's written us
 
 <div style="margin-block-start: 16px; text-align: center">
   <video width="600" controls>
-    <source src="/blog/sim-gui-preview.mp4" type="video/mp4">
+    <source src="/blog/sim-gui-preview.mp4" type="video/mp4" />
   </video>
 </div>
 

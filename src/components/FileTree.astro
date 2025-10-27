@@ -1,0 +1,144 @@
+---
+import { fileTree } from "./fileTree.ts";
+import { rehype } from "rehype";
+
+/** Rehype processor to extract file tree data and turn each entry into its associated markup. */
+const fileTreeProcessor = rehype()
+	.data('settings', { fragment: true })
+	.use(fileTree);
+
+const html = fileTreeProcessor.processSync({ data: { directoryLabel: "Hi" }, value: await Astro.slots.render("default") }).toString();
+---
+
+<div
+    class="file-tree"
+    set:html={html}
+    class="not-content"
+    data-pagefind-ignore
+/>
+
+<style>
+    .file-tree {
+        --x-space: 24px;
+        --y-space: 2px;
+        --y-pad: 0;
+
+        display: block;
+        font-family: var(--font-monospace);
+        border: 1px solid var(--background-secondary);
+        border-radius: 4px;
+        padding: 16px;
+        overflow-x: auto;
+    }
+
+    .file-tree :global(.directory > details) {
+        border: 0;
+        padding: 0;
+        padding-inline-start: var(--x-space);
+        background: transparent;
+    }
+
+    .file-tree :global(.directory > details > summary) {
+        margin-inline-start: calc(-1 * var(--x-space));
+        border: 0;
+        padding: var(--y-pad) 10px;
+        font-weight: normal;
+        color: var(--foreground-primary);
+        max-width: 100%;
+    }
+
+    .file-tree :global(.directory > details > summary::marker),
+    .file-tree :global(.directory > details > summary::-webkit-details-marker) {
+        color: var(--foreground-tertiary);
+    }
+
+    .file-tree :global(.directory > details > summary:hover),
+    .file-tree :global(.directory > details > summary:hover .tree-icon) {
+        cursor: pointer;
+        color: var(--foreground-primary);
+        fill: currentColor;
+    }
+
+    .file-tree :global(.directory > details > summary:hover ~ ul) {
+        border-color: var(--foreground-tertiary);
+    }
+
+    .file-tree
+        :global(.directory > details > summary:hover .highlight .tree-icon) {
+        color: var(--background-primary);
+        fill: currentColor;
+    }
+
+    .file-tree :global(ul) {
+        margin-inline-start: 8px;
+        border-inline-start: 1px solid var(--background-secondary);
+        padding: 0;
+        padding-inline-start: 2px;
+        list-style: none;
+    }
+
+    .file-tree > :global(ul) {
+        margin: 0;
+        border: 0;
+        padding: 0;
+    }
+
+    .file-tree :global(li) {
+        margin: var(--y-space) 0;
+        padding: var(--y-pad) 0;
+    }
+
+    .file-tree :global(.file) {
+        margin-inline-start: calc(var(--x-space) - 2px);
+        color: var(--foreground-primary);
+    }
+
+    .file-tree :global(.tree-entry) {
+        display: inline-flex;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        max-width: calc(100% - 16px);
+    }
+
+    @media (min-width: 30em) {
+        .file-tree :global(.tree-entry) {
+            flex-wrap: nowrap;
+        }
+    }
+
+    .file-tree :global(.tree-entry > :first-child) {
+        flex-shrink: 0;
+    }
+
+    .file-tree :global(.empty) {
+        color: var(--foreground-tertiary);
+        padding-inline-start: 6px;
+    }
+
+    .file-tree :global(.comment) {
+        color: var(--foreground-tertiary);
+        padding-inline-start: 26px;
+    }
+
+    .file-tree :global(.highlight) {
+        display: inline-block;
+        border-radius: 4px;
+        padding-inline-end: 4px;
+        border: 1px solid var(--background-accent-yellow);
+        color: var(--foreground-accent-yellow);
+        font-weight: 200;
+    }
+
+    .file-tree :global(svg) {
+        display: inline;
+        fill: var(--foreground-primary);
+        vertical-align: middle;
+        margin-inline: 4px 6px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .file-tree :global(.highlight svg.tree-icon) {
+        fill: currentColor;
+    }
+</style>

@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	name: string;
@@ -93,7 +93,7 @@ const {
 			)
 		}
 
-		<ViewTransitions />
+		<ClientRouter />
 
 		<title>{title}</title>
 	</head>
@@ -132,6 +132,7 @@ const {
 	:root {
 		--base-hue: 228deg;
 		--accent-red-hue: 1deg;
+		--accent-green-hue: 125deg;
 		--accent-yellow-hue: 47deg;
 
 		--background-primary: hsl(var(--base-hue), 12%, 16%);
@@ -175,7 +176,8 @@ const {
 		font-family: var(--font-primary);
 		background-color: var(--background-primary);
 		color: var(--foreground-primary);
-		scrollbar-color: var(--foreground-tertiary) var(--background-secondary);
+		scrollbar-width: thin;
+		scrollbar-color: var(--foreground-tertiary) var(--background-primary);
 		margin: 0;
 		padding: 0;
 	}
