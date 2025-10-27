@@ -402,39 +402,6 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         display: block;
     }
 
-    .markdown-body :global(.code-split) {
-        display: flex;
-        flex-wrap: wrap;
-        flex-basis: content;
-        gap: 1px;
-        background-color: var(--background-secondary);
-        border: 1px solid var(--background-secondary);
-        margin-block: 24px;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .markdown-body :global(.code-split.error) {
-        background-color: hsl(1deg 76% 78% / 50%);
-        border-color: hsl(1deg 76% 78% / 50%);
-    }
-
-    .markdown-body :global(.code-split pre) {
-        margin-block: 0;
-        flex: 1 1 auto;
-        border-radius: 0;
-        border: 0;
-    }
-
-    .markdown-body :global(.code-split pre:first-child) {
-        border-left: none;
-    }
-
-    .markdown-body :global(.code-split.error pre:last-of-type) {
-        text-wrap: wrap;
-        background-color: #372930 !important;
-    }
-
     .markdown-body :global(table) {
         text-align: left;
         border-collapse: collapse;
@@ -466,17 +433,13 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         display: block;
     }
 
-    .markdown-body :global(details[open] summary) {
+    /* .markdown-body :global(details[open] summary) {
         display: none;
-    }
+    } */
 
-    .markdown-body :global(details summary) {
-        /* list-style: none; */
+    /* .markdown-body :global(details summary) {
         cursor: pointer;
-        /* &::before {
-            content: "";
-        } */
-    }
+    } */
 
     @media print {
         .markdown-body :global(.markdown-alert),

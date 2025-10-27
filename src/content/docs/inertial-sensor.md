@@ -161,7 +161,7 @@ This gives us values for each axis in *degrees per second*. For example, positiv
 
 Here's what you're probably here for. If we want to determine the robot's absolute heading or orientation, we can use the sensor’s integrated gyroscope, which continuously tracks how far the robot has turned since the sensor was last calibrated or reset. This is accessed using the [`rotation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.rotation) and [`heading()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.heading) functions.
 
-- [`rotation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.rotation) gives the total accumulated rotation of the robot in degrees, which can exceed 360° or go negative.
+- [`rotation()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.rotation) gives the total accumulated rotation of the robot, which can exceed 360° or go negative.
 - [`heading()`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.heading) gives the current compass-like heading, which is always wrapped between 0° and 360°.
 
 ```rs
@@ -176,7 +176,11 @@ async fn main(peripherals: Peripherals) {
 
     //                    (               )                      (              )
     if let Ok(rotation) = sensor.rotation() && let Ok(heading) = sensor.heading() {
-        println!("Rotation: {:.2}°, Heading: {:.2}°", rotation, heading);
+        println!(
+            "Rotation: {:.2}°, Heading: {:.2}°",
+            rotation.as_degrees(),
+            heading.as_degrees()
+        );
     }
 }
 ```
@@ -195,17 +199,15 @@ vexide also keeps internal offsets to allow for setting and resetting the sensor
 For instance, if we want the robot’s initial orientation to be 90 degrees instead of 0, we can use the [`set_heading`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.set_heading) and [`set_rotation`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.set_rotation) methods to offset the initial heading/rotation values.
 
 ```rs
-// @fold start
-use vexide::prelude::*;
+use vexide::{prelude::*, math::Angle};
 
-// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut sensor = InertialSensor::new(peripherals.port_1);
     sensor.calibrate().await.unwrap();
 
-    _ = sensor.set_heading(90.0);
-    _ = sensor.set_rotation(90.0);
+    _ = sensor.set_heading(Angle::from_degrees(90.0));
+    _ = sensor.set_rotation(Angle::from_degrees(90.0));
 }
 ```
 
@@ -221,8 +223,8 @@ async fn main(peripherals: Peripherals) {
     let mut sensor = InertialSensor::new(peripherals.port_1);
     sensor.calibrate().await.unwrap();
 
-    _ = sensor.reset_heading(); // equivalent to `_ = sensor.set_heading(0.0)`
-    _ = sensor.reset_rotation(); // equivalent to `_ = sensor.set_rotation(0.0)`
+    _ = sensor.reset_heading(); // equivalent to `_ = sensor.set_heading(Angle::ZERO)`
+    _ = sensor.reset_rotation(); // equivalent to `_ = sensor.set_rotation(Angle::ZERO)`
 }
 ```
 
@@ -231,7 +233,7 @@ async fn main(peripherals: Peripherals) {
 
 ## Euler Angles
 
-When using `heading` and `rotation`, we measure the rotation of the robot on one axis — the *yaw*, or the rotation about the Z-axis. We can also do the same for the other axes using the [`euler`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.euler) method. This gives us a set of *Euler Angles* as three angles in degrees:
+When using `heading` and `rotation`, we measure the rotation of the robot on one axis — the *yaw*, or the rotation about the Z-axis. We can also do the same for the other axes using the [`euler`](https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html#method.euler) method. This gives us a set of *Euler Angles* as three angles:
 
 - `a` is the **yaw** of the robot. This is effectively the same as `heading`.
 - `b` is the **pitch** of the robot, or how tilted forward/backward it is.
@@ -251,11 +253,11 @@ async fn main(peripherals: Peripherals) {
         println!(
             "yaw: {}°, pitch: {}°, roll: {}°",
         //  (      )
-            angles.a, // yaw
+            angles.a.as_degrees(), // yaw
         //  (      )
-            angles.b, // pitch
+            angles.b.as_degrees(), // pitch
         //  (      )
-            angles.c, // roll
+            angles.c.as_degrees(), // roll
         );
     }
 }
@@ -318,16 +320,12 @@ pub async fn calibrate_imu(
     imu: &mut InertialSensor,
 ) {
     println!("Calibrating IMU");
-    _ = controller
-        .screen
-        .try_set_text("Calibrating...", 1, 1);
+    _ = controller.try_set_text("Calibrating...", 1, 1);
     let imu_calibration_start = Instant::now();
     
     if imu.calibrate().await.is_err() {
         eprintln!("Calibration fail!");
-        _ = controller
-            .screen
-            .try_set_text("Calibration fail!    ", 1, 1);
+        _ = controller.try_set_text("Calibration fail!    ", 1, 1);
         return;
     }
 
@@ -335,9 +333,7 @@ pub async fn calibrate_imu(
 
     println!("Calibration completed in {:?}.", imu_calibration_elapsed);
 
-    _ = controller
-        .screen
-        .try_set_text(format!("{:?}    ", imu_calibration_elapsed), 1, 1);
+    _ = controller.try_set_text(format!("{:?}    ", imu_calibration_elapsed), 1, 1);
 }
 ```
 

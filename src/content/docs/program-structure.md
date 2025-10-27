@@ -31,7 +31,7 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
-This line of code brings vexide's *prelude* module into scope. All that this does is import a bunch of commonly used stuff, so you don't have to type out their full name every time. For example, you can simply use `Motor` rather than `vexide::devices::smart::motor::Motor`.
+This line of code brings vexide's *prelude* module into scope. All that this does is import a bunch of commonly used stuff, so you don't have to type out their full name every time. For example, you can simply use `Motor` rather than `vexide::smart::motor::Motor`.
 
 > [!TIP]
 > For a full list of what's imported by the `prelude`, see the [module docs](https://docs.rs/vexide/latest/vexide/prelude/index.html).

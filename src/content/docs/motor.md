@@ -173,8 +173,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
 
-    //      (                )
-    my_motor.set_velocity(200).ok();
+    //          (                )
+    _ = my_motor.set_velocity(200);
     //                   ^
     //      [Spin the motor at 200RPM.]
 }
@@ -191,8 +191,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
 
-    //      (                 )
-    my_motor.set_velocity(-200).ok();
+    //          (                 )
+    _ = my_motor.set_velocity(-200);
     //                   ^
     //   [Spin the motor backwards at 200RPM.]
 }
@@ -210,16 +210,14 @@ Great question!
 You can also control the position of a motor using the `set_position_target` method. This method will instruct the motor to rotate to a certain position and then stop.
 
 ```rs
-// @fold start
-use vexide::prelude::*;
+use vexide::{prelude::*, math::Angle};
 
-// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
-    //                                (                               )
-    let _ = motor.set_position_target(Position::from_degrees(90.0), 200);
-    //                                ^
+    //                            (                               )
+    _ = motor.set_position_target(Angle::from_degrees(90.0), 200);
+    //                            ^
     // [Rotate the motor to 90 degrees at 200RPM.]
 }
 ```
@@ -234,10 +232,8 @@ Sometimes, you don't want to move. You want to stop. This is where braking comes
 In vexide, you can brake using the `Motor::brake` method:
 
 ```rs
-// @fold start
-use vexide::prelude::*;
+use vexide::{prelude::*, smart::motor::BrakeMode};
 
-// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);

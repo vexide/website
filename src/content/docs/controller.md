@@ -229,12 +229,12 @@ use vexide::prelude::*;
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut controller = peripherals.primary_controller;
-    //                    (                             )
-    _ = controller.screen.set_text("Hello, world!", 1, 1).await;
+    //             (                             )
+    _ = controller.set_text("Hello, world!", 1, 1).await;
     //                                              ^
     //         [Display Hello, world! on the screen at row 1, column 1]
-    //                    (                           )
-    _ = controller.screen.set_text("Hello, VEX!", 2, 1).await;
+    //             (                           )
+    _ = controller.set_text("Hello, VEX!", 2, 1).await;
 }
 ```
 

@@ -7,6 +7,8 @@ links: {
 }
 ---
 
+import SplitCodeblock from "components/SplitCodeblock.astro";
+
 Until this point, everything we've done with vexide has focused on doing things with the brain itself rather than the whole robot. In this section, we'll learn how to interact with the devices on our robot.
 
 # Devices and Peripherals
@@ -164,7 +166,7 @@ This means a few (important) things:
 
 These rules are best demonstrated when we try to break them. Let's try to create two motors on port 1 of our brain.
 
-<div class="code-split error">
+<SplitCodeblock error>
 
 ```rs
 // @fold start
@@ -191,13 +193,13 @@ async fn main(peripherals: Peripherals) {
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: move occurs because `peripherals.port_1` has type `SmartPort`, which does not implement the `Copy` trait[0m
 ```
 
-</div>
+</SplitCodeblock>
 
 The compiler's error message is pretty helpful here. `peripherals.port_1` is a [`SmartPort`](https://docs.rs/vexide/latest/vexide/devices/smart/struct.SmartPort.html), which does not implement the `Copy` trait. This means that after we move `peripherals.port_1` into `motor_1`, we cannot use it again to create `motor_2`. In other words, `motor_1` is now the *sole owner* of port 1.
 
 Alright, back to the drawing board. The next step that many people might try is to `clone` the port before creating the second motor. Let's give that a try.
 
-<div class="code-split error">
+<SplitCodeblock error>
 
 ```rs
 // @fold start
@@ -220,13 +222,13 @@ async fn main(peripherals: Peripherals) {
 [0m  [0m[0m[1m[38;5;12m|[0m[0m                                                 [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `SmartPort`[0m
 ```
 
-</div>
+</SplitCodeblock>
 
 Unfortunately, the compiler won't let this fly either. Similarly to `Copy`, smart ports do not implement the `Clone` trait either, meaning it won't let us create multiple instances of a motor from the same port.
 
 Alright, this is a bit of a problem. Our two motors are similar enough, so maybe we can try cloning the motor rather than the port?
 
-<div class="code-split error">
+<SplitCodeblock error>
 
 ```rs
 // @fold start
@@ -249,7 +251,7 @@ async fn main(peripherals: Peripherals) {
 [0m  [0m[0m[1m[38;5;12m|[0m[0m                           [0m[0m[1m[38;5;9m^^^^^[0m[0m [0m[0m[1m[38;5;9mmethod not found in `Motor`[0m
 ```
 
-</div>
+</SplitCodeblock>
 
 Nope. Because `motor_1` takes complete ownership of the port (which isn't copyable or cloneable), we can't clone or copy motors either. That would require cloning the `SmartPort` instance now owned by the motor, which is something the compiler already yelled at us for earlier.
 
@@ -394,7 +396,7 @@ pub struct Odometry<'a> {
 
 This ends up looking pretty nasty, since we've had to introduce lifetime annotations into our structs to store references, but even worse — it won't compile when we try to use it!
 
-<div class="code-split error">
+<SplitCodeblock error>
 
 ```rs
 // @fold start
@@ -460,7 +462,7 @@ async fn main(peripherals: Peripherals) {
 [0m   [0m[0m[1m[38;5;12m|[0m[0m                  [0m[0m[1m[38;5;12m-----------------[0m[0m [0m[0m[1m[38;5;12mmutable borrow later used here[0m
 ```
 
-</div>
+</SplitCodeblock>
 
 The borrow checker is angry with us because we tried to immutably borrow our motors in `Odometry` after we've already mutably borrowed them in `Drivetrain`. The compiler won't let us do this, because you are only allowed either ONE mutable reference or MANY immutable references to an owned piece of data, but not both at the same time.
 
@@ -685,7 +687,7 @@ async fn main(first_peripherals: Peripherals) {
 Along with stealing new instances of `Peripherals`, you can *(but really shouldn't)* also unsafely create new `SmartPort`s separate from the ones provided to you through the `Peripherals` struct.
 
 ```rs
-use vexide::devices::smart::SmartPort;
+use vexide::smart::SmartPort;
 
 //           (                          )
 let port_1 = unsafe { SmartPort::new(1) };
@@ -696,7 +698,7 @@ let port_1 = unsafe { SmartPort::new(1) };
 Note that this is *particularly bad* because it has no bounds checking, meaning we are able to create completely nonsensically-numbered ports that don't exist in real life.
 
 ```rs
-use vexide::devices::smart::SmartPort;
+use vexide::smart::SmartPort;
 
 // Sure, why not.
 let port_32 = unsafe { SmartPort::new(32) };
@@ -708,8 +710,11 @@ let port_32 = unsafe { SmartPort::new(32) };
 We are also able to do this with other peripherals such as `AdiPort`, `Display`, and `Controller`.
 
 ```rs
-use vexide::prelude::*;
-use vexide::devices::controller::ControllerId;
+use vexide::{
+    prelude::*,
+    controller::ControllerId,
+    smart::SmartPort
+};
 
 let smart_port = unsafe { SmartPort::new(1) };
 let adi_port = unsafe { AdiPort::new(1, None) };

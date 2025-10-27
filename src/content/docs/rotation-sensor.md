@@ -33,3 +33,11 @@ async fn main(peripherals: Peripherals) {
     //                 [Create a Rotation Sensor on port 1.]
 }
 ```
+
+# Measurements
+
+## Position
+
+## Angle
+
+## Velocity

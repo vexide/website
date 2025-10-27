@@ -13,6 +13,8 @@ thumbnail: {
 }
 ---
 
+import SplitCodeblock from "components/SplitCodeblock.astro";
+
 Hi everyone, we're excited announce the largest update to vexide yet. This release introduces support for the Rust Standard Library, unit testing, running programs without a robot, improved error reporting, and much more!
 
 > [!TIP]
@@ -155,7 +157,7 @@ As of vexide 0.8.0, we'll now optionally provide a more detailed report of many 
 
 ![improved abort handler](/blog/abort-handler.png)
 
-<div class="code-split error">
+<SplitCodeblock error>
 
 ```sh
 cargo v5 run --release
@@ -198,7 +200,7 @@ help: this CPU fault indicates the misuse of unsafe code.
       (e.g. llvm-symbolizer -e ./target/armv7a-vex-v5/release/program_name 0x3800ed0)
 ```
 
-</div>
+</SplitCodeblock>
 
 This new error reporting system (which is enabled by default with the `abort-handler` feature flag) provides more helpful information for debugging and finding the location of these types of crashes, including:
 
@@ -269,7 +271,7 @@ vexide::task::task_local! {
 
 This looks a lot like a normal static, but when we spawn an [async task](http://localhost:4321/docs/async-introduction/), each task will get its own unique version of `COUNT` starting at `1`. In other words, value of `COUNT` is *local* to each task accessing it.
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```rs
 // @fold start
@@ -313,7 +315,7 @@ Main task count: 6
 Spawned task count: 6
 ```
 
-</div>
+</SplitCodeblock>
 
 > [!TIP]
 > Task-local `static`s have a few advantages over regular global `static`s. Because each task gets its own isolated instance, they don't require any form of synchronization  (no need for a `Mutex`). They can also safely store types that wouldn’t be allowed in global statics, such as types that don't implement `Sync`.
@@ -333,6 +335,8 @@ println!("Link address: {:#x}", linked_file_ptr as usize);
 
 These functions aren't something that you should realistically need to use or care about in most cases, but are useful to have for low-level development.
 
+![colored stars](/blog/stars.svg)
+
 # `cargo-v5` 0.12.0
 
 # New Contributors
@@ -345,4 +349,4 @@ These functions aren't something that you should realistically need to use or ca
 
 Thanks again for your contributions!
 
-![colored stars](/blog/stars.svg)
+<img src="/blog/hologram.webp" style="object-fit: cover;" height="180" width="240" alt="vexide logo hologram" />

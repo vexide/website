@@ -13,6 +13,8 @@ thumbnail: {
 }
 ---
 
+import SplitCodeblock from "components/SplitCodeblock.astro";
+
 Happy summer everyone, hope you're enjoying the vacation! It's been a solid minute since the [initial release of vexide](/blog/posts/vexide-release/) back in May, but we've been busy with development and (finally) have some important announcements!
 
 # Growing Pains & `pros-cli`
@@ -42,7 +44,7 @@ Shortly after our new serial crate became usable, we began putting efforts towar
 
 <div style="margin-block-start: 16px; text-align: center">
   <video width="600" controls>
-    <source src="/docs/upload-demo.mp4" type="video/mp4">
+    <source src="/docs/upload-demo.mp4" type="video/mp4" />
   </video>
 </div>
 
@@ -75,7 +77,7 @@ Along with the new tooling improvements, we've also released vexide version 0.3.
 
 We've revamped the old `CompetitionRobot` trait for this version. It's now called `Compete` and should have less boilerplate.
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```rs
 //! 0.2.0
@@ -103,7 +105,7 @@ impl Compete for Robot {
 }
 ```
 
-</div>
+</SplitCodeblock>
 
 An important change here is that competition functions are now *infallible*, meaning they can no longer return an error type. This was previously allowed for the convenience of using Rust's `?` operator to return early if an error occurs, but returning early in the competition lifecycle will effectively just crash your program, which isn't good practice at all.
 
@@ -111,7 +113,7 @@ An important change here is that competition functions are now *infallible*, mea
 
 Embedded Rust is a little weird. If you're coming from a typical Rust project with the standard library, you may find many things just *missing* in a `no_std` environment. One of those things is support for math on floating-point numbers.
 
-<div class="code-split">
+<SplitCodeblock error>
 
 ```rs
 #![no_std]
@@ -134,7 +136,7 @@ fn main() {
 [0m  [0m[0m[1m[38;5;12m| [0m[0m         [0m[0m[1m[38;5;9mhelp: there is a method with a similar name: `min`[0m
 ```
 
-</div>
+</SplitCodeblock>
 
 This is because Rust's standard library uses a combination of your platform's `libm` library and certain LLVM intrinisics that just aren't available for our target. There's active proposals being made to [fix this](https://github.com/rust-lang/rfcs/issues/2505) in upstream Rust, but we aren't quite there yet.
 
