@@ -44,7 +44,7 @@ That will send the data `HelloHello` to your computer.
 
 Simply running all of this code with no connection to a computer won't visibly do anything, so let's change that.
 
-![Connect the brain to your computer using a USB cable](/docs/connect-brain.svg)
+<img src="/docs/connect-brain.svg" alt="Connect the brain to your computer using a USB cable" width="480" />
 
 Terminal data can be read over a USB connection to a V5 brain or controller using `cargo-v5` (one of the [prerequisites](../prerequisites/) that you should already have installed). To open a terminal connection with the brain, we'll simply run the following command:
 

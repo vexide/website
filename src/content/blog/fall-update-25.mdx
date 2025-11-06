@@ -15,18 +15,33 @@ thumbnail: {
 
 import SplitCodeblock from "components/SplitCodeblock.astro";
 
-Hi everyone, we're excited announce the largest update to vexide yet. This release introduces support for the Rust Standard Library, unit testing, running programs without a robot, improved error reporting, and much more!
+Hi everyone, we're excited announce by far the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
 
 > [!TIP]
 > vexide is a Rust library for programming VEX robots, empowering you to write safe and efficient code for your robot in the Rust programming language. [Learn more.](/docs/#what-is-vexide)
 
-vexide programs have historically required that Rust's Standard Library (the `std` crate) be disabled. This forces us to use the stripped down `core` and `alloc` libraries instead, and limits the packages we can use on [crates.io](https://crates.io/). This is because the `std` crate depends on features provided by an operating system, and nobody had bothered to write a port of the standard library for VEXos in the Rust compiler.
-
 # Rust Standard Library Support
+
+vexide programs have historically required that Rust's Standard Library (the `std` crate) be disabled. This forces vexide users to use the stripped down `core` and `alloc` libraries instead, which significantly limits the libraries on [crates.io](https://crates.io/) that projects can use. It also means we can't use some nice features of the standard library like `std::io`.
+
+```rs
+// @highlight start
+#![no_std]
+#![no_main]
+// @highlight end
+// ^<<<
+// [no standard library :(]
+
+use vexide::prelude::*;
+
+async fn main(_peripherals: Peripherals) {}
+```
+
+We do this because the `std` crate depends on features provided by an operating system, and nobody had bothered to write a port of the standard library for VEXos in the Rust compiler ...until now!
 
 ![pull request adding standard library support for armv7a-vex-v5](/blog/libstd-pr.png)
 
-...until now! Over the last year we've been working on upstreaming support for VEX brains as an official compilation target and standard platform in the Rust language. You can now use the `std` crate and compile to a V5 brain using the [`armv7a-vex-v5` target](https://doc.rust-lang.org/nightly/rustc/platform-support/armv7a-vex-v5.html) in Rust!
+Over the last year we've been working on upstreaming support for VEX brains as an official compilation target and standard platform *in the Rust language itself*. This means that you can now use the `std` crate and compile to a V5 brain using the [`armv7a-vex-v5` target](https://doc.rust-lang.org/nightly/rustc/platform-support/armv7a-vex-v5.html) in Rust!
 
 ```rs title="main.rs"
 // This runs on a brain now.
@@ -62,6 +77,19 @@ In the past, vexide attempted to "fill in the gaps" left by our lack of a standa
 | [`vexide::time::Instant`](https://docs.rs/vexide/0.7.0/vexide/time/struct.Instant.html)    | [`std::time::Instant`](https://doc.rust-lang.org/stable/std/time/struct.Instant.html)                                                              |
 | [`vexide::panic::*`](https://docs.rs/vexide/0.7.0/vexide/panic/index.html)                 | [`std::panic::*`](https://doc.rust-lang.org/stable/std/panic/index.html)                                                                           |
 | [`vexide::float::*`](https://docs.rs/vexide/0.7.0/vexide/float/index.html)                 | [`std::f32::*`](https://doc.rust-lang.org/stable/std/primitive.f32.html), [`std::f64::*`](https://doc.rust-lang.org/stable/std/primitive.f64.html) |
+
+We've also taken the chance to restructure some device-related modules to make them easier to find and less of a pain to type out. Everything in `vexide::devices` has been moved to the top level of the crate.
+
+| Old Module Path (0.7.0)                                                                 | New Module Path (0.8.0)                                                                                                                               |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`vexide::devices::adi:*`](https://docs.rs/vexide/0.7.0/vexide/devices/adi/index.html)                    | [`vexide::adi::*`](https://docs.rs/vexide/0.8.0/vexide/adi/index.html)                                                                              |
+| [`vexide::devices::smart::*`](https://docs.rs/vexide/0.7.0/vexide/devices/smart/index.html)                       | [`vexide::smart::*`](https://docs.rs/vexide/0.8.0/vexide/smart/index.html)                                                                                 |
+| [`vexide::devices::peripherals::*`](https://docs.rs/vexide/0.7.0/vexide/devices/peripherals/index.html)                       | [`vexide::peripherals::*`](https://docs.rs/vexide/0.8.0/vexide/peripherals/index.html)                                                                                 |
+| [`vexide::devices::controller::*`](https://docs.rs/vexide/0.7.0/vexide/devices/controller/index.html)                    | [`vexide::controller::*`](https://docs.rs/vexide/0.8.0/vexide/controller/index.html)                                                                              |
+| [`vexide::devices::display::*`](https://docs.rs/vexide/0.7.0/vexide/devices/display/index.html)                    | [`vexide::display::*`](https://docs.rs/vexide/0.8.0/vexide/display/index.html)                                                                              |
+| [`vexide::devices::math::*`](https://docs.rs/vexide/0.7.0/vexide/devices/math/index.html)                    | [`vexide::math::*`](https://docs.rs/vexide/0.8.0/vexide/math/index.html)                                                                              |
+| [`vexide::devices::position::*`](https://docs.rs/vexide/0.7.0/vexide/devices/position/index.html)                    | [`vexide::math::Angle`](https://docs.rs/vexide/0.8.0/vexide/math/struct.Angle.html)                                                                              |
+| [`vexide::devices::rgb::*`](https://docs.rs/vexide/0.7.0/vexide/devices/rgb/index.html)                    | [`vexide::color::*`](https://docs.rs/vexide/0.8.0/vexide/color/index.html)                                                                              |
 
 # SDK Shenanigans
 

@@ -59,7 +59,9 @@ async fn main(peripherals: Peripherals) {
         println!("Found an object!");
         println!("Distance: {}mm", object.distance);
         println!("Velocity: {}m/s", object.velocity);
-        println!("Relative Size: {}", object.relative_size);
+        if let Some(size) = object.relative_size {
+            println!("Relative Size: {}", object.relative_size);
+        }
         println!("Confidence in readings: {}%", object.confidence * 100.0);
     } else {
         println!("No object found :(");
