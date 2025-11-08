@@ -12,6 +12,8 @@ import { getEntry } from "astro:content";
 const { page: currentPage } = Astro.props;
 
 const allPages = Object.values(DOCS_SIDEBAR).flat();
+const currentCategory = Object.entries(DOCS_SIDEBAR).find(([, ids]) => ids.includes(currentPage.slug))![0];
+
 const index = allPages.indexOf(currentPage.slug);
 const prevPageId = allPages[index - 1];
 const nextPageId = allPages[index + 1];
@@ -153,7 +155,7 @@ const [prevPage, nextPage] = await Promise.all([
             <header class="docs-header">
                 <div class="docs-header-inner">
                     <span class="docs-breadcrumbs"
-                        >{currentPage.data.category} > {
+                        >{currentCategory} > {
                             currentPage.data.title
                         }</span
                     >
