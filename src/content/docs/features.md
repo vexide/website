@@ -87,9 +87,9 @@ These SDKs work when targeting desktop operating systems, and may be enabled alo
 
 ## Miscellaneous Features
 
-These features provide extra functionality or compatibility. They are not enabled by default, since most vexide users do not (or should not) need them. They may be freely enabled by libraries or programs.
+These features provide extra functionality or compatibility. They are not enabled by default, since most vexide users do not (or should not) need them. They may be freely enabled both libraries and programs.
 
-- `embedded-io`: Support for the `embedded-io` crate (as an alternative to using `std`)
+- `embedded-io`: Support for the [`embedded-io`](https://crates.io/crates/embedded-io) crate (as an alternative to using [`std::io`](https://doc.rust-lang.org/stable/std/io/index.html)).
 - `dangerous-motor-tuning` **(Advanced)**: Enables customizing the PID constants used by [Smart Motors](/docs/motor/).
 
   > [!CAUTION]
