@@ -1,7 +1,5 @@
 ---
 title: Rotation Sensor
-category: 02. Devices
-page: 13
 links: {
     "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/rotation/struct.RotationSensor.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/rotation-sensor",

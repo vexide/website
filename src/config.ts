@@ -28,3 +28,30 @@ async fn main(peripherals: Peripherals) {
 }`,
 	},
 ];
+
+export const DOCS_SIDEBAR = {
+  "01. Getting Started": [
+	"index",
+	"prerequisites",
+	"program-structure",
+	"building-uploading",
+	"using-the-terminal",
+	"competition",
+  ],
+  "02. Devices": [
+	"peripherals",
+	"motor",
+	"controller",
+	"inertial-sensor",
+	"rotation-sensor",
+	"distance-sensor",
+	"optical-sensor",
+  ],
+  "03. Multitasking": [
+	"async-introduction",
+  ],
+  "04. Specific Topics": [
+	"features",
+	"abort",
+  ]
+};

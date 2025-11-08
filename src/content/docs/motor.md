@@ -1,7 +1,5 @@
 ---
 title: Motor
-category: 02. Devices
-page: 8
 links: {
     "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/motor/struct.Motor.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors",

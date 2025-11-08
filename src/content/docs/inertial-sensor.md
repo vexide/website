@@ -1,7 +1,5 @@
 ---
 title: Inertial Sensor
-category: 02. Devices
-page: 12
 links: {
     "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/imu",

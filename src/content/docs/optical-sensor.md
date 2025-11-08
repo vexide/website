@@ -1,7 +1,5 @@
 ---
 title: Optical Sensor
-category: 02. Devices
-page: 15
 links: {
     "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/optical/struct.OpticalSensor.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/optical-sensor",

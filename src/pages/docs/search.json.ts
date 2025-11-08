@@ -1,8 +1,9 @@
 import FlexSearch, { type Id } from "flexsearch";
 
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
+import { getEntry } from "astro:content";
 import { categorize, excerpt } from "utils";
+import { DOCS_SIDEBAR } from "config";
 
 // Enable server mode for this route.
 export const prerender = false;
@@ -27,12 +28,20 @@ const stripMarkdown = (markdown: string): string =>
         .replace(/^[\s]*[-*+]\s+/gm, "") // unordered list
         .replace(/^[\s]*\d+\.\s+/gm, ""); // ordered list
 
-const pages: SearchResult[] = (await getCollection("docs")).map((page) => ({
-    title: page.data.title,
-    category: page.data.category,
-    excerpt: page.body,
-    slug: page.slug,
-}));
+const pages: SearchResult[] = await Promise.all(
+    Object.entries(DOCS_SIDEBAR).flatMap(([category, ids]) =>
+        ids.map(async (id) => {
+            const page = await getEntry("docs", id)!;
+
+            return {
+                title: page.data.title,
+                category,
+                excerpt: page.body,
+                slug: page.slug,
+            };
+        })
+    )
+);
 
 const index = new FlexSearch.Document({
     tokenize: "forward",

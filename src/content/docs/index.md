@@ -1,7 +1,5 @@
 ---
 title: Introduction
-category: 01. Getting Started
-page: 1
 ---
 
 

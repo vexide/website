@@ -1,7 +1,5 @@
 ---
 title: Competition
-category: 01. Getting Started
-page: 6
 ---
 
 There's a pretty good chance that you're using vexide for competitive robotics. When programming for a competition robot, we need a way to run different code paths depending on the current state of the match.

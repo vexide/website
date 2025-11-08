@@ -1,7 +1,5 @@
 ---
 title: Program Structure
-category: 01. Getting Started
-page: 3
 ---
 
 # Hello, world!

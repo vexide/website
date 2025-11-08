@@ -1,7 +1,5 @@
 ---
 title: Building & Uploading
-category: 01. Getting Started
-page: 4
 ---
 
 # Uploading with `cargo v5`

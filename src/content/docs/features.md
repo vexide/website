@@ -1,7 +1,5 @@
 ---
 title: Optional Features
-category: 04. Specific Topics
-page: 401
 ---
 
 ![vexide logo next to a settings icon](/docs/config.svg)

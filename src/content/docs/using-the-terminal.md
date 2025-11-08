@@ -1,7 +1,5 @@
 ---
 title: Using The Terminal
-category: 01. Getting Started
-page: 5
 ---
 
 One of the most useful debugging tools available to you is the serial terminal, which allows you to view live data from a VEX brain on your computer as your program runs.

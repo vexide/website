@@ -5,22 +5,21 @@ import NavigationItem from "components/NavigationItem.astro";
 import Button from "components/Button.svelte";
 import DocsSearch from "components/DocsSearch.svelte";
 import MarkdownStyles from "components/MarkdownStyles.astro";
-import { GITHUB_ORG_URL } from "config";
+import { GITHUB_ORG_URL, DOCS_SIDEBAR } from "config";
 import BaseLayout from "./BaseLayout.astro";
-import { getCollection } from "astro:content";
-import { categorize } from "utils";
+import { getEntry } from "astro:content";
 
 const { page: currentPage } = Astro.props;
 
-const pages = (await getCollection("docs")).sort(
-    (a: any, b: any) => a.data.page - b.data.page,
-);
-const categories = categorize(pages, (page: any) => page.data.category);
+const allPages = Object.values(DOCS_SIDEBAR).flat();
+const index = allPages.indexOf(currentPage.slug);
+const prevPageId = allPages[index - 1];
+const nextPageId = allPages[index + 1];
 
-const prevPage =
-    pages[pages.findIndex((page: any) => page.id === currentPage.id) - 1];
-const nextPage =
-    pages[pages.findIndex((page: any) => page.id === currentPage.id) + 1];
+const [prevPage, nextPage] = await Promise.all([
+  prevPageId && getEntry("docs", prevPageId),
+  nextPageId && getEntry("docs", nextPageId),
+]);
 ---
 
 <script>
@@ -76,98 +75,88 @@ const nextPage =
         <DocsSearch slot="right" client:load />
         <Fragment slot="mobile">
             {
-                Object.keys(categories)
-                    .sort((a: string, b: string) => a.localeCompare(b))
-                    .map((category) => (
-                        <>
-                            <strong class="docs-category-label">
-                                {category}
-                            </strong>
-                            <ul class="docs-category">
-                                {categories[category]
-                                    .sort(
-                                        (a: any, b: any) =>
-                                            a.data.page - b.data.page,
-                                    )
-                                    .map((page: any) => {
-                                        return (
-                                            <li
-                                                class:list={[
-                                                    "docs-sidebar-item",
-                                                    {
-                                                        selected:
-                                                            page.slug ===
-                                                            currentPage.slug,
-                                                    },
-                                                ]}
-                                            >
-                                                <a
-                                                    href={
-                                                        page.slug == "index"
-                                                            ? "/docs/"
-                                                            : `/docs/${page.slug}/`
-                                                    }
-                                                >
-                                                    {page.data.title}
-                                                </a>
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
-                        </>
-                    ))
+                Object.entries(DOCS_SIDEBAR).map(([category, entries]) => (
+                    <>
+                        <strong class="docs-category-label">{category}</strong>
+                        <ul class="docs-category">
+                            {entries.map(async (entry) => {
+                                const page = await getEntry("docs", entry)!;
+
+                                return (
+                                    <li
+                                        class:list={[
+                                            "docs-sidebar-item",
+                                            {
+                                                selected:
+                                                    page.slug ===
+                                                    currentPage.slug,
+                                            },
+                                        ]}
+                                    >
+                                        <a
+                                            href={
+                                                page.slug == "index"
+                                                    ? "/docs/"
+                                                    : `/docs/${page.slug}/`
+                                            }
+                                        >
+                                            {page.data.title}
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ))
             }
         </Fragment>
     </Navigation>
     <main class="docs-layout">
         <aside class="docs-sidebar">
             {
-                Object.keys(categories)
-                    .sort((a: string, b: string) => a.localeCompare(b))
-                    .map((category) => (
-                        <>
-                            <strong class="docs-category-label">
-                                {category}
-                            </strong>
-                            <ul class="docs-category">
-                                {categories[category]
-                                    .sort(
-                                        (a: any, b: any) =>
-                                            a.data.page - b.data.page,
-                                    )
-                                    .map((page: any) => {
-                                        return (
-                                            <li
-                                                class:list={[
-                                                    "docs-sidebar-item",
-                                                    {
-                                                        selected:
-                                                            page.slug ===
-                                                            currentPage.slug,
-                                                    },
-                                                ]}
-                                            >
-                                                <a
-                                                    href={
-                                                        page.slug == "index"
-                                                            ? "/docs/"
-                                                            : `/docs/${page.slug}/`
-                                                    }
-                                                >
-                                                    {page.data.title}
-                                                </a>
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
-                        </>
-                    ))
+                Object.entries(DOCS_SIDEBAR).map(([category, entries]) => (
+                    <>
+                        <strong class="docs-category-label">{category}</strong>
+                        <ul class="docs-category">
+                            {entries.map(async (entry) => {
+                                const page = await getEntry("docs", entry)!;
+
+                                return (
+                                    <li
+                                        class:list={[
+                                            "docs-sidebar-item",
+                                            {
+                                                selected:
+                                                    page.slug ===
+                                                    currentPage.slug,
+                                            },
+                                        ]}
+                                    >
+                                        <a
+                                            href={
+                                                page.slug == "index"
+                                                    ? "/docs/"
+                                                    : `/docs/${page.slug}/`
+                                            }
+                                        >
+                                            {page.data.title}
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ))
             }
         </aside>
         <div class="docs-page">
             <header class="docs-header">
                 <div class="docs-header-inner">
-                    <span class="docs-breadcrumbs">{currentPage.data.category} > {currentPage.data.title}</span>
+                    <span class="docs-breadcrumbs"
+                        >{currentPage.data.category} > {
+                            currentPage.data.title
+                        }</span
+                    >
                     <h1>{currentPage.data.title}</h1>
                     <Button
                         class="edit-on-github"
@@ -183,13 +172,12 @@ const nextPage =
                             <path
                                 fill="currentColor"
                                 d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
-                            />
+                            ></path>
                         </svg>
                     </Button>
                     {
                         currentPage.data.links && (
                             <div class="docs-header-links">
-
                                 {Object.entries(currentPage.data.links).map(
                                     ([name, href]) => (
                                         <a
@@ -318,7 +306,7 @@ const nextPage =
         scrollbar-color: hsl(var(--base-hue), 12%, 30%) #262831;
         top: 0;
     }
-    
+
     .docs-sidebar:hover {
         scrollbar-width: thin;
     }
@@ -402,7 +390,7 @@ const nextPage =
         font-family: var(--font-monospace);
         text-transform: uppercase;
     }
-    
+
     .docs-header-links {
         grid-area: links;
         display: flex;
