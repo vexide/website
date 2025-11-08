@@ -43,7 +43,7 @@ vexide = "*"
 
 # Feature Reference
 
-Here are all of each of vexide's optional features. You can check which APIs each one enables in the [vexide API docs](https://docs.rs/vexide).
+Here are all of vexide's optional features. You can check which APIs each one enables in the [vexide API docs](https://docs.rs/vexide).
 
 ## Core Features
 
