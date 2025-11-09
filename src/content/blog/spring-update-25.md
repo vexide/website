@@ -103,9 +103,9 @@ The `slint` and `embedded-graphics` drivers have been removed from the main vexi
 
 <div style="display: block; text-align: center; margin: 0 auto;">
 
-![email client written in slint](/blog/email.png)
+<img src="/blog/email.png" alt="email client written in slint" aria-describedby="a11y-email-desc" />
 
-<small>
+<small id="a11y-email-desc">
 Using the brain for its intended purpose — email.
 </small>
 </div>

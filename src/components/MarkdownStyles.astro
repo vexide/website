@@ -433,6 +433,13 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         display: block;
     }
 
+    .markdown-body :global(small) {
+        max-width: 600px;
+        display: block;
+        text-align: center;
+        margin: 12px auto;
+    }
+
     /* .markdown-body :global(details[open] summary) {
         display: none;
     } */

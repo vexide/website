@@ -51,7 +51,7 @@ export const DOCS_SIDEBAR = {
 		"async-introduction",
 	],
 	"04. Specific Topics": [
-		"features",
 		"abort",
+		"features",
 	]
 };
