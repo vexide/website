@@ -22,7 +22,7 @@ cargo v5 upload --release
   </video>
 </div>
 
-The first time you do this, it might take a while to build! That's normal though, and it should only take that long on the first build.
+The first time you do this, it might take a while to build! Don't worry, it won't take as long on subsequent builds.
 
 # Configuring Uploads
 
