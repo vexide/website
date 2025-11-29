@@ -6,7 +6,7 @@ author: {
     github: "tropicaaal",
 }
 tags: ["news"]
-date: 2025-09-30
+date: 2025-11-27
 thumbnail: {
     url: "/images/thumbnails/twilight.png",
     alt: "vexide logo drawn over a night sky"
@@ -15,7 +15,7 @@ thumbnail: {
 
 import SplitCodeblock from "components/SplitCodeblock.astro";
 
-Hi everyone, we're excited announce by far the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
+Hi everyone, Happy Thanksgiving! Today, we're excited announce by far the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
 
 > [!TIP]
 > vexide is a Rust library for programming VEX robots, empowering you to write safe and efficient code for your robot in the Rust programming language. [Learn more.](/docs/#what-is-vexide)
@@ -352,8 +352,9 @@ Spawned task count: 6
 > [!TIP]
 > Task-local `static`s have a few advantages over regular global `static`s. Because each task gets its own isolated instance, they don't require any form of synchronization  (no need for a `Mutex`). They can also safely store types that wouldn’t be allowed in global statics, such as types that don't implement `Sync`.
 
-## Low-level User Program Information
+## New Addressable LED API
 
+## Low-level User Program Information
 
 We've added new functions for retrieving some niche information about the current user program. The new `code_signature` and `linked_file` functions in `vexide::program` allow you to read the currently running program's code signature and file link address:
 
@@ -366,6 +367,8 @@ println!("Link address: {:#x}", linked_file_ptr as usize);
 ```
 
 These functions aren't something that you should realistically need to use or care about in most cases, but are useful to have for low-level development.
+
+<img src="/blog/hologram.webp" style="object-fit: cover;" height="180" width="240" alt="vexide logo hologram" />
 
 ![colored stars](/blog/stars.svg)
 
@@ -381,4 +384,4 @@ These functions aren't something that you should realistically need to use or ca
 
 Thanks again for your contributions!
 
-<img src="/blog/hologram.webp" style="object-fit: cover;" height="180" width="240" alt="vexide logo hologram" />
+![goodbye](https://media1.tenor.com/m/LC-1Pgw1VdAAAAAd/frc.gif)
