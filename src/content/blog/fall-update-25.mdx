@@ -15,7 +15,7 @@ thumbnail: {
 
 import SplitCodeblock from "components/SplitCodeblock.astro";
 
-Hi everyone, Happy Thanksgiving! Today, we're excited announce by far the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
+Hey everyone, Happy<sub>(late)</sub> Thanksgiving! Today, we're excited announce *by far* the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
 
 > [!TIP]
 > vexide is a Rust library for programming VEX robots, empowering you to write safe and efficient code for your robot in the Rust programming language. [Learn more.](/docs/#what-is-vexide)
@@ -117,9 +117,9 @@ You can specify which backend to use in your `Cargo.toml` file by editing vexide
 
 ```toml title="Cargo.toml"
 # @diff -
-vexide = "0.7.0"
+vexide = { version = "0.8.0", features = ["full", "default-sdk"] }
 # @diff + start
-vexide = { version = "0.8.0", features = ["full", "vex-sdk-jumptable"] }
+vexide = { version = "0.8.0", features = ["full", "vex-sdk-pros", "vex-sdk-mock"] }
 ```
 
 All of these options should provide equivalent functionality, but this setup ensures vexide remains future-proof.
@@ -130,14 +130,8 @@ Another advantage of modularizing the SDK in vexide is that we can now fake the 
 
 ![clawbot example](/blog/native-compilation.png)
 
-To natively compile your robot code, enable the `vex-sdk-mock` feature on vexide in your `Cargo.toml` along with your existing SDK provider, and simply use `cargo run` instead of `cargo v5 run`:
-
-```toml title="Cargo.toml"
-# @diff -
-vexide = { version = "0.8.0", features = ["full", "vex-sdk-jumptable"] }
-# @diff + start
-vexide = { version = "0.8.0", features = ["full", "vex-sdk-jumptable", "vex-sdk-mock"] }
-```
+> [!TIP]
+> To natively run your robot code, enable the `vex-sdk-mock` feature (enabled by default for new projects) and simply use `cargo run` instead of `cargo v5 run`.
 
 ## Unit Tests
 
@@ -354,6 +348,20 @@ Spawned task count: 6
 
 ## New Addressable LED API
 
+We've overhauled the Addressable LED API ([`AdiAddrLed`](https://docs.rs/vexide/0.8.0-rc.1/vexide/adi/addrled/struct.AdiAddrLed.html)) for this release to allow for controlling LED strips from vexide without allocating data on the heap. Here's an example of that in action:
+
+```rs
+use vexide::{color::Color, prelude::*};
+
+const NUM_PIXELS: usize = 18; // 18 LED diodes on our strip.
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut strip = AdiAddrLed::<NUM_PIXELS>::new(peripherals.adi_a);
+    _ = strip.set_all(Color::RED); // Set all lights to red.
+}
+```
+
 ## Low-level User Program Information
 
 We've added new functions for retrieving some niche information about the current user program. The new `code_signature` and `linked_file` functions in `vexide::program` allow you to read the currently running program's code signature and file link address:
@@ -368,11 +376,71 @@ println!("Link address: {:#x}", linked_file_ptr as usize);
 
 These functions aren't something that you should realistically need to use or care about in most cases, but are useful to have for low-level development.
 
+## And more...?
+
+We could go on for a while longer here covering everything else that's been changed and fixed (there's a *lot*, nearly everything has been refactored), but we have a [changelog](/releases/#vexide-080) and a [migration guide](/blog/posts/080-migration-guide/) for that. Go read those.
+
 <img src="/blog/hologram.webp" style="object-fit: cover;" height="180" width="240" alt="vexide logo hologram" />
 
-![colored stars](/blog/stars.svg)
+# `cargo-v5` 0.12.0 Release
 
-# `cargo-v5` 0.12.0
+Accompanying vexide 0.8.0 is a new release of cargo-v5. You'll need to update to this new version in order to build vexide 0.8.0 projects.
+
+```sh
+cargo v5 self-update
+```
+
+## Project Migration Tool
+
+If you have an older vexide 0.7.0 project and want to move your project to 0.8.0, we've included a tool in this release to do *some* (but not all) of that work for you automatically. To start migrating your project 0.8.0, use the `migrate` subcommand.
+
+```sh
+cargo v5 migrate
+```
+
+This will make the necessary adjustments to your project's configuration files and build tooling, but it won't touch your source code.
+
+> [!IMPORTANT]
+> Please read our [migration guide](http://localhost:4321/blog/posts/080-migration-guide/) for detailed instructions on updating your project.
+
+## Wireless Upload Reliability
+
+Behind the scenes, we've rewritten the VEX serial protocol implementation (now called `vex-cdc`) that powers cargo-v5 from the ground up. This comes with improvements to memory usage and upload reliability, especially when working with wireless controller uploads.
+
+We're also now able to detect cases where the controller firmware has frozen or experienced a deadlock in its radio firmware and cancel the upload.
+
+<SplitCodeblock vertical error>
+```sh
+cargo v5 upload --release
+```
+
+```ansi
+Error: [31mcargo_v5::radio_channel_stuck[0m
+
+  [31m×[0m Controller is stuck in radio channel 9.
+[36m  help: [0mThis is a bug in the controller's firmware. Please power cycle the controller to fix this.
+```
+</SplitCodeblock>
+
+## Brain Key/Value Access
+
+Alright, story time. Last weekend, I attended a tournament and forgot to set the team number on our Brains before going through inspection. While our hardware was being inspected, I was scrambling to find a way to change this so we didn't have to go to the back of the line. Unfortunately cargo-v5 didn't support doing this, so I desperately loaded up the [VEXcode webapp](https://codev5.vex.com/) in my browser and was met with this screen.
+
+![Web-based VEXcode V5 is not supported on Android. Please visit the Google Play Store to download VEXcode V5 for Android tablets.](/blog/vexcode-linux.png)
+
+Great. VEX is blocking *all* linux user agents from loading VEXcode under the impression that they're Android users! What's shocking is that this page will load fine on chromeOS, so I have no idea how they've managed to mess this up. Anyways, I downloaded a user agent spoofer and lied to the site that I was loading it from Windows... still no luck.
+
+In the end, I had to dig up a 9-month old copy of `vex-v5-serial` and write my own program over the serial protocol to set our Brains to the correct team number. This sucked, and I don't want anyone else to go through that pain, so as of 0.12.0 cargo-v5 now supports setting the Brain's system key/value configuration through the `cargo v5 kv` commands. If you want to set your team number or robot name, you can now just do this:
+
+```sh
+cargo v5 kv set teamnumber 643A
+```
+
+```sh
+cargo v5 kv set robotname meow
+```
+
+![colored stars](/blog/stars.svg)
 
 # New Contributors
 
