@@ -43,9 +43,9 @@ export const DOCS_SIDEBAR = {
 		"motor",
 		"controller",
 		"inertial-sensor",
-		"rotation-sensor",
+		// "rotation-sensor",
 		"distance-sensor",
-		"optical-sensor",
+		// "optical-sensor",
 	],
 	"03. Multitasking": [
 		"async-introduction",

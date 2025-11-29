@@ -17,11 +17,11 @@ Let's first cover some sane defaults that you should probably stick with if you 
 
 ## For Programs
 
-If you're creating a robot program (that is, if your project contains a `main` function), then enable the `full`, `vex-sdk-jumptable`, and `vex-sdk-mock` features.
+If you're creating a robot program (that is, if your project contains a `main` function), then enable the `full` and `default-sdk` features.
 
 ```toml title="Cargo.toml"
 [dependencies]
-vexide = { version = "*", features = ["full", "vex-sdk-jumptable", "vex-sdk-mock"] }
+vexide = { version = "*", features = ["full", "default-sdk"] }
 ```
 
 > [!NOTE]
@@ -82,6 +82,11 @@ These three SDKs work on the VEX V5 platform. All programs targeting the brain s
 These SDKs work when targeting desktop operating systems, and may be enabled alongside one of the three V5-compatible SDKs:
 
 - `vex-sdk-mock` *(Recommended)*: An SDK created by vexide for unit testing and simulation.
+
+Additionally, the `default-sdk` feature will enable the currently recommended SDK features to serve as a sane default for new projects. *At the time of writing this, `default-sdk` enables `vex-sdk-jumptable`, `vex-sdk-mock`.*
+
+> [!TIP]
+> If you aren't sure what to use in your or don't care, stick with the `default-sdk` feature.
 
 ## Miscellaneous Features
 
