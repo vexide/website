@@ -366,7 +366,7 @@ Many factors can lead to a buildup of static electricity when driving a robot, w
 
 ![poor factory calibration causes pitch and roll error](/docs/imu-factory-calibration.png)
 
-A small number of Inertial Sensors ship with a defect that causes error in their *pitch* and *roll* readings, making the robot think it's slightly tipping or tilted when it's level with the ground. This is a result of poor factory calibration in the sensor's accelerometer, and can be fixed by following the instructions [here](https://kb.vex.com/hc/en-us/articles/360053918032-Understanding-the-Alignment-of-the-V5-Inertial-Sensor).
+A small number of Inertial Sensors ship with a defect that causes error in their *pitch* and/or *roll* readings, making the robot think it's slightly tipping or tilted when it's level with the ground. This is a result of poor factory calibration in the sensor's accelerometer, and can be fixed by following the instructions [here](https://kb.vex.com/hc/en-us/articles/360053918032-Understanding-the-Alignment-of-the-V5-Inertial-Sensor).
 
 > [!WARNING]
 > This process should be done with care, and only when **absolutely** necessary! Please read the VEX article carefully before doing this, as it may damage the sensor or make the problem worse if done improperly.
