@@ -23,7 +23,8 @@ const docs = defineCollection({
     type: 'content',
     schema: z.object({
         title: z.string(),
-        links: z.record(z.string()).optional()
+        links: z.record(z.string()).optional(),
+        draft: z.boolean().optional(),
     })
 });
 

@@ -5,6 +5,7 @@ links: {
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/optical-sensor",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360051005291-Using-the-Optical-Sensor-with-VEX-V5",
 }
+draft: true
 ---
 
 <img height="200" alt="optical sensor sketch" align="center" src="/docs/optical-sensor.svg" />

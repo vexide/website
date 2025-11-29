@@ -5,6 +5,7 @@ links: {
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/rotation-sensor",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360051368331-Using-the-Rotation-Sensor-with-VEX-V5",
 }
+draft: true
 ---
 
 <img width="400" alt="rotation sensor sketch" align="center" src="/docs/rotation-sensor.svg" />
