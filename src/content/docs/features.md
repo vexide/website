@@ -24,8 +24,7 @@ If you're creating a robot program (that is, if your project contains a `main` f
 vexide = { version = "*", features = ["full", "default-sdk"] }
 ```
 
-> [!NOTE]
-> This is the same set of features you get when making a project with [`vexide-template`](https://github.com/vexide/vexide-template/blob/main/Cargo.toml).
+(This is the same set of features you get when making a project with [`vexide-template`](https://github.com/vexide/vexide-template/blob/main/Cargo.toml).)
 
 ## For Libraries
 
@@ -36,8 +35,7 @@ If you're writing a library that other robot programs will use, do not enable an
 vexide = "*"
 ```
 
-> [!CAUTION]
-> Avoid enabling `full` or any `vex-sdk-*` features in your library! Enabling these from a library could break user programs that depend on your library due to versioning and feature conflicts.
+**Important:** Avoid enabling `full` or any of the `sdk` features in your library, since this can cause versioning and feature conflicts with programs which use a different feature-set.
 
 # Feature Reference
 
@@ -65,10 +63,14 @@ These features enable functionality that helps robot programs compile and run pr
 
 ## SDK-Related Features
 
-vexide and the Rust Standard Library use an SDK to access VEX peripherals, determine program state, and retrieve operating system resources. The following vexide features allow you to pick which SDK your program will use. All SDKs should have the same functionality and only differ in platform support and licensing.
+vexide and the Rust Standard Library use an SDK to access VEX peripherals and operating system resources. The following vexide features allow you to pick which SDK your program will use. All SDKs should have the same functionality and only differ in platform support and licensing.
 
-> [!CAUTION]
-> Libraries should *never, under any circumstances* touch SDK-related features, as enabling them in a library will also enable them for all downstream dependents. This will prevent programs depending on your library from building if they use a different SDK, since only one V5 SDK may be enabled at a time.
+> [!IMPORTANT]
+> These features shouldn't be used by libraries. Only one V5 SDK may be enabled at a time, so enabling one in a library will make it incompatible with libraries or programs that enable a different SDK.
+
+The `default-sdk` feature enables the recommended SDKs. This is the best option for most vexide projects and should be preferred over picking an SDK. At the time of writing, the recommended SDKs are `vex-sdk-jumptable` on VEXos and `vex-sdk-mock` on desktop due to their compatibility and flexible licenses.
+
+Alternatively, vexide allows you to choose a different SDK by enabling one of the following features.
 
 These three SDKs work on the VEX V5 platform. All programs targeting the brain should enable at *exactly one* of these features. Enabling more than one of these three features will cause a compiler error.
 
@@ -82,8 +84,6 @@ These three SDKs work on the VEX V5 platform. All programs targeting the brain s
 These SDKs work when targeting desktop operating systems, and may be enabled alongside one of the three V5-compatible SDKs:
 
 - `vex-sdk-mock` *(Recommended)*: An SDK created by vexide for unit testing and simulation.
-
-Additionally, the `default-sdk` feature will enable the currently recommended SDK features to serve as a sane default for new projects. *At the time of writing this, `default-sdk` enables `vex-sdk-jumptable`, `vex-sdk-mock`.*
 
 > [!TIP]
 > If you aren't sure what to use in your or don't care, stick with the `default-sdk` feature.
