@@ -124,7 +124,7 @@ vexide = { version = "0.8.0", features = ["full", "vex-sdk-pros", "vex-sdk-mock"
 
 All of these options should provide equivalent functionality, but this setup ensures vexide remains future-proof.
 
-# Host Compilation & Unit Testing 
+# Host Compilation & Unit Testing
 
 Another advantage of modularizing the SDK in vexide is that we can now fake the underlying platform that vexide runs on. With vexide 0.8.0, you can now *natively compile and run* your robot's codebase on your own computer. Here's a screenshot of me running the [clawbot example](https://github.com/vexide/vexide/blob/main/examples/clawbot.rs) on my laptop without a robot:
 
@@ -313,7 +313,7 @@ let task = spawn(async {
     loop {
         println!("Spawned task count: {}", COUNT.get());
         COUNT.set(COUNT.get() + 1);
-        
+
         sleep(Duration::from_millis(100)).await;
     }
 });
@@ -401,7 +401,7 @@ cargo v5 migrate
 This will make the necessary adjustments to your project's configuration files and build tooling, but it won't touch your source code.
 
 > [!IMPORTANT]
-> Please read our [migration guide](http://localhost:4321/blog/posts/080-migration-guide/) for detailed instructions on updating your project.
+> Please read our [migration guide](/blog/posts/080-migration-guide/) for detailed instructions on updating your project.
 
 ## Wireless Upload Reliability
 
