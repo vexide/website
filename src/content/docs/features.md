@@ -86,7 +86,7 @@ These SDKs work when targeting desktop operating systems, and may be enabled alo
 - `vex-sdk-mock` *(Recommended)*: An SDK created by vexide for unit testing and simulation.
 
 > [!TIP]
-> If you aren't sure what to use in your or don't care, stick with the `default-sdk` feature.
+> If you aren't sure what to use in your project or don't care, stick with the `default-sdk` feature.
 
 ## Miscellaneous Features
 
