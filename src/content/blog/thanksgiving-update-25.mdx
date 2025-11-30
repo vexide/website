@@ -1,0 +1,457 @@
+---
+title: "Fall Updates: Standard Library Support with vexide 0.8.0!"
+description: "vexide 0.8.0 brings support for the Rust Standard Library, an improved development experience, and various API improvements."
+author: {
+    name: "Tropical",
+    github: "tropicaaal",
+}
+tags: ["news"]
+date: 2025-11-29
+thumbnail: {
+    url: "/images/thumbnails/twilight.png",
+    alt: "vexide logo drawn over a night sky"
+}
+---
+
+import SplitCodeblock from "components/SplitCodeblock.astro";
+
+Hey everyone, Happy<sub>(late)</sub> Thanksgiving! Today, we're excited announce *by far* the largest update to vexide yet. This release introduces support for Rust's Standard Library, unit testing robot code, running programs without a robot, improved error reporting, and much more!
+
+> [!TIP]
+> vexide is a Rust library for programming VEX robots, empowering students to write safe and efficient code for competitive robots in the Rust programming language. [Learn more.](/docs/#what-is-vexide)
+
+# Rust Standard Library Support
+
+vexide programs have historically required that Rust's Standard Library (the `std` crate) be disabled. This forces vexide users to use the stripped down `core` and `alloc` libraries instead, which significantly limits the libraries on [crates.io](https://crates.io/) that projects can use. It also means we can't use some nice features of the standard library like `std::io`.
+
+```rs
+// @highlight start
+#![no_std]
+#![no_main]
+// @highlight end
+// ^<<<
+// [no standard library :(]
+
+use vexide::prelude::*;
+
+async fn main(_peripherals: Peripherals) {}
+```
+
+We do this because the `std` crate depends on features provided by an operating system, and nobody had bothered to write a port of the standard library for VEXos in the Rust compiler ...until now!
+
+![pull request adding standard library support for armv7a-vex-v5](/blog/libstd-pr.png)
+
+Over the last year we've been working on upstreaming support for VEX brains as an official compilation target and standard platform *in the Rust language itself*. This means that you can now use the `std` crate and compile to a V5 brain using the [`armv7a-vex-v5` target](https://doc.rust-lang.org/nightly/rustc/platform-support/armv7a-vex-v5.html) in Rust!
+
+```rs title="main.rs"
+// This runs on a brain now.
+fn main() {
+    println!("Hello, World!");
+}
+```
+
+This unlocks a huge portion of the Rust ecosystem. Most libraries that require `std` now “just work”. You can use the `std::fs` API to write to the brain's SDCard and use the *real* `println!` macro to print to the terminal. I've even managed to run [Tokio](https://tokio.rs/) on a V5 brain!
+
+<div style="display: block; text-align: center; margin: 0 auto; width: 60%;">
+
+<img
+    src="/blog/tokio.png"
+    alt="Tokio's single-threaded executor running on a V5 brain (real hardware)."
+    aria-describedby="a11y-tokio-desc"
+/>
+
+<small id="a11y-tokio-desc">
+Please don't try this at home.
+</small>
+</div>
+
+> [!WARNING]
+> Due to platform limitations, some parts of the standard library will return errors. Notably, `std::thread::spawn` will not work, filesystem access through `std::fs` is limited, and networking with `std::net` is unsupported. For a full list of what works and doesn't work, see the [target docs](https://doc.rust-lang.org/nightly/rustc/platform-support/armv7a-vex-v5.html#requirements).
+
+## Slimming Down
+
+In the past, vexide attempted to "fill in the gaps" left by our lack of a standard library with equivalent APIs. Now that we have the real thing, these APIs are redundant and have been removed.
+
+| Removed `vexide` 0.7.0 API                                                                 | Equivalent `std` API                                                                                                                               |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`vexide::io::*`](https://docs.rs/vexide/0.7.0/vexide/io/index.html)                       | [`std::io::*`](https://doc.rust-lang.org/stable/std/io/index.html)                                                                                 |
+| [`vexide::fs::*`](https://docs.rs/vexide/0.7.0/vexide/fs/index.html)                       | [`std::fs::*`](https://doc.rust-lang.org/stable/std/fs/index.html)                                                                                 |
+| [`vexide::path:*`](https://docs.rs/vexide/0.7.0/vexide/path/index.html)                    | [`std::path:*`](https://doc.rust-lang.org/stable/std/path/index.html)                                                                              |
+| [`vexide::program::{exit, abort}`](https://docs.rs/vexide/0.7.0/vexide/program/index.html) | [`std::process::{exit, abort}`](https://doc.rust-lang.org/stable/std/process/index.html)                                                           |
+| [`vexide::time::Instant`](https://docs.rs/vexide/0.7.0/vexide/time/struct.Instant.html)    | [`std::time::Instant`](https://doc.rust-lang.org/stable/std/time/struct.Instant.html)                                                              |
+| [`vexide::panic::*`](https://docs.rs/vexide/0.7.0/vexide/panic/index.html)                 | [`std::panic::*`](https://doc.rust-lang.org/stable/std/panic/index.html)                                                                           |
+| [`vexide::float::*`](https://docs.rs/vexide/0.7.0/vexide/float/index.html)                 | [`std::f32::*`](https://doc.rust-lang.org/stable/std/primitive.f32.html), [`std::f64::*`](https://doc.rust-lang.org/stable/std/primitive.f64.html) |
+
+We've also taken the chance to restructure some device-related modules to make them easier to find and less of a pain to type out. Everything in `vexide::devices` has been moved to the top level of the crate.
+
+| Old Module Path (0.7.0)                                                                 | New Module Path (0.8.0)                                                                                                                               |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`vexide::devices::adi:*`](https://docs.rs/vexide/0.7.0/vexide/devices/adi/index.html)                    | [`vexide::adi::*`](https://docs.rs/vexide/0.8.0/vexide/adi/index.html)                                                                              |
+| [`vexide::devices::smart::*`](https://docs.rs/vexide/0.7.0/vexide/devices/smart/index.html)                       | [`vexide::smart::*`](https://docs.rs/vexide/0.8.0/vexide/smart/index.html)                                                                                 |
+| [`vexide::devices::peripherals::*`](https://docs.rs/vexide/0.7.0/vexide/devices/peripherals/index.html)                       | [`vexide::peripherals::*`](https://docs.rs/vexide/0.8.0/vexide/peripherals/index.html)                                                                                 |
+| [`vexide::devices::controller::*`](https://docs.rs/vexide/0.7.0/vexide/devices/controller/index.html)                    | [`vexide::controller::*`](https://docs.rs/vexide/0.8.0/vexide/controller/index.html)                                                                              |
+| [`vexide::devices::display::*`](https://docs.rs/vexide/0.7.0/vexide/devices/display/index.html)                    | [`vexide::display::*`](https://docs.rs/vexide/0.8.0/vexide/display/index.html)                                                                              |
+| [`vexide::devices::math::*`](https://docs.rs/vexide/0.7.0/vexide/devices/math/index.html)                    | [`vexide::math::*`](https://docs.rs/vexide/0.8.0/vexide/math/index.html)                                                                              |
+| [`vexide::devices::position::*`](https://docs.rs/vexide/0.7.0/vexide/devices/position/index.html)                    | [`vexide::math::Angle`](https://docs.rs/vexide/0.8.0/vexide/math/struct.Angle.html)                                                                              |
+| [`vexide::devices::rgb::*`](https://docs.rs/vexide/0.7.0/vexide/devices/rgb/index.html)                    | [`vexide::color::*`](https://docs.rs/vexide/0.8.0/vexide/color/index.html)                                                                              |
+
+# SDK Shenanigans
+
+Before we go further, I should explain a major internal overhaul that we've been working towards for a while.
+
+vexide and the standard library need some way to make calls to VEXos to control devices and handle I/O on the brain. This is traditionally done through the **VEX SDK** — a proprietary library shipped by VEX for VEXcode and partner developers (such as PROS). When vexide was first created, we made the decision to *not* use an SDK provided by VEX and instead implement our own version from scratch.
+
+![VEXos system architecture](/blog/vex-sdk.svg)
+
+However, this posed a challenge when we were porting the standard library. Shipping proprietary code in Rust itself wasn't an option, but forcing people to use our own SDK wasn't ideal either and could pose challenges down the road.
+
+## Bring Your Own SDK
+
+Instead, we picked a third option — if you use the standard library, you are expected to link your own SDK. If you use vexide, it will provide one for you. This led to us completely modularizing how vexide links to its SDK. You can now pick from three different "backends" (providers) for an SDK that vexide can run on:
+
+- [`vex-sdk-jumptable`](https://crates.io/crates/vex-sdk-jumptable) is the custom reimplementation of the SDK used by previous vexide versions.
+- [`vex-sdk-vexcode`](https://crates.io/crates/vex-sdk-vexcode) will download the official proprietary SDK from VEX themselves, and link your project to it. This is downloaded from VEX's servers, and not directly distributed with vexide due to licensing restrictions.
+- [`vex-sdk-pros`](https://crates.io/crates/vex-sdk-pros) will use the partner SDK inside of the [PROS kernel](http://pros.cs.purdue.edu/) as a provider for vexide's SDK functions.
+
+You can specify which backend to use in your `Cargo.toml` file by editing vexide's feature flags:
+
+```toml title="Cargo.toml"
+# @diff -
+vexide = { version = "0.8.0", features = ["full", "default-sdk"] }
+# @diff + start
+vexide = { version = "0.8.0", features = ["full", "vex-sdk-pros", "vex-sdk-mock"] }
+```
+
+All of these options should provide equivalent functionality, but this setup ensures vexide remains future-proof.
+
+# Host Compilation & Unit Testing 
+
+Another advantage of modularizing the SDK in vexide is that we can now fake the underlying platform that vexide runs on. With vexide 0.8.0, you can now *natively compile and run* your robot's codebase on your own computer. Here's a screenshot of me running the [clawbot example](https://github.com/vexide/vexide/blob/main/examples/clawbot.rs) on my laptop without a robot:
+
+![clawbot example](/blog/native-compilation.png)
+
+> [!TIP]
+> To natively run your robot code, enable the `vex-sdk-mock` feature (enabled by default for new projects) and simply use `cargo run` instead of `cargo v5 run`.
+
+## Unit Tests
+
+Being able to run our robot code on an actual host system means we can also support Rust's testing features. You can now write and run unit tests against your robot logic without needing hardware on hand, integrate with CI pipelines, and catch bugs in your code earlier.
+
+> [!WARNING]
+> At this point in time, devices won't do anything and will simply be disconnected at all times when using host compilation. This will change in the future, and we hope to add the ability to mock robot devices and entire subsystems in unit tests soon. We also hope to support emulating your robot's brain screen, for testing GUIs and autonomous selectors without physical access to a brain.
+
+```rs
+use vexide::prelude::*;
+
+#{vexide::main}
+async fn main(peripherals: Peripherals) {
+    println!("Hello, world!");
+}
+
+#[cfg(test)]
+mod tests {
+    use vexide::prelude::*;
+    use std::time::Duration;
+
+    #[test]
+//  ^
+// [The test attribute can now be used in vexide projects.]
+    fn one_plus_one_equals_two() {
+        assert!(1 + 1 == 2);
+    }
+
+    #[vexide::test]
+//  ^
+// [Use the vexide::test macro to run tests with async code.]
+    async fn async_test(_p: Peripherals) {
+        sleep(Duration::from_millis(5)).await;
+        println!("Hello");
+        assert!(4 + 4 == 8);
+    }
+}
+```
+
+# Error Reporting Improvements
+
+If you've ever encountered this screen, you know you're in for a fun time:
+
+![memory permission error](/blog/memory-permission-error.png)
+
+This is a [data abort exception](https://developer.arm.com/documentation/ddi0406/b/System-Level-Architecture/The-System-Level-Programmers--Model/Exceptions/Data-Abort-exception). It can happen when your program accesses memory in some way that the brain's CPU doesn't allow, and it often indicates that your program has undefined behavior. Think of it as the VEX equivalent of a [segfault](https://en.wikipedia.org/wiki/Segmentation_fault). These types of errors *really suck* to debug, and the error that VEXos throws up on screen often doesn't give you all of the necessary information you need to find what caused it.
+
+As of vexide 0.8.0, we'll now optionally provide a more detailed report of many different CPU faults including data aborts, prefetch aborts, and undefined instruction exceptions.
+
+![improved abort handler](/blog/abort-handler.png)
+
+<SplitCodeblock error>
+
+```sh
+cargo v5 run --release
+```
+
+```ansi
+    Finished `release` profile [optimized] target(s) in 0.19s
+     [1;92mObjcopy[0m /home/tropical/Documents/GitHub/vexide/target/armv7a-vex-v5/release/examples/basic.bin
+     [1;92mRunning[0m `slot_1.bin`
+go go gadget null pointer dereference
+
+Data Abort exception at 0x3800ed0:
+Permission fault (MMU) while writing to 0x0
+
+registers at time of fault:
+ r0: 0x0
+ r1: 0x0
+ r2: 0x0
+ r3: 0x0
+ r4: 0x1
+ r5: 0x0
+ r6: 0x0
+ r7: 0x7a00024
+ r8: 0x7a00034
+ r9: 0x7a0001c
+r10: 0x380fba8
+r11: 0x132
+r12: 0x3692594
+ sp: 0x79ffe60
+ lr: 0x3800e8c
+ pc: 0x3800ed0
+
+stack backtrace:
+  0: 0x3800ecf
+  1: 0x3801a83
+  2: 0x38003f7
+
+help: this CPU fault indicates the misuse of unsafe code.
+      Use a symbolizer tool to determine the location of the crash.
+      (e.g. llvm-symbolizer -e ./target/armv7a-vex-v5/release/program_name 0x3800ed0)
+```
+
+</SplitCodeblock>
+
+This new error reporting system (which is enabled by default with the `abort-handler` feature flag) provides more helpful information for debugging and finding the location of these types of crashes, including:
+
+- The full cause of the CPU exception (including the type of operation that caused the fault).
+- A stack backtrace leading up to the function causing the exception. The addresses in this trace can be passed to a symbolizer program like [`llvm-symbolizer`](https://llvm.org/docs/CommandGuide/llvm-symbolizer.html) to find the exact line of code causing the abort.
+- For undefined instruction exceptions, the invalid instruction that caused the abort.
+- The CPU's registers at the time of the fault.
+- The ability to print this data to the terminal and re-print it if your terminal wasn't open when the program crashed.
+
+> [!TIP]
+> As a reminder, vexide is designed to [explicitly prevent these kinds of errors from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+
+# Other Changes in `vexide` 0.8.0
+
+## Custom Encoder Support
+
+It's fairly common for VEXU teams to use off-the-shelf shaft encoders rather than buying sensors sold by VEX. vexide currently supports VEX's old [Optical Shaft Encoders](https://www.vexrobotics.com/276-2156.html) through the [`AdiEncoder` API](https://docs.rs/vexide/latest/vexide/devices/adi/struct.AdiEncoder.html), and while this is *sort of* compatible with custom hardware already, commonly used sensors like the [AMT102-V](https://www.sameskydevices.com/product/motion-and-control/rotary-encoders/incremental/modular/amt102-v) often have much higher resolution than VEX's optical encoders (which have a resolution of 360 ticks/rev). In the past, you'd have to multiply the output of `AdiEncoder` by a constant to get a usable angle reading, which was rather annoying.
+
+In `vexide` 0.8.0, we now provide support for encoders with custom resolutions. `AdiEncoder` now takes a const-generic argument for the number of encoder ticks in a full revolution. The position reading will be automatically scaled appropriately for the encoder's TPR.
+
+For example, you can read from an encoder with a resolution of 8192 ticks/rev like this:
+
+```rs
+use vexide::prelude::*;
+
+const ENCODER_TPR: u32 = 8192;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let enc = AdiEncoder::<ENCODER_TPR>::new(
+        peripherals.adi_a,
+        peripherals.adi_b
+    );
+
+    println!("Encoder position: {:?}", enc.position().unwrap().as_degrees());
+}
+```
+
+We also provide an `AdiOpticalEncoder` type alias for if you're using VEX's optical encoder. This simply resolves to `AdiEncoder<360>`, and should behave identically to the previous `AdiEncoder` API in vexide 0.7.0 and below.
+
+```rs
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let enc = AdiOpticalEncoder::new(
+        peripherals.adi_a,
+        peripherals.adi_b
+    );
+
+    println!("Encoder position: {:?}", enc.position().unwrap().as_degrees());
+}
+```
+
+## Task-local Storage (TLS)
+
+vexide now supports the ability to create **async task-local static data**. That's a lot of of word salad, so let's look at what this practically means.
+
+You can define a task-local static variable by wrapping it in the new `task_local!` macro. Let's make a counter:
+
+```rs
+use std::cell::Cell;
+
+vexide::task::task_local! {
+    static COUNT: Cell<u32> = Cell::new(1);
+}
+```
+
+This looks a lot like a normal static, but when we spawn an [async task](http://localhost:4321/docs/async-introduction/), each task will get its own unique version of `COUNT` starting at `1`. In other words, value of `COUNT` is *local* to each task accessing it.
+
+<SplitCodeblock>
+
+```rs
+// @fold start
+use vexide::prelude::*;
+use std::{cell::Cell, std::time::Duration};
+
+vexide::task::task_local! {
+    static COUNT: Cell<u32> = Cell::new(1);
+}
+
+//@fold end
+let task = spawn(async {
+    loop {
+        println!("Spawned task count: {}", COUNT.get());
+        COUNT.set(COUNT.get() + 1);
+        
+        sleep(Duration::from_millis(100)).await;
+    }
+});
+
+loop {
+    println!("Main task count: {}", COUNT.get());
+    COUNT.set(COUNT.get() + 1);
+
+    sleep(Duration::from_millis(100)).await;
+}
+```
+
+```
+Main task count: 1
+Spawned task count: 1
+Main task count: 2
+Spawned task count: 2
+Main task count: 3
+Spawned task count: 3
+Main task count: 4
+Spawned task count: 4
+Main task count: 5
+Spawned task count: 5
+Main task count: 6
+Spawned task count: 6
+```
+
+</SplitCodeblock>
+
+> [!TIP]
+> Task-local `static`s have a few advantages over regular global `static`s. Because each task gets its own isolated instance, they don't require any form of synchronization  (no need for a `Mutex`). They can also safely store types that wouldn’t be allowed in global statics, such as types that don't implement `Sync`.
+
+## New Addressable LED API
+
+We've overhauled the Addressable LED API ([`AdiAddrLed`](https://docs.rs/vexide/0.8.0/vexide/adi/addrled/struct.AdiAddrLed.html)) for this release to allow for controlling LED strips from vexide without allocating data on the heap. Here's an example of that in action:
+
+```rs
+use vexide::{color::Color, prelude::*};
+
+const NUM_PIXELS: usize = 18; // 18 LED diodes on our strip.
+
+#[vexide::main]
+async fn main(peripherals: Peripherals) {
+    let mut strip = AdiAddrLed::<NUM_PIXELS>::new(peripherals.adi_a);
+    _ = strip.set_all(Color::RED); // Set all lights to red.
+}
+```
+
+## Low-level User Program Information
+
+We've added new functions for retrieving some niche information about the current user program. The new `code_signature` and `linked_file` functions in `vexide::program` allow you to read the currently running program's code signature and file link address:
+
+```rs
+let code_sig = vexide::program::code_signature();
+let linked_file_ptr = vexide::program::linked_file();
+
+println!("Program owner: {:?}", code_sig.owner());
+println!("Link address: {:#x}", linked_file_ptr as usize);
+```
+
+These functions aren't something that you should realistically need to use or care about in most cases, but are useful to have for low-level development.
+
+## And more...?
+
+We could go on for a while longer here covering everything else that's been changed and fixed (there's a *lot*, nearly everything has been refactored), but we have a [changelog](/releases/#vexide-080) and a [migration guide](/blog/posts/080-migration-guide/) for that. Go read those.
+
+<img src="/blog/hologram.webp" style="object-fit: cover;" height="180" width="240" alt="vexide logo hologram" />
+
+# `cargo-v5` 0.12.0 Release
+
+Accompanying vexide 0.8.0 is a new release of cargo-v5. You'll need to update to this new version in order to build vexide 0.8.0 projects.
+
+```sh
+cargo v5 self-update
+```
+
+## Project Migration Tool
+
+If you have an older vexide 0.7.0 project and want to move your project to 0.8.0, we've included a tool in this release to do *some* (but not all) of that work for you automatically. To start migrating your project 0.8.0, use the `migrate` subcommand.
+
+```sh
+cargo v5 migrate
+```
+
+This will make the necessary adjustments to your project's configuration files and build tooling, but it won't touch your source code.
+
+> [!IMPORTANT]
+> Please read our [migration guide](http://localhost:4321/blog/posts/080-migration-guide/) for detailed instructions on updating your project.
+
+## Wireless Upload Reliability
+
+Behind the scenes, we've rewritten the VEX serial protocol implementation (now called `vex-cdc`) that powers cargo-v5 from the ground up. This comes with improvements to memory usage and upload reliability, especially when working with wireless controller uploads.
+
+We're also now able to detect cases where the controller firmware has frozen or experienced a deadlock in its radio firmware and cancel the upload.
+
+<SplitCodeblock vertical error>
+```sh
+cargo v5 upload --release
+```
+
+```ansi
+Error: [31mcargo_v5::radio_channel_stuck[0m
+
+  [31m×[0m Controller is stuck in radio channel 9.
+[36m  help: [0mThis is a bug in the controller's firmware. Please power cycle the controller to fix this.
+```
+</SplitCodeblock>
+
+## Brain Key/Value Access
+
+Alright, story time. Last weekend, I attended a tournament and forgot to set the team number on our Brains before going through inspection. While our hardware was being inspected, I was scrambling to find a way to change this so we didn't have to go to the back of the line. Unfortunately, cargo-v5 didn't support doing this so I desperately loaded up the [VEXcode webapp](https://codev5.vex.com/) in my browser and was met with this screen.
+
+![Web-based VEXcode V5 is not supported on Android. Please visit the Google Play Store to download VEXcode V5 for Android tablets.](/blog/vexcode-linux.png)
+
+Great. VEX is blocking *all* linux user agents from loading VEXcode under the impression that they're Android users! What's shocking is that this page will load fine on chromeOS, so I have no idea how they've managed to mess this up. Anyways, I downloaded a user agent spoofer and lied to the site that I was loading it from Windows... still no luck.
+
+In the end, I had to dig up a 9-month old copy of `vex-v5-serial` and write my own program over the serial protocol to set our Brains to the correct team number. This sucked, and I don't want anyone else to go through that pain, so as of 0.12.0 cargo-v5 now supports setting the Brain's system key/value configuration through the `cargo v5 kv` commands. If you want to set your team number or robot name, you can now just do this:
+
+```sh
+cargo v5 kv set teamnumber 643A
+```
+
+```sh
+cargo v5 kv set robotname meow
+```
+
+![colored stars](/blog/stars.svg)
+
+# New Contributors
+
+> [!THANKS]
+> vexide is a community project maintained for free by open-source contributors. We'd like to thank the following new contributors to the project:
+
+- [GamingLiamStudios](https://github.com/GamingLiamStudios) fixed several issues with our filesystem implementation.
+- [fibonacci61](https://github.com/fibonacci61) wrote an initial implementation of our new async Task-local Storage system in vexide's async runtime.
+- [slipperking](https://github.com/slipperking) fixed some bugs in vexide's AI Vision API and helped with documentation.
+- [aadishv](https://github.com/aadishv) and the [`venice-v5` team](https://github.com/venice-v5/venice) provided important feedback and bug reports for vexide 0.8.0 throughout its development.
+
+Thanks again for your contributions!
+
+![goodbye](https://media1.tenor.com/m/LC-1Pgw1VdAAAAAd/frc.gif)

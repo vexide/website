@@ -5,450 +5,552 @@ import NavigationItem from "components/NavigationItem.astro";
 import Button from "components/Button.svelte";
 import DocsSearch from "components/DocsSearch.svelte";
 import MarkdownStyles from "components/MarkdownStyles.astro";
-import { GITHUB_ORG_URL } from "config";
+import { GITHUB_ORG_URL, DOCS_SIDEBAR } from "config";
 import BaseLayout from "./BaseLayout.astro";
-import { getCollection } from "astro:content";
-import { categorize } from "utils";
+import { getEntry } from "astro:content";
 
 const { page: currentPage } = Astro.props;
 
-const pages = (await getCollection("docs")).sort(
-	(a: any, b: any) => a.data.page - b.data.page,
-);
-const categories = categorize(pages, (page: any) => page.data.category);
+const allPages = Object.values(DOCS_SIDEBAR).flat();
+const currentCategory = Object.entries(DOCS_SIDEBAR).find(([, ids]) => ids.includes(currentPage.slug))![0];
 
-const prevPage =
-	pages[pages.findIndex((page: any) => page.id === currentPage.id) - 1];
-const nextPage =
-	pages[pages.findIndex((page: any) => page.id === currentPage.id) + 1];
+const index = allPages.indexOf(currentPage.slug);
+const prevPageId = allPages[index - 1];
+const nextPageId = allPages[index + 1];
+
+const [prevPage, nextPage] = await Promise.all([
+  prevPageId && getEntry("docs", prevPageId),
+  nextPageId && getEntry("docs", nextPageId),
+]);
 ---
 
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const sidebar = document.querySelector(".docs-sidebar")!;
+        const storedState = sessionStorage.getItem("docsSidebarScrollPosition");
+
+        if (storedState) {
+            sidebar.scrollTop = parseInt(storedState);
+        }
+
+        sidebar.addEventListener("scroll", () => {
+            sessionStorage.setItem(
+                "docsSidebarScrollPosition",
+                sidebar.scrollTop.toString(),
+            );
+        });
+    });
+</script>
+
 <BaseLayout
-	name="vexide Docs"
-	title={currentPage.data.title}
-	description="Documentation and tutorials for the vexide runtime."
-	banner={{
-		url: "/images/logo_opengraph.png",
-		width: 280,
-		height: 280,
-		alt: "vexide logo",
-		twitter_card: "summary",
-	}}
+    name="vexide Docs"
+    title={currentPage.data.title}
+    description="Documentation and tutorials for vexide."
+    banner={{
+        url: "/images/logo_opengraph.png",
+        width: 280,
+        height: 280,
+        alt: "vexide logo",
+        twitter_card: "summary",
+    }}
 >
-	<Button class="skip-to-content" href="#content">Skip to content</Button>
-	<Navigation title="vexide">
-		<img
-			slot="logo"
-			width="36"
-			height="36"
-			src="/images/logo.svg"
-			alt="vexide Logo"
-		/>
-		<span slot="title" class="navigation-docs-chip">Docs</span>
-		<NavigationItem selected href="/docs/">Tutorials</NavigationItem>
-		<NavigationItem href="https://docs.rs/vexide/" external>API</NavigationItem>
-		<NavigationItem href="https://github.com/vexide/vexide/tree/main/examples" external>Examples</NavigationItem>
-		<DocsSearch slot="right" client:load />
-		<Fragment slot="mobile">
-			{
-				Object.keys(categories)
-					.sort((a: string, b: string) => a.localeCompare(b))
-					.map((category) => (
-						<>
-							<strong class="docs-category-label">
-								{category}
-							</strong>
-							<ul class="docs-category">
-								{categories[category]
-									.sort(
-										(a: any, b: any) =>
-											a.data.page - b.data.page,
-									)
-									.map((page: any) => {
-										return (
-											<li
-												class:list={[
-													"docs-sidebar-item",
-													{
-														selected:
-															page.slug ===
-															currentPage.slug,
-													},
-												]}
-											>
-												<a
-													href={
-														page.slug == "index"
-															? "/docs/"
-															: `/docs/${page.slug}/`
-													}
-												>
-													{page.data.title}
-												</a>
-											</li>
-										);
-									})}
-							</ul>
-						</>
-					))
-			}
-		</Fragment>
-	</Navigation>
-	<main class="docs-layout">
-		<aside class="docs-sidebar">
-			{
-				Object.keys(categories)
-					.sort((a: string, b: string) => a.localeCompare(b))
-					.map((category) => (
-						<>
-							<strong class="docs-category-label">
-								{category}
-							</strong>
-							<ul class="docs-category">
-								{categories[category]
-									.sort(
-										(a: any, b: any) =>
-											a.data.page - b.data.page,
-									)
-									.map((page: any) => {
-										return (
-											<li
-												class:list={[
-													"docs-sidebar-item",
-													{
-														selected:
-															page.slug ===
-															currentPage.slug,
-													},
-												]}
-											>
-												<a
-													href={
-														page.slug == "index"
-															? "/docs/"
-															: `/docs/${page.slug}/`
-													}
-												>
-													{page.data.title}
-												</a>
-											</li>
-										);
-									})}
-							</ul>
-						</>
-					))
-			}
-		</aside>
-		<div class="docs-page">
-			<header class="docs-header">
-				<div class="docs-header-inner">
-					<h1>{currentPage.data.title}</h1>
-					<a
-						class="edit-on-github"
-						href={`${GITHUB_ORG_URL}/website/tree/main/src/content/docs/${currentPage.id}`}
-					>
-						Edit this page on GitHub
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 32 32"
-						>
-							<path
-								fill="currentColor"
-								d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
-							></path>
-						</svg>
-					</a>
-				</div>
-			</header>
-			<MarkdownStyles element="article" id="content">
-				<slot />
-				{
-					(prevPage || nextPage) && (
-						<nav class="docs-page-actions">
-							{prevPage ? (
-								<a
-									class="page-action prev-page"
-									href={
-										prevPage.slug == "index"
-											? "/docs/"
-											: `/docs/${prevPage.slug}/`
-									}
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										width="24"
-										height="24"
-									>
-										<path d="M15.28 5.22a.75.75 0 0 1 0 1.06L9.56 12l5.72 5.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-6.25-6.25a.75.75 0 0 1 0-1.06l6.25-6.25a.75.75 0 0 1 1.06 0Z" />
-									</svg>
-									<div class="page-action-contents">
-										Previous
-										<strong>{prevPage.data.title}</strong>
-									</div>
-								</a>
-							) : (
-								<div />
-							)}
-							{nextPage ? (
-								<a
-									class="page-action next-page"
-									href={
-										nextPage.slug == "index"
-											? "/docs/"
-											: `/docs/${nextPage.slug}/`
-									}
-								>
-									<div class="page-action-contents">
-										Next
-										<strong>{nextPage.data.title}</strong>
-									</div>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										width="24"
-										height="24"
-									>
-										<path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
-									</svg>
-								</a>
-							) : (
-								<div />
-							)}
-						</nav>
-					)
-				}
-			</MarkdownStyles>
-		</div>
-	</main>
+    <Button class="skip-to-content" href="#content">Skip to content</Button>
+    <Navigation title="vexide">
+        <img
+            slot="logo"
+            width="36"
+            height="36"
+            src="/images/logo.svg"
+            alt="vexide Logo"
+        />
+        <span slot="title" class="navigation-docs-chip">Docs</span>
+        <NavigationItem selected href="/docs/">Tutorials</NavigationItem>
+        <NavigationItem href="https://docs.rs/vexide/" external>
+            API
+        </NavigationItem>
+        <NavigationItem
+            href="https://github.com/vexide/vexide/tree/main/examples"
+            external
+        >
+            Examples
+        </NavigationItem>
+        <DocsSearch slot="right" client:load />
+        <Fragment slot="mobile">
+            {
+                Object.entries(DOCS_SIDEBAR).map(([category, entries]) => (
+                    <>
+                        <strong class="docs-category-label">{category}</strong>
+                        <ul class="docs-category">
+                            {entries.map(async (entry) => {
+                                const page = await getEntry("docs", entry)!;
+
+                                return (
+                                    <li
+                                        class:list={[
+                                            "docs-sidebar-item",
+                                            {
+                                                selected:
+                                                    page.slug ===
+                                                    currentPage.slug,
+                                            },
+                                        ]}
+                                    >
+                                        <a
+                                            href={
+                                                page.slug == "index"
+                                                    ? "/docs/"
+                                                    : `/docs/${page.slug}/`
+                                            }
+                                        >
+                                            {page.data.title}
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ))
+            }
+        </Fragment>
+    </Navigation>
+    <main class="docs-layout">
+        <aside class="docs-sidebar">
+            {
+                Object.entries(DOCS_SIDEBAR).map(([category, entries]) => (
+                    <>
+                        <strong class="docs-category-label">{category}</strong>
+                        <ul class="docs-category">
+                            {entries.map(async (entry) => {
+                                const page = await getEntry("docs", entry)!;
+
+                                return !page.data.draft && (
+                                    <li
+                                        class:list={[
+                                            "docs-sidebar-item",
+                                            {
+                                                selected:
+                                                    page.slug ===
+                                                    currentPage.slug,
+                                            },
+                                        ]}
+                                    >
+                                        <a
+                                            href={
+                                                page.slug == "index"
+                                                    ? "/docs/"
+                                                    : `/docs/${page.slug}/`
+                                            }
+                                        >
+                                            {page.data.title}
+                                        </a>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </>
+                ))
+            }
+        </aside>
+        <div class="docs-page">
+            <header class="docs-header">
+                <div class="docs-header-inner">
+                    <span class="docs-breadcrumbs"
+                        >{currentCategory} > {
+                            currentPage.data.title
+                        }</span
+                    >
+                    <h1>{currentPage.data.title}</h1>
+                    <Button
+                        class="edit-on-github"
+                        href={`${GITHUB_ORG_URL}/website/tree/main/src/content/docs/${currentPage.id}`}
+                    >
+                        Edit This Page
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 32 32"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
+                            ></path>
+                        </svg>
+                    </Button>
+                    {
+                        currentPage.data.links && (
+                            <div class="docs-header-links">
+                                {Object.entries(currentPage.data.links).map(
+                                    ([name, href]) => (
+                                        <a
+                                            href={href as string}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                        >
+                                            {name}
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 32 32"
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z"
+                                                />
+                                            </svg>
+                                        </a>
+                                    ),
+                                )}
+                            </div>
+                        )
+                    }
+                </div>
+            </header>
+            <MarkdownStyles element="article" id="content">
+                <slot />
+                {
+                    (prevPage || nextPage) && (
+                        <nav class="docs-page-actions">
+                            {prevPage ? (
+                                <a
+                                    class="page-action prev-page"
+                                    href={
+                                        prevPage.slug == "index"
+                                            ? "/docs/"
+                                            : `/docs/${prevPage.slug}/`
+                                    }
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        width="24"
+                                        height="24"
+                                    >
+                                        <path d="M15.28 5.22a.75.75 0 0 1 0 1.06L9.56 12l5.72 5.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-6.25-6.25a.75.75 0 0 1 0-1.06l6.25-6.25a.75.75 0 0 1 1.06 0Z" />
+                                    </svg>
+                                    <div class="page-action-contents">
+                                        Previous
+                                        <strong>{prevPage.data.title}</strong>
+                                    </div>
+                                </a>
+                            ) : (
+                                <div />
+                            )}
+                            {nextPage ? (
+                                <a
+                                    class="page-action next-page"
+                                    href={
+                                        nextPage.slug == "index"
+                                            ? "/docs/"
+                                            : `/docs/${nextPage.slug}/`
+                                    }
+                                >
+                                    <div class="page-action-contents">
+                                        Next
+                                        <strong>{nextPage.data.title}</strong>
+                                    </div>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        width="24"
+                                        height="24"
+                                    >
+                                        <path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z" />
+                                    </svg>
+                                </a>
+                            ) : (
+                                <div />
+                            )}
+                        </nav>
+                    )
+                }
+            </MarkdownStyles>
+        </div>
+    </main>
 </BaseLayout>
 
 <style>
-	:global(.navigation:has(.docs-search input:focus)) {
-		position: sticky;
-		top: 0;
-	}
-	
-	.navigation-docs-chip {
-		align-self: center;
-		font-size: 1.2rem;
-		text-transform: uppercase;
-		color: var(--foreground-accent-yellow);
-		border: 1px solid var(--background-accent-yellow);
-		border-radius: 50px;
-		padding-inline: 8px;
-		padding-block: 1px;
-	}
+    :global(.navigation:has(.docs-search input:focus)) {
+        position: sticky;
+        top: 0;
+    }
 
-	:global(.navigation .navigation-inner) {
-		max-inline-size: unset;
-		padding-inline: 16px;
-	}
+    .navigation-docs-chip {
+        align-self: center;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        color: var(--foreground-accent-yellow);
+        border: 1px solid var(--background-accent-yellow);
+        border-radius: 50px;
+        padding-inline: 8px;
+        padding-block: 1px;
+    }
 
-	.docs-layout {
-		display: flex;
-		position: relative;
-	}
+    :global(.navigation .navigation-inner) {
+        max-inline-size: unset;
+        padding-inline: 16px;
+    }
 
-	.docs-sidebar {
-		width: 280px;
-		height: 100vh;
-		padding-block-end: 48px;
-		flex: 0 0 auto;
-		overflow: auto;
-		position: sticky;
-		scrollbar-width: thin;
-		scrollbar-color: hsl(var(--base-hue), 12%, 30%) #282a34;
-		top: 0;
-	}
+    .docs-layout {
+        display: flex;
+        position: relative;
+    }
 
-	:global(.navigation:has(.docs-search input:focus)) + .docs-layout .docs-sidebar {
-		top: 48px;
-	}
+    .docs-sidebar {
+        width: 280px;
+        height: 100vh;
+        padding-block-end: 48px;
+        flex: 0 0 auto;
+        overflow: auto;
+        position: sticky;
+        scrollbar-width: none;
+        scrollbar-color: hsl(var(--base-hue), 12%, 30%) #262831;
+        top: 0;
+    }
 
-	@media screen and (max-width: 768px) {
-		.docs-sidebar {
-			display: none;
-		}
+    .docs-sidebar:hover {
+        scrollbar-width: thin;
+    }
 
-		.docs-header .docs-header-inner h1 {
-			font-size: 3.6rem;
-		}
-	}
+    :global(.navigation:has(.docs-search input:focus))
+        + .docs-layout
+        .docs-sidebar {
+        top: 48px;
+    }
 
-	@media print {
-		.docs-sidebar {
-			display: none;
-		}
-	}
+    @media screen and (max-width: 768px) {
+        .docs-sidebar {
+            display: none;
+        }
 
-	.docs-page {
-		overflow: hidden;
-		flex: 1 1 auto;
-		flex-direction: column;
-	}
+        .docs-header .docs-header-inner {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "breadcrumbs"
+                "title"
+                "links"
+                "edit";
+        }
 
-	.docs-header,
-	.docs-page #content {
-		padding: 48px;
-	}
-	
-	@media screen and (max-width: 768px) {
-		.docs-header,
-		.docs-page #content {
-			padding-inline: 24px;
-		}
-	}
+        .docs-header .edit-on-github {
+            margin-block-end: 0;
+            margin-block-start: 16px;
+        }
 
-	.docs-page #content {
-		max-inline-size: 960px;
-		margin: 0 auto;
-	}
+        .docs-header .docs-header-inner h1 {
+            font-size: 3.6rem;
+        }
+    }
 
-	.docs-header {
-		background-image: url("/images/placeholder_pattern.svg");
-		background-size: 800px;
-		border-bottom: 1px solid var(--background-secondary);
-	}
+    @media print {
+        .docs-sidebar {
+            display: none;
+        }
+    }
 
-	.docs-header h1 {
-		font-weight: 400;
-		font-size: 4.8rem;
-		margin: 0;
-	}
+    .docs-page {
+        overflow: hidden;
+        flex: 1 1 auto;
+        flex-direction: column;
+    }
 
-	.docs-header-inner {
-		max-inline-size: 864px;
-		margin: 0 auto;
-	}
+    .docs-header,
+    .docs-page #content {
+        padding: 48px;
+    }
 
-	.docs-sidebar {
-		background-color: #282a34;
-		border-right: 1px solid var(--background-secondary);
-	}
+    @media screen and (max-width: 768px) {
+        .docs-header,
+        .docs-page #content {
+            padding: 36px 24px;
+        }
+    }
 
-	.docs-category-label {
-		font-size: 16px;
-		color: var(--foreground-primary);
-		font-family: var(--font-monospace);
-		font-weight: normal;
-		padding: 16px;
-		display: flex;
-		border-bottom: 1px solid var(--background-secondary);
-	}
+    .docs-page #content {
+        max-inline-size: 960px;
+        margin: 0 auto;
+    }
 
-	.docs-category-label:not(:first-of-type) {
-		margin-top: 24px;
-	}
+    .docs-header {
+        background-image: url("/images/placeholder_pattern.svg");
+        background-size: 800px;
+        border-bottom: 1px solid var(--background-secondary);
+    }
 
-	.docs-category {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		display: flex;
-		flex-direction: column;
-	}
+    .docs-header h1 {
+        align-self: flex-end;
+        grid-area: title;
+        font-weight: 400;
+        font-size: 4.8rem;
+        margin: 0;
+    }
 
-	.docs-sidebar-item a {
-		display: flex;
-		align-items: center;
-		border-left: 2px solid transparent;
-		font-size: 1.4rem;
-		text-decoration: none;
-		color: var(--foreground-secondary);
-		padding: 8px 16px;
-	}
+    .docs-header-inner {
+        grid-template-columns: 1fr auto; /* Example: one column for sidebar, three for main content */
+        grid-template-areas:
+            "breadcrumbs edit"
+            "title links";
 
-	.docs-sidebar-item:not(.selected) a:hover {
-		text-decoration: underline;
-	}
+        display: grid;
+        justify-content: space-between;
+        gap: 16px;
+        max-inline-size: 864px;
+        margin: 0 auto;
+    }
 
-	.docs-sidebar-item.selected a {
-		font-weight: 600;
-		color: var(--foreground-primary);
-		border-left-color: var(--background-accent-yellow);
-	}
+    .docs-breadcrumbs {
+        grid-area: breadcrumbs;
+        font-size: 14px;
+        color: var(--foreground-secondary);
+        font-family: var(--font-monospace);
+        text-transform: uppercase;
+    }
 
-	.edit-on-github {
-		color: var(--foreground-accent-red);
-		text-decoration: none;
-		border-bottom: 1px solid currentColor;
-		transition: 0.25s ease;
-	}
+    .docs-header-links {
+        grid-area: links;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-	.edit-on-github:hover {
-		opacity: 0.8;
-	}
+    .docs-header-links a {
+        color: var(--foreground-accent-red);
+        text-decoration: none;
+        border-bottom: 1px solid currentColor;
+        transition: 0.25s ease;
+        display: inline-block;
+        margin-block-start: 16px;
+        font-size: 1.6rem;
+    }
 
-	.edit-on-github {
-		display: inline-block;
-		margin-block-start: 16px;
-		font-size: 1.6rem;
-	}
+    .docs-header-links a:hover {
+        opacity: 0.8;
+    }
 
-	.docs-page-actions {
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		gap: 16px 48px;
-		border-top: 1px solid var(--background-secondary);
-		padding-top: 48px;
-		margin-top: 48px;
-	}
+    .docs-sidebar {
+        background-color: #262831;
+        border-right: 1px solid var(--background-secondary);
+    }
 
-	.docs-page-actions > * {
-		flex: 1;
-		min-inline-size: 300px;
-	}
+    .docs-category-label {
+        font-size: 14px;
+        text-transform: uppercase;
+        color: var(--foreground-primary);
+        font-family: var(--font-monospace);
+        font-weight: normal;
+        padding: 16px;
+        display: flex;
+        border-bottom: 1px solid var(--background-secondary);
+    }
 
-	.page-action.next-page {
-		text-align: right;
-	}
+    .docs-category-label:not(:first-of-type) {
+        margin-top: 24px;
+    }
 
-	.docs-page-actions .page-action {
-		display: flex;
-		align-items: center;
-		gap: 24px;
-		text-decoration: none;
-		border: 1px solid var(--foreground-secondary);
-		border-radius: 4px;
-		padding: 24px;
-		color: var(--foreground-secondary);
-		text-transform: uppercase;
-		font-size: 12px;
-		font-weight: 700;
-		line-height: normal;
-	}
+    .docs-category {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+    }
 
-	.page-action strong {
-		color: var(--foreground-primary);
-		font-family: var(--font-monospace);
-		font-size: 24px;
-		margin-block-start: 8px;
-		font-weight: 400;
-	}
+    .docs-sidebar-item a {
+        display: flex;
+        align-items: center;
+        border-left: 2px solid transparent;
+        font-size: 1.4rem;
+        text-decoration: none;
+        color: var(--foreground-secondary);
+        padding: 8px 16px;
+    }
 
-	.page-action-contents {
-		display: flex;
-		flex-direction: column;
-		flex: 1 1 auto;
-	}
+    .docs-sidebar-item:not(.selected) a:hover {
+        text-decoration: underline;
+    }
 
-	.page-action svg {
-		flex: 0 0 auto;
-		fill: currentColor;
-	}
+    .docs-sidebar-item.selected a {
+        font-weight: 600;
+        color: var(--foreground-primary);
+        border-left-color: var(--background-accent-yellow);
+    }
 
-	:global(.mobile-navigation .mobile-navigation-flyout .mobile-navigation-items) {
-		display: flex;
-		gap: 16px;
-		padding: 16px;
-		padding-block-end: 0;
-	}
+    .button.edit-on-github {
+        grid-area: edit;
+        font-size: 14px;
+        padding: 8px 16px;
+        margin-block-end: 16px;
+    }
 
-	:global(.mobile-navigation .mobile-navigation-flyout) {
-		padding: 0;
-	}
+    .button.edit-on-github svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .docs-page-actions {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px 48px;
+        border-top: 1px solid var(--background-secondary);
+        padding-top: 48px;
+        margin-top: 48px;
+    }
+
+    .docs-page-actions > * {
+        flex: 1;
+        min-inline-size: 300px;
+    }
+
+    .page-action.next-page {
+        text-align: right;
+    }
+
+    .docs-page-actions .page-action {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        text-decoration: none;
+        border: 1px solid var(--foreground-secondary);
+        border-radius: 4px;
+        padding: 24px;
+        color: var(--foreground-secondary);
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    .page-action strong {
+        color: var(--foreground-primary);
+        font-family: var(--font-monospace);
+        font-size: 24px;
+        margin-block-start: 8px;
+        font-weight: 400;
+    }
+
+    .page-action-contents {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+    }
+
+    .page-action svg {
+        flex: 0 0 auto;
+        fill: currentColor;
+    }
+
+    :global(
+        .mobile-navigation .mobile-navigation-flyout .mobile-navigation-items
+    ) {
+        display: flex;
+        gap: 16px;
+        padding: 16px;
+        padding-block-end: 0;
+    }
+
+    :global(.mobile-navigation .mobile-navigation-flyout) {
+        padding: 0;
+    }
 </style>

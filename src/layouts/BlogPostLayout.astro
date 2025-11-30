@@ -4,6 +4,9 @@ import PageSection from "components/PageSection.astro";
 import PageLayout from "./PageLayout.astro";
 const { title, author, date, description, tags, thumbnail } =
 	Astro.props.page.data;
+
+const authorGithub = ((author as any)?.github) ?? (author as string);
+const authorName = ((author as any)?.name) ?? authorGithub;
 ---
 
 <PageLayout
@@ -32,16 +35,16 @@ const { title, author, date, description, tags, thumbnail } =
 		<div class="post-metadata">
 			<a
 				class="metadata-author"
-				href={`https://github.com/${author}`}
+				href={`https://github.com/${authorGithub}`}
 				target="_blank"
 				rel="noreferrer noopeners"
 			>
 				<img
-					src={`https://github.com/${author}.png`}
-					alt={`${author}'s Avatar`}
+					src={`https://github.com/${authorGithub}.png`}
+					alt={`${authorName}'s Avatar`}
 				/>
 				<span>
-					<strong>{author}</strong> • {
+					<strong>{authorName}</strong> • {
 						new Date(date).toLocaleDateString("en-US", { timeZone: 'UTC' })
 					}
 				</span>

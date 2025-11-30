@@ -188,25 +188,33 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         font-family: var(--font-primary);
     }
     .markdown-body :global(pre.shaku .line.diff-insert) {
-        background-color: rgba(126, 231, 135, 0.1);
+        background-color: hsl(var(--accent-green-hue), 69%, 70%, 0.1);
     }
     .markdown-body :global(pre.shaku .line.diff-insert::before) {
         content: "+";
-        color: #7ee787;
+        color: hsl(var(--accent-green-hue), 69%, 70%);
     }
     .markdown-body :global(pre.shaku .line.diff-delete) {
         opacity: 0.5;
-        background-color: rgba(248, 81, 73, 0.1);
+        background-color: hsl(var(--accent-red-hue), 93%, 63%, 0.1);
     }
     .markdown-body :global(pre.shaku .line.diff-delete::before) {
         content: "-";
-        color: rgb(248, 81, 73);
+        color: hsl(var(--accent-red-hue), 93%, 63%);
     }
 
     .markdown-body :global(.shaku-inline-highlight) {
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
         background-color: hsl(var(--accent-yellow-hue), 73%, 63%, 0.15);
+    }
+
+    .markdown-body :global(.line.diff-delete .shaku-inline-highlight) {
+        background-color: hsl(var(--accent-red-hue), 73%, 63%, 0.25);
+    }
+
+    .markdown-body :global(.line.diff-insert .shaku-inline-highlight) {
+        background-color: hsl(var(--accent-green-hue), 73%, 63%, 0.25);
     }
 
     .markdown-body :global(.shaku-inline-highlight[data-id="err"]) {
@@ -216,6 +224,11 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
     }
 
     .markdown-body :global(pre.shaku .line.dim) {
+        transition: filter 0.25s ease;
+        filter: blur(0) brightness(0.6);
+    }
+
+    .markdown-body :global(pre.shaku:not(:hover) .line.dim) {
         filter: blur(2px) brightness(0.5);
     }
 
@@ -389,39 +402,6 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         display: block;
     }
 
-    .markdown-body :global(.code-split) {
-        display: flex;
-        flex-wrap: wrap;
-        flex-basis: content;
-        gap: 1px;
-        background-color: var(--background-secondary);
-        border: 1px solid var(--background-secondary);
-        margin-block: 24px;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .markdown-body :global(.code-split.error) {
-        background-color: hsl(1deg 76% 78% / 50%);
-        border-color: hsl(1deg 76% 78% / 50%);
-    }
-
-    .markdown-body :global(.code-split pre) {
-        margin-block: 0;
-        flex: 1 1 auto;
-        border-radius: 0;
-        border: 0;
-    }
-
-    .markdown-body :global(.code-split pre:first-child) {
-        border-left: none;
-    }
-
-    .markdown-body :global(.code-split.error pre:last-of-type) {
-        text-wrap: wrap;
-        background-color: #372930 !important;
-    }
-
     .markdown-body :global(table) {
         text-align: left;
         border-collapse: collapse;
@@ -452,6 +432,21 @@ const { element: Element = "div", class: className, ...rest } = Astro.props;
         margin: 0 auto;
         display: block;
     }
+
+    .markdown-body :global(small) {
+        max-width: 600px;
+        display: block;
+        text-align: center;
+        margin: 12px auto;
+    }
+
+    /* .markdown-body :global(details[open] summary) {
+        display: none;
+    } */
+
+    /* .markdown-body :global(details summary) {
+        cursor: pointer;
+    } */
 
     @media print {
         .markdown-body :global(.markdown-alert),

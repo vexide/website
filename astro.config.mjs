@@ -14,11 +14,13 @@ import { transformerTitle } from "@rudeigerc/shiki-transformer-title";
 
 import cloudflare from '@astrojs/cloudflare';
 
+import mdx from '@astrojs/mdx';
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://vexide.dev",
   trailingSlash: "always",
-  integrations: [sitemap(), svelte(), markdown()],
+  integrations: [sitemap(), svelte(), markdown(), mdx()],
 
   markdown: {
     rehypePlugins: [

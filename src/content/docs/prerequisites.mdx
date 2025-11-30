@@ -1,0 +1,71 @@
+---
+title: Prerequisites
+---
+
+import FileTree from "components/FileTree.astro";
+
+Before you start programming, you'll need to install some tools in order to build and upload your code. Get a command-line of your choice ready, since we'll be running some terminal commands.
+{/* 
+<div style="display: block; text-align: center; margin: 0 auto;">
+<iframe aria-describedby="a11y-video-desc" width="560" height="315" src="https://www.youtube.com/embed/8lf5uh8Se2g?si=yXhixtAme-q_FIpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<small id="a11y-video-desc">
+    If you're on Windows and prefer to follow along with a video tutorial, we have one of those too!
+</small>
+</div> */}
+
+# Installing Rust
+
+In order to use vexide, you'll need a Rust toolchain (`cargo`, `rustc`, etc...) installed on your computer. To install Rust on your system, follow the instructions [here](https://www.rust-lang.org/tools/install).
+
+> [!NOTE]
+> If you use a Windows computer, the Rust installer may also prompt you to install Visual Studio Build Tools. *This is required for building and installing `cargo-v5`.* If you skipped this step, you can download the Build Tools installer [here](https://aka.ms/vs/stable/vs_BuildTools.exe).
+
+# Installing `cargo-v5`
+
+vexide uses the `cargo-v5` tool to build/upload to VEX brains. You can install that with the following command:
+
+```sh
+cargo install cargo-v5
+```
+
+# Setting up a Project
+
+To make a new vexide project, we'll use the `cargo v5 new <NAME>` command. This will create a project in the current directory containing a bare-bones template that we can start out with.
+
+```sh
+cargo v5 new my-project
+```
+
+After running this, you should have a new folder named `my-project` (or whatever you named your project). Open that folder in a code editor of your choice. If you don't have a code editor, we recommend starting with [Visual Studio Code](https://code.visualstudio.com/) or [Zed](https://zed.dev/).
+
+![template project open in a text editor editor](/docs/template-project.png)
+
+If you've worked in a rust project before, this file structure should be somewhat familiar to you.
+
+<FileTree>
+- my_project
+  - .cargo
+    - config.toml
+  - .github
+    - workflows
+      - rust.yml
+  - src
+    - **main.rs** The entrypoint file of your program's source code.
+  - .envrc
+  - .gitignore
+  - Cargo.lock
+  - **Cargo.toml** Your project's package information, including its dependencies.
+  - README.md
+  - flake.nix
+  - rust-toolchain.toml
+</FileTree>
+
+If you don't recognize any of this, that's okay too! There are two files of relevance we'll worry about right now:
+
+- The `Cargo.toml` file contains metadata and configuration about your project's package. This includes your *dependencies*, or external libraries that you may wish to use later. This is also where you can configure your project's name, description, and [upload slot](/docs/building-uploading/).
+- Inside of the `src` folder is your project's *source code*. That's where the actual code for your robot goes. Everything in that folder will eventually be imported by `main.rs`, which contains the entrypoint of your code — the `main` function. We'll look at that on the next page.
+
+Most of the other files in the template are configuration files that tell Rust how to build projects for the V5 Brain. There's also a set of [GitHub actions](https://github.com/features/actions) for testing your project when you push to GitHub and a [flake](https://wiki.nixos.org/wiki/Flakes) for NixOS users.
+
+![rocketship with ferris on it](/docs/blastoff.svg)

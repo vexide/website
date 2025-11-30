@@ -1,8 +1,8 @@
 ---
 title: Async Rust
-category: 03. Multitasking
-page: 12
 ---
+
+import SplitCodeblock from "components/SplitCodeblock.astro";
 
 `async` is a feature of the Rust language that allows you to express when code *waits for things to happen*. By doing this, we write code that cooperates with other parts of our program to multitask, or do more than one thing concurrently.
 
@@ -66,9 +66,6 @@ Well, let's try treating it like a normal function and calling it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -91,9 +88,6 @@ In order to actually execute our `wow` function, we need to `await` it.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
@@ -120,9 +114,6 @@ To demonstrate this behavior, we can store the return value (the "future") of ou
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 async fn wow() {
@@ -171,7 +162,7 @@ So far, we've just made a regular function `async` for seemingly no reason. Sinc
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -220,12 +211,12 @@ async fn b() {
 
 If we call and `await` these functions directly in `main` we would only ever run the first function since it loops forever.
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -264,7 +255,7 @@ hello
 hello
 ```
 
-</div>
+</SplitCodeblock>
 
 !["a" function runs forever](/docs/infinite-loop.svg)
 
@@ -272,12 +263,12 @@ But we want to run these at the same time! To do this, let's make some *tasks* t
 
 We can do this with vexide's `spawn` function. This will poll a future in a background task without forcing our `main` function to wait until it's complete. Rather than `await`ing `a` and `b`'s futures, we instead pass them to `spawn()` to run them in a task.
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 async fn a() {
     loop {
@@ -324,7 +315,7 @@ hello
 hello
 ```
 
-</div>
+</SplitCodeblock>
 
 ![two tasks, "a_task" and "b_task" running at the same time](/docs/async-tasks-ab.svg)
 
@@ -332,7 +323,7 @@ It works! And notice how we don't `await` `a()` or `b()`, as `spawn` does that f
 
 ## `async` Blocks
 
-The *`async` block* is a syntax feature that allow us to concisely create a `Future` that can be awaited at a later time.
+The *`async` block* is a syntax feature that allows us to concisely create a `Future` that can be awaited at a later time.
 
 ```rs
 // The code within this block will not run until we `await` it.
@@ -348,7 +339,7 @@ This is useful because it allows us to spawn tasks without needing entirely sepa
 ```rs
 // @fold start
 use vexide::prelude::*;
-use core::time::Duration;
+use std::time::Duration;
 
 // @fold end
 #[vexide::main]
@@ -380,7 +371,7 @@ This also let's us demonstrate a fact we discussed earlier.
 
 Recall that `async fn`s are desugared into regular functions that return a `Future`. With that in mind, we can demonstrate that these two functions are the same:
 
-<div class="code-split">
+<SplitCodeblock>
 
 ```rs
 async fn multiply(a: f64, b: f64) {
@@ -390,7 +381,7 @@ async fn multiply(a: f64, b: f64) {
 ```
 
 ```rs
-use core::future::Future;
+use std::future::Future;
 
 fn multiply(a: f64, b: f64) -> impl Future {
     async {
@@ -400,7 +391,7 @@ fn multiply(a: f64, b: f64) -> impl Future {
 }
 ```
 
-</div>
+</SplitCodeblock>
 
 Above is an `async fn`, and below we have a regular function returning an `async` block (a struct implementing the `Future` trait).
 

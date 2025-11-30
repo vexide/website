@@ -1,0 +1,136 @@
+---
+title: Aborts and Panics
+---
+
+import SplitCodeblock from "components/SplitCodeblock.astro";
+
+![ferris in front of an error box](/docs/ferris-error.svg)
+
+vexide is designed to be *fault-tolerant*, meaning it should be difficult for code to unintentionally fail in unexpected ways. Sometimes, that doesn't go to plan and you need to find out why. This page will cover how to troubleshoot and fix unrecoverable failures in vexide programs.
+
+There are two forms of errors that will cause a program to crash — **panics** and **aborts** (also known as *exceptions*).
+
+# Panics
+
+A [panic](https://doc.rust-lang.org/book/ch09-01-unrecoverable-errors-with-panic.html) is an *intentional decision* made by the program to stop running due to some unrecoverable or unhandled error. Panics can occur for a variety of reasons, but typically happen when something goes wrong at the logic or runtime level. For example:
+
+- Accessing an out-of-bounds index in an array.
+- Unwrapping a `Result` or `Option` that contains an error or `None`.
+- Failing an internal assertion (e.g. `assert!(condition)`).
+- Violating the contract of a function with documented panic conditions.
+
+When a panic occurs, vexide halts the program and prints a detailed message describing what happened to the Brain's display and terminal.
+
+<div style="display: block; text-align: center; margin: 0 auto;">
+<img src="/docs/panic-anatomy.png" alt="anatomy of a panic, showing the location, message, and stack backtrace" aria-describedby="a11y-panic-desc" />
+
+<small id="a11y-panic-desc">
+    A panic message is drawn to the screen along with a stack backtrace.
+</small>
+</div>
+
+## Diagnosis
+
+The information that vexide gives us tells us both the cause and the location of the panic. This can be used to diagnose and fix the problem.
+
+<SplitCodeblock error>
+```rs
+// @fold start
+use vexide::prelude::*;
+
+// @fold end
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+//  (err    )
+    panic!();
+}
+```
+
+```ansi
+panicked at main.rs:5:5:
+explicit panic
+stack backtrace:
+  0: 0x380832f
+  1: 0x380041b
+  2: 0x38064b7
+  3: 0x3804983
+  4: 0x3804913
+  5: 0x38061e3
+  6: 0x3803373
+  7: 0x380351b
+  8: 0x3800ed3
+  9: 0x3800c1f
+ 10: 0x3800407
+note: Use a symbolizer to convert stack frames to human-readable function names.
+```
+</SplitCodeblock>
+
+In the example above, we are told that the panic originates from `main.rs:5:5`. This can be read as "main.rs, line 5, column 5". Looking at line 5 of `main.rs` shows us that there is indeed a `panic!()` invocation.
+
+```rs title="main.rs"
+use vexide::prelude::*;
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+//  (err    )
+    panic!();
+// ^
+// [Panic occurred here.]<
+}
+```
+
+The message we are given is simply "explicit panic", which is the default message that Rust will use when invoking `panic!()` with no custom message. In practice, you will typically be given a more helpful message describing exactly what went wrong.
+
+# Aborts
+
+An **abort** (also called an *exception*) is a serious, unexpected failure that happens when the Brain's user processor experiences a hardware or system-level error. Aborts are often a sign of *undefined behavior* from `unsafe` code being misused (either from your code or from a library you're using).
+
+<div style="display: block; text-align: center; margin: 0 auto;">
+<img src="/docs/abort-anatomy.png" alt="a data abort exception resulting from a null pointer dereference" aria-describedby="a11y-panic-desc" />
+
+<small id="a11y-panic-desc">
+    An abort message is drawn to the screen along with a register dump and stack backtrace. This abort was caused by a null pointer dereference (hence the "writing to 0x0" message).
+</small>
+</div>
+
+Unlike a panic which is raised intentionally by your program, an abort is triggered by the processor itself when something goes catastrophically wrong. Aborts give us less useful information about exactly *where* they occurred, making them harder to diagnose.
+
+> [!TIP]
+> Undefined behavior is extremely unpredictable and may even cause *safe code* to abort as a side-effect.
+
+## Abort Types
+
+There are a few types of processor exceptions that will cause an abort. Knowing exactly what causes each of them isn't necessarily required to find the location of the abort, but may help with identifying why it happened.
+
+- **Data Abort Exception**: Occurs when the Brain tries to read or write to data memory in a way that isn't allowed. Common causes include null pointer dereferences (accessing address `0x0`), trying to access protected memory, and dangling pointers (use-after-free, double-free).
+- **Prefetch Abort Exception**: Occurs when the Brain tries to fetch (execute) an instruction from memory that isn't allowed or accessible. This can occur if the instruction is in a protected region, the memory is unmapped, or a jump address is incorrect.
+- **Undefined Instruction Exception**: Occurs when the Brain encounters an instruction it doesn't recognize or support. This could be caused by executing data as code, jumping to misaligned instructions, or running code compiled for the wrong architecture.
+
+## Tracing Abort Addresses
+
+As mentioned previously, aborts are more difficult to trace back to a line of code. Unlike panics, aborts do not give us a file name or line number. Instead we are given the memory address of the instruction that caused the abort. To resolve this address to a location in our source code, we have to use a tool called a *symbolizer*.
+
+> [!TIP]
+> This page covers a command-line method of symbolizing addresses. If you use VSCode, we have an extension that nicely automates the whole process for you. Follow [this guide](https://github.com/vexide/symbolizer-for-vex-v5/wiki/Find-where-your-code-is-crashing) instead.
+
+A symbolizer translates an instruction address into a human-readable location using debug information from your compiled code. In this tutorial, we'll use the `llvm-symbolizer` tool. If you don't have LLVM installed, go download it [here](https://releases.llvm.org/).
+
+To find the location of our abort, we need two things:
+1. The address of the abort. This is printed to the terminal and shown on the display as a hexadecimal number when the abort occurs.
+2. Our compiled code. This *must* be the exact same version of the code that was subsequently uploaded to the Brain when the abort happened. You can typically find this in your project's `target` folder at `./target/<profile>/<name>` as a file with no extension. Replace `<profile>` with either `debug` or `release` depending on if your project was compiled in debug or release mode and `<name>` with the name of your project.
+
+To use `llvm-symbolizer`, we give it our compiled code and the address of the abort. Let's say we aborted at address `0x123456678` in a project named `my-robot` compiled for `release` mode:
+
+<SplitCodeblock vertical>
+
+```sh
+llvm-symbolizer -p -o ./target/release/my-project 0x12345678
+```
+
+```ansi
+src/main.rs:42:13
+my_crate::module::some_function
+```
+</SplitCodeblock>
+
+Running this should hopefully give you the file name, line number, and symbol name where the abort occurred.

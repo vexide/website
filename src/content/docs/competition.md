@@ -1,20 +1,28 @@
 ---
 title: Competition
-category: 01. Getting Started
-page: 8
 ---
 
-There's a pretty good chance that you're using vexide for competition purposes. When programming for a competition robot, we need to have a way to hook into the different *competition modes* (such as driver and autonomous) and run different pieces of code depending on what mode we are in.
+There's a pretty good chance that you're using vexide for competitive robotics. When programming for a competition robot, we need a way to run different code paths depending on the current state of the match.
+
+# Competition Modes
+
+From a programming standpoint, a typical competition match involves three possible *modes* that your robot can be in at any given point in time:
+
+- **Disabled**: This is the default state of your robot before or after a match. You are unable to move motors while your robot is disabled (this is enforced in firmware).
+- **Autonomous**: In the autonomous state, you are able to move motors but cannot read data from controllers.
+- **Driver**: In the driver control phase, no restrictions are placed on motors or controllers. This is the default state of your robot when no field controller is connected (e.g. when you run your program normally).
+
+The mode that your robot is placed into is determined by a *field controller*, which is a special piece of hardware that plugs into your controller during the match and communicates with the brain.
+
+> [!TIP]
+> You can test each mode using the **Timed Run** option on your controller. This will simulate a typical V5RC match cycle with a 3 second disabled period, a 15 second autonomous period, and a 1 minute 45 second driver period. Alternatively, a *VEXnet Competition Switch* (no longer sold) may be used to temporarily force the robot into a specific match mode.
 
 # The `Compete` Trait
 
-The `Compete` trait allows us to do just that - you can implement it on a data structure containing your robot's devices and have vexide run a function corresponding to the current competition mode.
+The `Compete` trait allows us to run different code depending on the state of the match. You can implement it on a struct containing some shared data (such as your robot's devices) and have vexide automatically call a function depending on the current competition mode.
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -22,6 +30,10 @@ struct MyRobot {}
 
 //   (     )
 impl Compete for MyRobot {
+    async fn disabled(&mut self) {
+        println!("Robot is disabled.");
+    }
+
     async fn autonomous(&mut self) {
         println!("Running in autonomous mode!");
     }
@@ -39,57 +51,166 @@ async fn main(_peripherals: Peripherals) {
 }
 ```
 
-Calling `my_robot.compete().await;` in `main` will poll a future that polls the functions we have in our `Compete` implementation depending on the current phase of the competition lifecycle.
-
-The full list of mode functions on `Compete` is:
-
-- `driver`, which is the default state of `Compete` when completely disconnected from field control. No restrictions on motors or sensors are placed in this mode.
-- `autonomous`, which runs during the autonomous period of the match. While in this mode, any attempts to read data from a controller will result in an error (this is enforced in firmware).
-- `disabled`, which runs between modes when on field control and before/after matches. While in this mode, motors cannot be driven (this is enforced in firmware).
-- `connected`, which runs once when a competition controller has been physically plugged in.
-- `disconnected`, which runs once when a competition controller has been physically unplugged.
-
-```rs
-impl Compete for MyRobot {
-    async fn connected(&mut self) {}
-    async fn disconnected(&mut self) {}
-    async fn disabled(&mut self) {}
-    async fn driver(&mut self) {}
-    async fn autonomous(&mut self) {}
-}
-```
-
-# The Competition Lifecycle
-
-Understanding how competition control interacts with your robot is of great importance when writing fault-tolerant code. Many teams in the past have gotten this wrong and made assumptions where they shouldn't, resulting in unpredictable behavior.
-
-## Execution of Competition Functions
-
-The first and **most important** thing to understand is that the **only function guaranteed to run once and only once is `main`!**
-
-> [!WARNING]
-> Every function in `Compete` can and will run any number of times in a single match. Your code should be designed around this fact. For example, you should **NEVER** assume that a function like `driver` or `connected` only runs once. You also cannot assume modes like `autonomous` will always run before `driver`.
-
-Here is an example of some bad code that assumes `driver` only runs once, resulting in a panic if it were to ever run twice.
+All methods on the `Compete` trait are optional. If we only wanted to provide a `driver` function, then we can omit `autonomous` and `disabled`, for example:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
+use vexide::prelude::*;
 
+struct MyRobot {}
+
+// @fold end
+impl Compete for MyRobot {
+    async fn driver(&mut self) {
+        println!("Running in driver mode!");
+    }
+}
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+    let my_robot = MyRobot {};
+    my_robot.compete().await;
+}
+```
+
+> [!NOTE]
+> In this case, when the robot is disabled or running autonomously, it will do nothing during that time period since we provided no implementation of `disabled` or `autonomous`.
+
+
+## Robot Initialization
+
+You may be wondering about this call that we made in our `main` function in the previous two examples.
+
+```rs
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+    let my_robot = MyRobot {};
+
+    // @focus
+    my_robot.compete().await;
+}
+```
+
+> What's its deal?
+
+This call that we make in our `main` function is what actually starts your robot's competition lifecycle. When we call `.compete().await;` on our robot struct, we are transferring control of our code to vexide's competition state handler. This is what allows the methods in `Compete` to run.
+
+> [!NOTE]
+> If this method were not called and `.await`ed, then nothing would happen and the program would simply exit by returning from `main`.
+
+This means that `.compete().await;` is our *last chance* to do work in our `main` function before we jump into our competition functions. Any initialization code that you want to *always* run at the start of your program (e.g. calibrating a sensor) should be run *before* calling `compete`.
+
+```rs
+// @fold start
+use vexide::prelude::*;
+
+struct MyRobot {}
+
+impl Compete for MyRobot {
+    async fn disabled(&mut self) {
+        println!("Robot is disabled.");
+    }
+
+    async fn autonomous(&mut self) {
+        println!("Running in autonomous mode!");
+    }
+
+    async fn driver(&mut self) {
+        println!("Running in driver mode!");
+    }
+}
+
+// @fold end
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+  // @highlight start
+  calibrate_some_sensor();
+  setup_gui_or_whatever();
+  select_auton_route();
+  do_more_stuff();
+  // @highlight end
+//  ^
+// [This code will always run at the start of the program regardless of competition state.] 
+
+    let my_robot = MyRobot {};
+//  (                       )
+    my_robot.compete().await;
+//                   ^
+// [At this point, control of the program is now in the hands of the competition runtime.]
+}
+```
+
+## Event Methods
+
+In addition to the three competition modes, the `Compete` trait also provides the `connected` and `disconnected` methods, which will be called when the robot is physically connected or disconnected from a field controller.
+
+> [!NOTE]
+>
+> The `connected` and `disconnected` functions implemented in the `Compete` trait are only guaranteed to run if a controller is *physically* unplugged from field control. This does not include the Robot's radio losing connection with the controller. If a radio fails during a match, the state of your robot is considered undefined and its motors may or may not be disabled. **This is NOT treated as a field disconnect.**
+
+Here is `Compete` implementation with every method implemented, including `connected` and `disconnected`:
+
+```rs
+// @fold start
+use vexide::prelude::*;
+
+struct MyRobot {}
+
+// @fold end
+impl Compete for MyRobot {
+    async fn connected(&mut self) {
+        println!("Connected to field control.");
+    }
+
+    async fn disconnected(&mut self) {
+        println!("Disconnected from field control.");
+    }
+
+    async fn disabled(&mut self) {
+        println!("Robot is disabled.");
+    }
+
+    async fn autonomous(&mut self) {
+        println!("Running in autonomous mode!");
+    }
+
+    async fn driver(&mut self) {
+        println!("Running in driver mode!");
+    }
+}
+// @fold start
+
+#[vexide::main]
+async fn main(_peripherals: Peripherals) {
+    let my_robot = MyRobot {};
+    my_robot.compete().await;
+}
+// @fold end
+```
+
+## Dangerous Assumptions
+
+A common misconception that many competitors have is that `driver` or `autonomous` will only run once during a match. While this may be true in many scenarios, it is not always the case.
+
+> [!IMPORTANT]
+> Any method in `Compete` may or may not run any number of times in a single match in any order. Your code should be designed around this. For example, you should **NEVER** assume that a function like `driver` will only run once, or that `autonomous` will always run *before* `driver`.
+
+Let's look at a potential recipe for disaster. Can you spot the issue?
+
+```rs
+// @fold start
 use vexide::prelude::*;
 
 // @fold end
 struct MyRobot {
-    some_data: Option<i32>,
+    some_state: Option<i32>,
 }
 
 impl Compete for MyRobot {
     async fn driver(&mut self) {
-//      (err                                     )
-        let data = self.some_data.take().unwrap();
-        //                             ^
-        // [called `Option::unwrap()` on a `None` value]
+        //          (err                          )
+        let state = self.some_state.take().unwrap();
+        println!("State is {}.", data);
     }
 }
 
@@ -102,105 +223,91 @@ async fn main(_peripherals: Peripherals) {
 }
 ```
 
-> Wait, what's going on here? Why did we panic again?
+In our `driver` function, we take `Some(3)` out of `self.some_state` and move it into our `state` variable. The first time our `driver` runs, this will cause no problems, but if `driver` ever runs a second time the program will panic. This is because `self.some_state` will be `None` the second time `driver` runs, since we already took the value out the first time.
 
-In this case, since the default state of the robot when not plugged into field control is `driver`, running this program before connecting to field control will start the program in `driver`, meaning `driver` will run a second time in the match and panic the program. The program panics since we already took out `Some(3)` from `self.some_data` in the first run of `driver`. When we try to take it a second time, we get `None` and panic when trying to call `unwrap` on that.
+> [!TIP]
+> `driver` running twice is actually a very common occurrence. Since the default state of your robot is `driver` when not plugged into field control, running this program before connecting to field control will run `driver` once, then a second time when the match properly begins.
 
-To visualize what happened, let's look at the order of competition functions throughout a theoretical match with this program:
-
+Here's a diagram illustrating the different methods on `Compete` that could be called in a scenario where the program is ran *before* the controller is connected to the field. Notice how `driver` runs twice in a single match?
 
 ![Possible chain of competition modes: main, driver, connected, disabled, autonomous, disabled, driver, disabled, disconnected](https://i.imgur.com/NWIHvxx.png)
 
-Or the TM could get bored and start randomly flicking switches on the field controller causing a situation like this:
+Or in a worst-case-scenario, the TM could get really bored and start randomly flicking switches on the field controller causing a situation like this:
 
 ![Rapid switches between autonomous and driver many times](https://i.imgur.com/chVRJn1.png)
 
 > That'd be a fun match.
 
-## Cancellation of Competition Functions
+# Accessing Competition State
 
-The second important thing to understand about the competition lifecycle is that competition functions other than `connected` and `disconnected` can have their execution cancelled at any time. If you are in the middle of `autonomous` and the field controller decides to disable you, execution *will* jump to `disabled` at the next opportunity the async runtime gets and any local context in `autonomous` will be lost, since its future will simply stop being polled.
+Sometimes it may be useful to retrieve information about the state of the match programmatically. Maybe a library needs to know if the robot is disabled, or maybe you want to know the type of field controller your robot is connected to. Fortunately, vexide provides a set of APIs for doing exactly this.
 
-> [!TIP]
-> In other words, if `autonomous` ever runs a second time, execution will not pick up where it left off. `autonomous` will instead just run again from the start.
 
-# Competition Information
+## Checking the Current Match Mode
 
-vexide also offers some functions for getting information about the current state of the competition. These are available through the [`competition` module of `vexide::core`](https://docs.rs/vexide-core/latest/vexide_core/competition/index.html).
-
-This includes:
-
-- [Whether or not a competition system is connected.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.is_connected.html)
-- [The type of competition system being used (Field Controller vs. Competition Switch).](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.system.html)
-- [The current competition mode (Driver, Autonomous, Disabled).](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.mode.html)
-- [The raw status flags returned by VEXos about the competition state.](https://docs.rs/vexide-core/latest/vexide_core/competition/fn.status.html)
+The `competition` module provides a simple set of functions that allow you to query the robot’s current match mode directly.
+This can be useful if you want to behave differently based on whether the robot is disabled, running autonomously, or under driver control.
 
 ```rs
-// @fold start
-#![no_std]
-#![no_main]
+use vexide::competition::{self, CompetitionMode};
 
-use vexide::prelude::*
-// @fold end
-use vexide::competition::{
-    self,
-    CompetitionMode,
-    CompetitionSystem,
-};
-
-#[vexide::main]
-async fn main(_peripherals: Peripherals) {
-//     (                         )
-    if competition::is_connected() {
-//                 ^
-//     [Check if we are currently controlled by a competition controller.]
-        println!("We are connected to a competition controller!");
-    }
-
-//                        (                   )
-    if let Some(system) = competition::system() {
-//                                    ^
-//     [Get the type of competition controller we are connected to.]
-        match system {
-            CompetitionSystem::FieldControl => {
-                println!("We are tethered to a field controller.");
-            }
-            CompetitionSystem::CompetitionSwitch => {
-                println!("We are tethered to a competition switch.");
-            }
-        }
-    } else {
-        println!("Not connected to competition control.");
-    }
-
-//        (                 )
-    match competition::mode() {
-//                    ^
-//     [Get the current that mode we are in.]
-//     [This will always be Driver if we are disconnected from competition control.]
-        CompetitionMode::Disabled => {
-            println!("Currently running disabled.");
-        },
-        CompetitionMode::Autonomous => {
-            println!("Currently running autonomous.");
-        }
-        CompetitionMode::Driver => {
-            println!("Currently running driver.");
-        }
-    }
-
-//                                               (                   )
-    println!("Competition status flags are: {}", competition::status());
-//                                                           ^
-//                          [Get the current competition-related bitflags returned by VEXos.]
+match competition::mode() {
+    CompetitionMode::Disabled => println!("Robot is disabled."),
+    CompetitionMode::Autonomous => println!("Autonomous period."),
+    CompetitionMode::Driver => println!("Driver control."),
 }
 ```
 
-# Edge-cases
+## Checking Connection State
 
-There are some edge cases associated with the Competition API. These are simply a side-effect of VEXos behavior and not really something we can control. They're useful to know about, regardless.
+To determine whether the robot is connected to any form of competition control, use [`competition::is_connected()`](https://docs.rs/vexide/latest/vexide/competition/fn.is_connected.html):
 
-- When running in the "Timed Run" mode through the controller, the Brain will be tricked by the controller into thinking it's running on a competition switch. `competition::system` will be `Some(CompetitionSystem::CompetitionSwitch)`.
-- When on field control, if a radio disconnect occurs, `is_connected` will still return `true` and you will remain in your current mode, but your motors will be disabled. VEXos will essentially give you the restrictions of `disabled` without actually placing you into `disabled`.
-    - This is done to prevent robots from completely restarting their autonomous routines halfway through a match if heavy radio interference is present. It also prevents teams from bypassing the restrictions of the current mode if a radio disconnect occurs.
-    - `Compete::disconnected` and `Compete::connected` will NOT run in this scenario. Recall that they only run if a wire is *physically unplugged*, not if there is a radio issue.
+```rs
+use vexide::competition;
+
+if competition::is_connected() {
+    println!("Connected to competition control.");
+} else {
+    println!("Running standalone.");
+}
+```
+
+This function returns `true` if the robot is connected to a field controller, competition switch, or in a timed run, and `false` otherwise.
+
+## Determining the Type of Control System
+
+You can also determine *what kind* of system is currently controlling your robot's competition state using [`competition::system()`](https://docs.rs/vexide/latest/vexide/competition/fn.system.html):
+
+```rs
+use vexide::competition::{self, CompetitionSystem};
+
+match competition::system() {
+    Some(CompetitionSystem::FieldControl) => println!("Connected to field control."),
+    Some(CompetitionSystem::CompetitionSwitch) => println!("Connected to competition switch."),
+    None => println!("Not connected to competition control."),
+}
+```
+
+This function returns an `Option<CompetitionSystem>`, which may contain either:
+
+* `Some(CompetitionSystem::FieldControl)` - The robot is being controlled by a **VEX Field Control System**.
+* `Some(CompetitionSystem::CompetitionSwitch)` - The robot is being controlled by a **VEXnet competition switch**.
+* `None` – The robot is not connected to any competition control device.
+
+## Getting the Full Competition Status
+
+If you need complete access to all competition flags reported by VEXos at once, you can retrieve them with [`competition::status()`](https://docs.rs/vexide/latest/vexide/competition/fn.status.html):
+
+```rs
+let status = vexide::competition::status();
+
+println!("Connected: {}", status.is_connected());
+println!("Mode: {:?}", status.mode());
+println!("System: {:?}", status.system());
+```
+
+This returns a [`CompetitionStatus`](https://docs.rs/vexide/latest/vexide/competition/struct.CompetitionStatus.html) bitflag structure, which contains all available information about the current match state.
+It provides convenience methods such as `.is_connected()`, `.mode()`, and `.system()` that mirror the standalone functions shown above.
+
+> [!TIP]
+> Working with `CompetitionStatus` directly can be useful for debugging or for libraries that need to monitor match transitions at a lower level. This is how vexide's `Compete` trait works under the hood.

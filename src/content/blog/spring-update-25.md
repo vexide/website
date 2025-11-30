@@ -1,7 +1,10 @@
 ---
 title: "Spring Updates: vexide 0.7.0, Auton Selectors, Docs & Ecosystem"
-description: An quick recap of recent developments in vexide.
-author: tropicaaal
+description: A quick recap of recent developments in vexide.
+author: {
+    name: "Tropical",
+    github: "tropicaaal",
+}
 tags: ["news"]
 date: 2025-03-05
 thumbnail: {
@@ -100,9 +103,9 @@ The `slint` and `embedded-graphics` drivers have been removed from the main vexi
 
 <div style="display: block; text-align: center; margin: 0 auto;">
 
-![email client written in slint](/blog/email.png)
+<img src="/blog/email.png" alt="email client written in slint" aria-describedby="a11y-email-desc" />
 
-<small>
+<small id="a11y-email-desc">
 Using the brain for its intended purpose — email.
 </small>
 </div>

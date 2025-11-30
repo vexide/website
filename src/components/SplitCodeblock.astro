@@ -1,0 +1,50 @@
+---
+const {
+    error = false,
+    vertical = false,
+} = Astro.props;
+---
+
+<div class="hi"></div>
+<div class="code-split" class:list={{ error, vertical }}>
+    <slot />
+</div>
+
+<style>
+    .code-split {
+        display: flex;
+        flex-wrap: wrap;
+        flex-basis: content;
+        gap: 1px;
+        background-color: var(--background-secondary);
+        border: 1px solid var(--background-secondary);
+        margin-block: 24px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .code-split.vertical {
+        flex-direction: column;
+    }
+
+    .code-split.error {
+        background-color: hsl(1deg 76% 78% / 50%);
+        border-color: hsl(1deg 76% 78% / 50%);
+    }
+
+    .code-split :global(pre) {
+        margin-block: 0;
+        flex: 1 1 auto;
+        border-radius: 0;
+        border: 0;
+    }
+
+    .code-split :global(pre:first-child) {
+        border-left: none;
+    }
+
+    .code-split.error :global(pre:last-of-type) {
+        text-wrap: wrap;
+        background-color: #372930 !important;
+    }
+</style>

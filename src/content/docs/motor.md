@@ -1,7 +1,10 @@
 ---
 title: Motor
-category: 02. Devices
-page: 9
+links: {
+    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/motor/struct.Motor.html",
+    "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors",
+    "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview",
+}
 ---
 
 ![Sketch of two different V5 motors](/docs/motors.svg)
@@ -10,29 +13,24 @@ Motors serve as the foundation for most robot subsystems, and are very likely th
 
 V5 motors are rather special in that they are both fairly fault-tolerant and provide extra features such as builtin velocity/position control, temperature sensors, and encoders. This is why they're commonly referred to as **Smart Motors**.
 
-> [!NOTE]
-> For more information on the specific features/hardware details of V5 motors, [see VEX's knowledge base page](https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview).
-
 # Creating Motors
 
-[Two pages ago](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
+[Last page](/docs/peripherals/), we briefly skimmed over creating motors as an example of a device, but let's look at that a little closer.
 
-Motors can be created from any one of the 21 `SmartPort` instances in `peripherals`, along with a provided `Gearset` and `Direction`:
+Using the `Peripherals` struct passed to our `main` function, we can a Motor from any one of the 21 `SmartPort` fields on it, along with a provided `Gearset` and `Direction`:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
+    // @focus
     //                            (                )  (            )  (                )
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
-    //            ^
-    //         [Create a motor on port 1 that spins forwards using the green gearset.]
+    //                ^
+    //             [Create a Motor on port 1 that spins forwards using the green gearset.]
 }
 ```
 
@@ -52,9 +50,6 @@ Here's an example where we create three motors on ports 1, 2, and 3. Each one ha
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -77,8 +72,8 @@ The third argument that we pass to `Motor::new` is a `Direction`. This determine
 
 Note how the arrow with the plus in its center is pointing in the **clockwise** direction when the motor is facing **right-side up**.
 
-- When `Direction::Forward` is specified, positive velocity/voltage values will cause the motor to rotate **with the arrow**. Position will **increase** as the motor rotates with the arrow.
-- When `Direction::Reverse` is specified, positive velocity/voltage values will cause the motor to rotate **against the arrow**. Position will **increase** as the motor rotates against the arrow.
+- When `Direction::Forward` is specified, positive velocity/voltage values will cause the motor to rotate **with the arrow**. Position will **increase** when the motor rotates with the arrow.
+- When `Direction::Reverse` is specified, positive velocity/voltage values will cause the motor to rotate **against the arrow**. Position will **decrease** when the motor rotates with the arrow.
 
 > How do I know if my motor should be reversed or not?
 
@@ -94,9 +89,6 @@ To create a 5.5W EXP motor, you can use the `Motor::new_exp` method instead of `
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -104,8 +96,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     //                     (     )
     let mut motor = Motor::new_exp(peripherals.port_1, Direction::Forward);
-    motor.motor_type() // -> MotorType::Exp
-    //    ^
+    let motor_type = motor.motor_type(); // -> MotorType::Exp
+    //              ^
     // [You can check the type of motor using the `motor_type` method.]
 }
 ```
@@ -122,9 +114,6 @@ We can control the voltage sent into the motor using the [`set_voltage`](https:/
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -145,9 +134,6 @@ We can also run the motor in reverse by passing in a negative voltage:
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -178,9 +164,6 @@ Let's tell our motor to spin at 200RPM (the maximum rated speed for the `Green` 
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -188,8 +171,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
 
-    //      (                )
-    my_motor.set_velocity(200).ok();
+    //          (                )
+    _ = my_motor.set_velocity(200);
     //                   ^
     //      [Spin the motor at 200RPM.]
 }
@@ -199,9 +182,6 @@ As with `set_voltage`, `set_velocity` can also accept negative values to spin th
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*;
 
 // @fold end
@@ -209,8 +189,8 @@ use vexide::prelude::*;
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
 
-    //      (                 )
-    my_motor.set_velocity(-200).ok();
+    //          (                 )
+    _ = my_motor.set_velocity(-200);
     //                   ^
     //   [Spin the motor backwards at 200RPM.]
 }
@@ -228,19 +208,14 @@ Great question!
 You can also control the position of a motor using the `set_position_target` method. This method will instruct the motor to rotate to a certain position and then stop.
 
 ```rs
-// @fold start
-#![no_std]
-#![no_main]
+use vexide::{prelude::*, math::Angle};
 
-use vexide::prelude::*;
-
-// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
-    //                                (                               )
-    let _ = motor.set_position_target(Position::from_degrees(90.0), 200);
-    //                                ^
+    //                            (                               )
+    _ = motor.set_position_target(Angle::from_degrees(90.0), 200);
+    //                            ^
     // [Rotate the motor to 90 degrees at 200RPM.]
 }
 ```
@@ -255,13 +230,8 @@ Sometimes, you don't want to move. You want to stop. This is where braking comes
 In vexide, you can brake using the `Motor::brake` method:
 
 ```rs
-// @fold start
-#![no_std]
-#![no_main]
+use vexide::{prelude::*, smart::motor::BrakeMode};
 
-use vexide::prelude::*;
-
-// @fold end
 #[vexide::main]
 async fn main(peripherals: Peripherals) {
     let mut my_motor = Motor::new(peripherals.port_1, Gearset::Green, Direction::Forward);
@@ -337,9 +307,6 @@ As an example, let's read out a bunch of this data and log it to the [terminal](
 
 ```rs
 // @fold start
-#![no_std]
-#![no_main]
-
 use vexide::prelude::*
 
 // @fold end
