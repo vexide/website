@@ -73,6 +73,7 @@ const { title = "" } = Astro.props;
 		block-size: fit-content;
 		position: relative;
 		z-index: 2;
+		overflow: hidden;
 	}
 
 	.navigation-inner {
@@ -243,4 +244,11 @@ const { title = "" } = Astro.props;
 			overflow: hidden;
 		}
 	}
+
+	@media screen and (max-width: 340px) {
+		.navigation-title span {
+			display: none;
+		}
+	}
+
 </style>
