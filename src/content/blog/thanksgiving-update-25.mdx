@@ -237,7 +237,7 @@ This new error reporting system (which is enabled by default with the `abort-han
 - The ability to print this data to the terminal and re-print it if your terminal wasn't open when the program crashed.
 
 > [!TIP]
-> As a reminder, vexide is designed to [explicitly prevent these kinds of errors from happening](http://localhost:4321/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
+> As a reminder, vexide is designed to [explicitly prevent these kinds of errors from happening](/docs/#safety-predictability-and-fault-tolerance) and it should ideally be *impossible* to trigger these using only safe Rust code. That being said, if or when you do encounter them, we want to make the problem as easy to diagnose as possible.
 
 # Other Changes in `vexide` 0.8.0
 
@@ -295,7 +295,7 @@ vexide::task::task_local! {
 }
 ```
 
-This looks a lot like a normal static, but when we spawn an [async task](http://localhost:4321/docs/async-introduction/), each task will get its own unique version of `COUNT` starting at `1`. In other words, value of `COUNT` is *local* to each task accessing it.
+This looks a lot like a normal static, but when we spawn an [async task](/docs/async-introduction/), each task will get its own unique version of `COUNT` starting at `1`. In other words, value of `COUNT` is *local* to each task accessing it.
 
 <SplitCodeblock>
 
