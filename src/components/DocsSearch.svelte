@@ -262,6 +262,10 @@
     }
 
     @media screen and (max-width: 480px) {
+        .docs-search input {
+            font-size: 16px;
+        }
+
         .docs-search:not(:focus-within) {
             justify-content: center;
         }
@@ -273,7 +277,7 @@
             width: calc(100% - 84px);
             background: var(--background-secondary);
         }
-        
+
         .search-keyboard-hint {
             display: none;
         }
@@ -287,11 +291,11 @@
             height: 32px;
             padding: 6px 8px;
         }
-        
+
         .docs-search input:not(:focus) {
             font-size: 0;
         }
-        
+
         .docs-search .search-results {
             position: fixed;
             left: 8px;
