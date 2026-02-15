@@ -149,7 +149,7 @@ async fn main(peripherals: Peripherals) {
 ```
 
 > [!TIP]
-> The maximum voltage that can be sent to a V5 Smart Motor (11W) is **±12.0 volts**. The maximum voltage for an V5 Smart Motor (5.5W) is **±10.0 volts**. Any higher or lower values will simply cap to the maximum/minimum.
+> The maximum voltage that can be sent to a V5 Smart Motor (11W) is **±12.0 volts**. The maximum voltage for an V5 Smart Motor (5.5W) is **±8.0 volts**. Any higher or lower values will simply cap to the maximum/minimum.
 
 > [!CAUTION]
 > 5.5W motors and 11W motors use different DC motor drivers internally. You should generally try to *avoid* using voltage control in a system where a 5.5W motor is geared to an 11W motor, as applying the same voltage to each motor doesn't necessarily equate to the same output speed due to differences in driver performance. Prefer using [velocity control](#velocity-control) in this case (which has feedback to ensure an actual consistent velocity) or a custom tuned solution like a PID velocity controller.
