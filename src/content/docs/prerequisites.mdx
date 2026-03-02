@@ -5,7 +5,7 @@ title: Prerequisites
 import FileTree from "components/FileTree.astro";
 
 Before you start programming, you'll need to install some tools in order to build and upload your code. Get a command-line of your choice ready, since we'll be running some terminal commands.
-{/* 
+{/*
 <div style="display: block; text-align: center; margin: 0 auto;">
 <iframe aria-describedby="a11y-video-desc" width="560" height="315" src="https://www.youtube.com/embed/8lf5uh8Se2g?si=yXhixtAme-q_FIpo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -23,10 +23,50 @@ In order to use vexide, you'll need a Rust toolchain (`cargo`, `rustc`, etc...) 
 
 # Installing `cargo-v5`
 
-vexide uses the `cargo-v5` tool to build/upload to VEX brains. You can install that with the following command:
+vexide uses the `cargo-v5` tool to build/upload to VEX brains. You can install that by running one of the following commands, depending on your platform:
+
+## On Windows
+
+Run the following command in PowerShell:
+
+```sh
+irm https://github.com/vexide/cargo-v5/releases/latest/download/cargo-v5-installer.ps1 | iex
+```
+
+## On macOS or Linux
+
+Run the following command in your Terminal app:
+
+```sh
+curl -fsSL https://github.com/vexide/cargo-v5/releases/latest/download/cargo-v5-installer.sh | sh -
+```
+
+## (Alternatives) Using a package manager
+
+If you prefer, you can install `cargo-v5` with a package manager instead of running one of the commands above. To do so, run one of the following commands:
+
+### Using Homebrew
+
+If you have Homebrew installed, you can install `cargo-v5` using the following command:
+
+```sh
+brew install vexide/vexide/cargo-v5
+```
+
+### Using Cargo
+
+You can compile `cargo-v5` from source using the following command:
 
 ```sh
 cargo install cargo-v5
+```
+
+### Using Cargo Binstall
+
+If you have the package manager installed, you can install `cargo-v5` using the following command:
+
+```sh
+cargo binstall cargo-v5
 ```
 
 # Setting up a Project
