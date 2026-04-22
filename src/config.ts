@@ -53,5 +53,6 @@ export const DOCS_SIDEBAR = {
 	"04. Specific Topics": [
 		"abort",
 		"features",
+		"ecosystem",
 	]
 };
