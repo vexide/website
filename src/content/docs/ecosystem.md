@@ -38,8 +38,9 @@ Libraries regarding motion control algorithms, position tracking, and autonomous
 Libraries which provide convenient extensions to vexide or standard library functionality.
 
 - [vexide-motorgroup](https://lib.rs/crates/vexide-motorgroup) (by zabackary): Allows you to group motors together and control them as one.
-- [veranda](https://lib.rs/crates/veranda) (by Gavin-Niederman): Random number generator which collects entropy from various system metrics of the V5.
-- [autons](https://lib.rs/crates/autons) (by Tropical): Autonomous Selection & Routing Library for vexide.
+- [veranda](https://lib.rs/crates/veranda) (by Gavin-Niederman): Random number generator which collects entropy from various system metrics.
+- [autons](https://lib.rs/crates/autons) (by Tropical): Autonomous selection & routing library for vexide.
+- [shrewnit](https://lib.rs/crates/shrewnit) (by Gavin-Niederman): Unit-aware math library.
 
 ## Graphics (UI)
 
@@ -64,13 +65,13 @@ Libraries for running and testing vexide programs without a physical robot.
 
 ### Desktop SDKs
 
-vexide is a cross-platform library: if your project includes implementations of the functions in the VEX SDK, you can just type `cargo run` to build and run your project directly on your own computer. The following desktop-compatible implementations of the VEX SDK allow you to configure what happens when you do platform-specific actions like moving a motor or reading a sensor.
+vexide is a cross-platform library: if your project includes a VEX SDK, you can just type `cargo run` to build and run your project directly on your own computer. The following desktop-compatible implementations of the VEX SDK allow you to configure what happens when you do platform-specific actions like moving a motor or reading a sensor.
 
-- [vex-sdk-mock](https://lib.rs/crates/vex-sdk-mock) (by vexide): vexide's **default desktop SDK**, which simply ignores any requests to read from sensors or control devices.
+- [vex-sdk-mock](https://lib.rs/crates/vex-sdk-mock) (by vexide): vexide's **default desktop SDK**, which ignores any requests to read from sensors or control devices.
 
 ### Emulators
 
-The vexide library has a built-in desktop simulator which you can access via the `cargo run` command, but if your project uses low-level features that require it to run in a more accurate environment, we've also developed some additional simulation tools you can try.
+If your project uses low-level features that require it to run in a more accurate environment, we've also developed some additional simulation tools you can try.
 
 - [vex-v5-qemu](https://github.com/vexide/vex-v5-qemu) (by vexide) is a limited emulator for the VEX V5 robot controller itself. It can run vexide and PROS programs that are already compiled for the V5 Brain, sometimes without any modification.
 
