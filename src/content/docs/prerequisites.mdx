@@ -27,9 +27,10 @@ vexide uses the `cargo-v5` tool to build/upload to VEX brains. You can install t
 
 ## On Windows
 
-Run the following command in PowerShell:
+Run the following commands in PowerShell:
 
 ```sh
+Set-ExecutionPolicy RemoteSigned -Scope Process
 irm https://vexide.dev/install.ps1 | iex
 ```
 
