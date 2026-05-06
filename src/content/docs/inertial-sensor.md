@@ -1,7 +1,7 @@
 ---
 title: Inertial Sensor
 links: {
-    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/imu/struct.InertialSensor.html",
+    "API Reference": "https://docs.rs/vexide/latest/vexide/smart/imu/index.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/imu",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360037382272-Using-the-Inertial-Sensor-with-VEX-V5",
 }
