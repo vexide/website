@@ -1,7 +1,7 @@
 ---
 title: Motor
 links: {
-    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/motor/struct.Motor.html",
+    "API Reference": "https://docs.rs/vexide/latest/vexide/smart/motor/index.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/motors",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360035591332-V5-Motor-Overview",
 }
