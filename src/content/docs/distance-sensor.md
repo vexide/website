@@ -1,7 +1,7 @@
 ---
 title: Distance Sensor
 links: {
-    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/smart/distance/struct.DistanceSensor.html",
+    "API Reference": "https://docs.rs/vexide/latest/vexide/smart/distance/index.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-sensors/smart-port-sensors/distance",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360050696511-Using-the-Distance-Sensor-with-VEX-V5",
 }
