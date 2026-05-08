@@ -1,7 +1,7 @@
 ---
 title: Controller
 links: {
-    "API Reference": "https://docs.rs/vexide/latest/vexide/devices/controller/struct.Controller.html",
+    "API Reference": "https://docs.rs/vexide/latest/vexide/controller/index.html",
     "SIGBots Wiki": "https://wiki.purduesigbots.com/vex-electronics/vex-electronics/vex-joystick",
     "VEX Library":  "https://kb.vex.com/hc/en-us/articles/360035589632-V5-Controller-Overview",
 }
