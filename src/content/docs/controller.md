@@ -60,7 +60,7 @@ This function returns an instance of the [`ControllerState`](https://docs.rs/vex
 > [!CAUTION]
 > When using `button_power`, you will STILL turn off your program and eventually your controller if you hold it down!
 
-When reading data from a controller, we almost always want to do so repeatedly so we can constantly get new updates from the controller. After all, getting the controller's state only once at one point in time wouldn't be very useful. To do this, we can place an infinite loop in our `driver` function:
+When reading data from a controller, we almost always want to do so repeatedly so we can constantly get new updates from the controller. After all, getting the controller's state only once at one point in time wouldn't be very useful. To do this, we can place an infinite loop in our `main` function:
 
 ```rs
 // @fold start
