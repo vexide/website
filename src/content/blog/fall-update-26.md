@@ -127,6 +127,8 @@ async fn main(peripherals: Peripherals) {
 }
 ```
 
+## New Contribution and LLM/AI Policies
+
 ## How to Update from 0.8.0 to 0.9.0
 
 Before you update the vexide dependency in your project's `Cargo.toml`, make the following adjustment to the `rust-toolchain.toml` file in your project's root. This will update your Rust version to the version vexide now requires:
@@ -182,10 +184,13 @@ In this release, we've added limited support for a few newer VEX products, inclu
 
 [Anish](https://github.com/Luminoso-256) also contributed some patches to our serial library to allow us to talk to AI Vision Sensors in a limited fashion from a PC, though that isn't supported in cargo-v5 at the moment. Other contributions from him include packets for setting the controller's backlight state and rumble motor over USB.
 
-# v5gdb
+# v5gdb: A Debugger for Your Brain
 
-# Roboscope
+# Running Linux on a V5 Brain?
 
-# Linux on the V5 Brain?
+# Roboscope: Yet another vexide simulator.
+
+Over the last few years, we've made a chingoncerning number of short-lived projects trying to do one thing: run your vexide programs without a physical robot.
 
 # Parting Words
+
