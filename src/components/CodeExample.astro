@@ -42,17 +42,27 @@ const { filename, lang, code } = Astro.props;
 		display: flex;
 		background-color: var(--grid-color);
 		border-bottom: 1px solid var(--background-secondary);
-		padding-inline: 12px;
-		padding-block: 8px;
 		justify-content: space-between;
 		position: relative;
 		align-items: center;
+		padding-inline: 12px;
 	}
 
 	.code-example-header strong {
+		padding-block: 8px;
 		font-family: var(--font-monospace);
 		font-weight: 400;
 		font-size: 1.4rem;
+		position: relative;
+	}
+
+	.code-example-header strong::after {
+		content: "";
+		width: 100%;
+		position: absolute;
+		left: 0;
+		bottom: -1px;
+		border-bottom: 1px solid var(--background-accent-yellow);
 	}
 
 	.code-example :global(pre) {

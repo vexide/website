@@ -48,7 +48,7 @@
 			</span>
 		</a>
 		<Button class="blog-card-button" variant="accent" href={url}>
-			Read More
+			Read Post
 		</Button>
 	</div>
 </div>
