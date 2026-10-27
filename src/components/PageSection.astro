@@ -59,14 +59,22 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		color: var(--foreground-secondary);
 	}
 
-	.page-section :global(.subtitle a) {
+	.page-section :global(.subtitle a),
+	.page-section :global(.anchor) {
 		color: var(--foreground-accent-red);
 		text-decoration: none;
 		border-bottom: 1px solid currentColor;
 		transition: 250ms ease;
+
 	}
 
-	.page-section :global(.subtitle a:hover) {
+	.page-section :global(.subtitle a svg),
+	.page-section :global(.anchor svg) {
+		vertical-align: middle;
+	}
+
+	.page-section :global(.subtitle a:hover),
+	.page-section :global(.anchor:hover) {
 		opacity: 0.8;
 	}
 
