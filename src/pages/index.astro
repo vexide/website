@@ -116,6 +116,15 @@ const latestBlogPost = (
         </PageSection>
 
         <PageSection id="support">
+            <div class="concentric-circles">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                 <polygon points="30 25 2 25 2 27 4 27 4 29 6 29 6 27 11 27 11 29 13 29 13 27 18 27 18 29 20 29 20 27 25 27 25 29 27 29 27 27 30 27 30 25"/>
                 <path d="M29.7144,16.59,18.1494,8.64A14.9327,14.9327,0,0,0,9.6519,6H2V8H9.6519a12.9459,12.9459,0,0,1,7.3647,2.2871L18.0532,11H9v2H20.9624l7.6187,5.2378A.966.966,0,0,1,28.0342,20H2v2H28.0342a2.9661,2.9661,0,0,0,1.68-5.41Z" transform="translate(0 0)"/>
@@ -330,7 +339,7 @@ const latestBlogPost = (
     }
     
     #support svg {
-        fill: var(--foreground-accent-yellow);
+        fill: var(--background-accent-yellow);
         margin-block-end: 32px;
     }
 
@@ -356,6 +365,50 @@ const latestBlogPost = (
     #support .subtitle {
         max-inline-size: 68ch;
     }
+
+    .concentric-circles {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 175%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        /* background: red; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: -1;
+    }
+
+    .concentric-circles div {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px dashed var(--background-secondary);
+        width: calc(100% - (10% * var(--i)));
+        height: calc(100% - (10% * var(--i)));
+        animation: concentric-circle-pulse 4s ease-in-out infinite;
+        animation-delay: calc(0.5s * var(--i));
+    }
+
+    .concentric-circles div:nth-child(1) { --i: 0; }
+    .concentric-circles div:nth-child(2) { --i: 1; }
+    .concentric-circles div:nth-child(3) { --i: 2; }
+    .concentric-circles div:nth-child(4) { --i: 3; }
+    .concentric-circles div:nth-child(5) { --i: 4; }
+    .concentric-circles div:nth-child(6) { --i: 5; }
+
+    @keyframes concentric-circle-pulse {
+        0%, 40%, 100% {
+            border-color: var(--background-secondary);
+            opacity: 1;
+        }
+        15% {
+            opacity: 0.75;
+            border-color: var(--foreground-tertiary);
+        }
+    }
+
 
     :global(.page-section::after) {
         content: "";
