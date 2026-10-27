@@ -387,8 +387,13 @@ const latestBlogPost = (
         border: 1px dashed var(--background-secondary);
         width: calc(100% - (10% * var(--i)));
         height: calc(100% - (10% * var(--i)));
-        animation: concentric-circle-pulse 4s ease-in-out infinite;
-        animation-delay: calc(0.5s * var(--i));
+    }
+    
+    @media (prefers-reduced-motion: no-preference) {
+        .concentric-circles div {
+            animation: concentric-circle-pulse 4s ease-in-out infinite;
+            animation-delay: calc(0.5s * var(--i));
+        }
     }
 
     .concentric-circles div:nth-child(1) { --i: 0; }
