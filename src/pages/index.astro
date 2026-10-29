@@ -1,5 +1,5 @@
 ---
-import { GITHUB_REPO_URL, EXAMPLES } from "config";
+import { GITHUB_REPO_URL, EXAMPLES, TEST_CODE } from "config";
 
 import { getCollection } from "astro:content";
 
@@ -9,6 +9,8 @@ import CodeExample from "components/CodeExample.astro";
 import BlogCard from "components/BlogCard.svelte";
 
 import Button from "components/Button.svelte";
+import Code from "astro/components/Code.astro";
+import SplitCodeblock from "components/SplitCodeblock.astro";
 
 const latestBlogPost = (
     await getCollection("blog", ({ data }) => !data?.draft)
@@ -136,11 +138,24 @@ const latestBlogPost = (
         </PageSection>
 
         <PageSection id="simulation">
-            <div>
-                <h2 class="title">No robot? No problem!</h2>
-                <p class="subtitle">vexide supports <i>host compilation</i>, allowing you to build and run your robot's code directly on your computer in a mock environment. No robot or any VEX hardware required!</p>
-                <p class="subtitle">Using this, you can also use Rust's unit testing features to automatically test the correctness of individual parts of your code without a robot present.</p>
+            <div class="section-split">
+                <div>
+                    <h2 class="title">No robot? No problem!</h2>
+                    <p class="subtitle">vexide supports <i>host compilation</i>, allowing you to build and run your robot's code directly on your computer in a mock environment. No robot or any VEX hardware required!</p>
+                    <p class="subtitle">Using this, you can also use Rust's unit testing features to automatically test the correctness of individual parts of your code without a robot present.</p>
+                </div>
+                <img src="/images/host-compilation.svg" width="420" />
             </div>
+            <SplitCodeblock vertical>
+                <Code
+                    lang="sh"
+                    code="cargo test"
+                />
+                <Code
+                    lang="ansi"
+                    code={TEST_CODE}
+                />
+            </SplitCodeblock>
         </PageSection>
 
         <PageSection id="simulation">
@@ -152,31 +167,6 @@ const latestBlogPost = (
                 </div>
                 <div class="features-header-right">
                     <img src="/docs/hearts.svg">
-                </div>
-            </div>
-
-            <div class="feature-cards">
-                <div class="feature-card">
-                    <h3>v5gdb</h3>
-                    <p>
-                        meow
-                    </p>
-                    <a class="anchor" href="/docs/#safety-predictability-and-fault-tolerance" target="_blank" rel="noreferrer noopener">Huh? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
-                </div>
-                <div class="feature-card">
-                    <h3>vex-sdk</h3>
-                    <p>
-                        meow 2
-                    </p>
-                    <a class="anchor" href="https://crates.io/" target="_blank" rel="noreferrer noopener">Check it out! <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
-
-                </div>
-                <div class="feature-card">
-                    <h3>vex-v5-qemu</h3>
-                    <p>
-                        meow 3
-                    </p>
-                    <a class="anchor" href="https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html/" target="_blank" rel="noreferrer noopener">Read more <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
                 </div>
             </div>
         </PageSection>
@@ -350,6 +340,7 @@ const latestBlogPost = (
     }
 
     #support img {
+        margin-bottom: -260px;
         width: 80%;
         height: auto;
         margin-top: 32px;
@@ -413,7 +404,6 @@ const latestBlogPost = (
             border-color: var(--foreground-tertiary);
         }
     }
-
 
     :global(.page-section::after) {
         content: "";
