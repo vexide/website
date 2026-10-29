@@ -8,6 +8,7 @@ import MarkdownStyles from "components/MarkdownStyles.astro";
 import { GITHUB_ORG_URL, DOCS_SIDEBAR } from "config";
 import BaseLayout from "./BaseLayout.astro";
 import { getEntry } from "astro:content";
+import AnimatedVexideLogo from "components/AnimatedVexideLogo.astro";
 
 const { page: currentPage } = Astro.props;
 
@@ -56,13 +57,7 @@ const [prevPage, nextPage] = await Promise.all([
 >
     <Button class="skip-to-content" href="#content">Skip to content</Button>
     <Navigation title="vexide">
-        <img
-            slot="logo"
-            width="36"
-            height="36"
-            src="/images/logo.svg"
-            alt="vexide Logo"
-        />
+		<AnimatedVexideLogo slot="logo" />
         <span slot="title" class="navigation-docs-chip">Docs</span>
         <NavigationItem selected href="/docs/">Tutorials</NavigationItem>
         <NavigationItem href="https://docs.rs/vexide/" external>

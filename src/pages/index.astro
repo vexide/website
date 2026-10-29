@@ -1,5 +1,5 @@
 ---
-import { GITHUB_REPO_URL, EXAMPLES } from "config";
+import { GITHUB_REPO_URL, EXAMPLES, TEST_CODE } from "config";
 
 import { getCollection } from "astro:content";
 
@@ -9,12 +9,11 @@ import CodeExample from "components/CodeExample.astro";
 import BlogCard from "components/BlogCard.svelte";
 
 import Button from "components/Button.svelte";
+import Code from "astro/components/Code.astro";
+import SplitCodeblock from "components/SplitCodeblock.astro";
 
 const latestBlogPost = (
-    await getCollection(
-        "blog",
-        ({ data }) => !data?.draft,
-    )
+    await getCollection("blog", ({ data }) => !data?.draft)
 ).sort(
     (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 )[0];
@@ -29,12 +28,11 @@ const latestBlogPost = (
                         Open-source Rust runtime for VEX robots.
                     </h1>
                     <p class="subtitle">
-                        vexide provides a safe and efficient runtime and
-                        toolchain for writing VEX V5 programs in the <a
+                        vexide provides tools and a safe and efficient runtime for programming VEX V5 robots in <a
                             href="https://rust-lang.com/"
                             target="_blank"
                             rel="noreferrer noopener"
-                            >Rust Programming Language</a
+                            >Rust</a
                         >. 🦀
                     </p>
                 </div>
@@ -49,8 +47,8 @@ const latestBlogPost = (
                         GitHub
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
+                            width="16"
+                            height="16"
                             viewBox="0 0 32 32"
                         >
                             <path
@@ -78,6 +76,107 @@ const latestBlogPost = (
                 />
             </div>
         </PageSection>
+
+        <PageSection id="features">
+            <div class="section-split">
+                <div>
+                    <h2 class="title">A new way to program your robot.</h2>
+                    <p class="subtitle">Using vexide, you get a powerful new environment to program your robot in with the full capability of the Rust Programming Language.</p>
+                </div>
+                <div class="features-header-right">
+                    <img width="346" height="203" src="/docs/crates.svg" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 108 108" width="600" height="600">
+                        <path fill="none" stroke="currentColor" stroke-width="0.25" stroke-linejoin="round" fill-rule="evenodd" d="M52.9.5a1.5 1.5 0 0 0-1.19.73l-2.66 4.43-1.41.14-3.48-3.83a1.5 1.5 0 0 0-2.52.5l-1.75 4.87-1.36.42-4.15-3.08a1.5 1.5 0 0 0-2.38.98l-.76 5.13-1.24.67-4.7-2.22a1.5 1.5 0 0 0-2.13 1.43l.25 5.2-1.07.87-5.05-1.26a1.5 1.5 0 0 0-1.82 1.82l1.26 5.05-.87 1.07-5.2-.25a1.5 1.5 0 0 0-1.43 2.14L11.46 30q-.34.6-.67 1.24L5.66 32a1.5 1.5 0 0 0-.98 2.38l3.08 4.15q-.22.67-.42 1.36l-4.87 1.75a1.5 1.5 0 0 0-.5 2.52l3.83 3.47-.14 1.42-4.43 2.66a1.5 1.5 0 0 0 0 2.58l4.43 2.66.14 1.42-3.83 3.47a1.5 1.5 0 0 0 .5 2.52l4.87 1.75.42 1.36-3.08 4.15A1.5 1.5 0 0 0 5.66 74l5.13.76.67 1.24-2.22 4.7a1.5 1.5 0 0 0 1.43 2.13l5.2-.25.87 1.07-1.26 5.05a1.5 1.5 0 0 0 1.82 1.82l5.05-1.26 1.07.87-.25 5.2a1.5 1.5 0 0 0 2.14 1.43L30 94.54q.6.34 1.24.67l.76 5.13a1.5 1.5 0 0 0 2.38.98l4.15-3.08q.67.23 1.36.42l1.75 4.87a1.5 1.5 0 0 0 2.52.5l3.47-3.83 1.42.14 2.66 4.43a1.5 1.5 0 0 0 2.58 0l2.66-4.43 1.41-.14 3.48 3.83a1.5 1.5 0 0 0 2.52-.5l1.75-4.87 1.36-.42 4.15 3.08a1.5 1.5 0 0 0 2.38-.98l.76-5.13 1.24-.67 4.7 2.22a1.5 1.5 0 0 0 2.13-1.43l-.25-5.2 1.07-.87 5.05 1.26a1.5 1.5 0 0 0 1.82-1.82l-1.26-5.05.87-1.07 5.2.25a1.5 1.5 0 0 0 1.43-2.14L94.54 76q.34-.6.67-1.24l5.13-.76a1.5 1.5 0 0 0 .98-2.38l-3.08-4.15q.23-.67.42-1.36l4.87-1.75a1.5 1.5 0 0 0 .5-2.52l-3.83-3.48.14-1.41 4.43-2.66a1.5 1.5 0 0 0 0-2.58l-4.43-2.66-.14-1.42 3.83-3.47a1.5 1.5 0 0 0-.5-2.52l-4.87-1.75-.42-1.36 3.08-4.15a1.5 1.5 0 0 0-.98-2.38l-5.13-.76-.67-1.24 2.22-4.7a1.5 1.5 0 0 0-1.43-2.13l-5.2.25-.87-1.07 1.26-5.05a1.5 1.5 0 0 0-1.82-1.82l-5.05 1.26-1.07-.87.25-5.2a1.5 1.5 0 0 0-2.14-1.43L76 11.46q-.6-.34-1.24-.67L74 5.66a1.5 1.5 0 0 0-2.38-.98l-4.15 3.08q-.67-.22-1.36-.42l-1.75-4.87a1.5 1.5 0 0 0-2.52-.5L58.36 5.8l-1.41-.14-2.66-4.43a1.5 1.5 0 0 0-1.4-.73ZM53 10a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3zm-7.1 5.15 4.98 4.97a3 3 0 0 0 4.24 0l4.97-4.97a38.4 38.4 0 0 1 26.73 19.39l-3.2 6.28a3 3 0 0 0 1.3 4.04l6.27 3.19q.3 2.43.31 4.95A38.4 38.4 0 0 1 81 79.46l-6.96-1.1a3 3 0 0 0-3.43 2.49l-1.1 6.96c-5 2.37-10.6 3.69-16.51 3.69s-11.5-1.32-16.5-3.69l-1.1-6.96a3 3 0 0 0-3.44-2.5l-6.97 1.1a38.4 38.4 0 0 1-10.18-31.4l6.26-3.2a3 3 0 0 0 1.32-4.03l-3.2-6.28a38.4 38.4 0 0 1 26.72-19.4zm-30.78 22.5a3 3 0 0 1 .76.14 3 3 0 0 1 1.93 3.78 3 3 0 0 1-3.78 1.92 3 3 0 0 1-1.92-3.78 3 3 0 0 1 3-2.07zm75.76 0a3 3 0 0 1 3.01 2.06 3 3 0 0 1-1.92 3.78 3 3 0 0 1-3.78-1.92 3 3 0 0 1 1.93-3.78 3 3 0 0 1 .76-.15zm-61.47 44.7a3 3 0 0 1 1.84.57 3 3 0 0 1 .67 4.2 3 3 0 0 1-4.2.66 3 3 0 0 1-.66-4.2 3 3 0 0 1 2.35-1.23zm47.18 0a3 3 0 0 1 2.35 1.24 3 3 0 0 1-.66 4.19 3 3 0 0 1-4.2-.67 3 3 0 0 1 .67-4.19 3 3 0 0 1 1.84-.57z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <h3>Unmatched reliability.</h3>
+                    <p>
+                        When something goes wrong on the field, you should know why. Rust's and vexide's design promote fault-tolerant, reliable, and memory-safe programming. Mistakes that would be left unchecked in other environments are often caught before you even build your code.
+                    </p>
+                    <a class="anchor" href="/docs/#safety-predictability-and-fault-tolerance" target="_blank" rel="noreferrer noopener">Huh? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
+                </div>
+                <div class="feature-card">
+                    <h3>Use libraries with Cargo.</h3>
+                    <p>
+                        vexide is just a regular library in a standard Rust project controlled by you. Using cargo, you gain access to Rust's ecosystem of 300,000+ third-party libraries and packages to use in your code. Adding and managing dependencies is made incredibly simple by Rust's build tooling.
+                    </p>
+                    <a class="anchor" href="https://crates.io/" target="_blank" rel="noreferrer noopener">Check it out! <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
+
+                </div>
+                <div class="feature-card">
+                    <h3>Great for large projects.</h3>
+                    <p>
+                        Your project will scale nicely as it gets larger. Code is split into different modules and files without the hassle of header files. cargo workspaces even allow you to program multiple different robots alongside each other in the same project!
+                    </p>
+                    <a class="anchor" href="https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html/" target="_blank" rel="noreferrer noopener">Read more <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="51:26"> <path fill="currentColor" d="M10 6v2h12.59L6 24.59L7.41 26L24 9.41V22h2V6z" data-astro-cid-j7pv25f6="" data-astro-source-file="/home/tropical/Projects/vexide-website/src/pages/index.astro" data-astro-source-loc="52:30"></path> </svg></a>
+                </div>
+            </div>
+        </PageSection>
+
+        <PageSection id="support">
+            <div class="concentric-circles">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                <polygon points="30 25 2 25 2 27 4 27 4 29 6 29 6 27 11 27 11 29 13 29 13 27 18 27 18 29 20 29 20 27 25 27 25 29 27 29 27 27 30 27 30 25"/>
+                <path d="M29.7144,16.59,18.1494,8.64A14.9327,14.9327,0,0,0,9.6519,6H2V8H9.6519a12.9459,12.9459,0,0,1,7.3647,2.2871L18.0532,11H9v2H20.9624l7.6187,5.2378A.966.966,0,0,1,28.0342,20H2v2H28.0342a2.9661,2.9661,0,0,0,1.68-5.41Z" transform="translate(0 0)"/>
+            </svg>
+            <h2 class="title">Stop waiting on wireless uploads.</h2>
+            <p class="subtitle">Differential uploads let vexide patch existing code on the brain instead of uploading the whole thing. This makes wireless uploads nearly instant -- even on huge codebases!</p>
+
+            <img width="883" height="534" src="/images/uploading.png" />
+        </PageSection>
+
+        <PageSection id="simulation">
+            <div class="section-split">
+                <div>
+                    <h2 class="title">No robot? No problem!</h2>
+                    <p class="subtitle">vexide supports <i>host compilation</i>, allowing you to build and run your robot's code directly on your computer in a mock environment. No robot or any VEX hardware required!</p>
+                    <p class="subtitle">Using this, you can also use Rust's unit testing features to automatically test the correctness of individual parts of your code without a robot present.</p>
+                </div>
+                <img src="/images/host-compilation.svg" width="420" />
+            </div>
+            <SplitCodeblock vertical>
+                <Code
+                    lang="sh"
+                    code="cargo test"
+                />
+                <Code
+                    lang="ansi"
+                    code={TEST_CODE}
+                />
+            </SplitCodeblock>
+        </PageSection>
+
+        <PageSection id="simulation">
+            <div class="section-split">
+                <div>
+                    <h2 class="title">Maintained in the open, for the community.</h2>
+                    <p class="subtitle">vexide is free and open source under the permissive MIT license with zero proprietary code. It is maintained by a passionate group of current and former competitors around the world.</p>
+                    <p class="subtitle">vexide benefits everyone in the community, not just Rust users. We maintain tools for communicating and debugging with VEX hardware, document previously undocumented APIs, and have audited bugs in both firmware and partner projects like PROS.</p>
+                </div>
+                <div class="features-header-right">
+                    <img src="/docs/hearts.svg">
+                </div>
+            </div>
+        </PageSection>
+
+        <PageSection id="support">
+            <div>
+                <h2 class="title">Ready to try it?</h2>
+                <p class="subtitle"></p>
+            </div>
+        </PageSection>
     </main>
 </PageLayout>
 
@@ -90,18 +189,12 @@ const latestBlogPost = (
     }
 
     #hero {
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-        z-index: 1;
-        border-bottom: 1px solid var(--background-secondary);
-        --grid-color: hsl(var(--base-hue), 12%, 18%);
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
         background-size: 20px 20px;
-        background-image: linear-gradient(
-                to right,
-                var(--grid-color) 1px,
-                transparent 1px
-            ),
+        background-image:
+            linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
             linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
     }
 
@@ -114,14 +207,20 @@ const latestBlogPost = (
         margin: 0 auto;
         opacity: 0.04;
         display: block;
-        background-image: radial-gradient(80% 100% at center bottom, #6e59ff 30%, #223ca9, transparent 60%);
+        background-image: radial-gradient(
+            80% 100% at center bottom,
+            #6e59ff 30%,
+            #223ca9,
+            transparent 60%
+        );
     }
 
     #hero > :global(.page-section-inner) {
         display: flex;
-        gap: 84px;
+        gap: 64px;
         max-block-size: 720px;
         padding-block: 72px;
+        justify-content: space-between;
     }
 
     .hero-left,
@@ -131,11 +230,11 @@ const latestBlogPost = (
     }
 
     .hero-left {
-        flex: 1 1 60%;
+        max-inline-size: 440px;
     }
 
     .hero-right {
-        flex: 1 0 40%;
+        flex: 0 0 40%;
         min-inline-size: 0;
         gap: 20px;
     }
@@ -149,6 +248,7 @@ const latestBlogPost = (
     }
 
     .hero-lead .subtitle {
+        font-size: 1.8rem;
         margin-block-start: 36px;
         animation: slide-up 500ms backwards 350ms;
     }
@@ -165,7 +265,193 @@ const latestBlogPost = (
         animation: slide-up 500ms backwards 500ms;
     }
 
+    .section-split {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 48px;
+    }
+
+    .section-split > * {
+        flex: 1 1 auto;
+    }
+
+    .feature-cards {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-block-start: 64px;
+    }
+
+    .feature-card {
+        border-top: 2px solid var(--background-secondary);
+    }
+
+    .feature-card h3 {
+        font-size: 2.4rem;
+        font-family: var(--font-monospace);
+        font-weight: 400;
+    }
+
+    .feature-card p {
+        font-size: 1.6rem;
+        line-height: 1.8;
+        color: var(--foreground-secondary);
+    }
+
+    .feature-card .anchor {
+        font-size: 1.6rem;
+    }
+
+    #features {
+        overflow: hidden;
+    }
+
+    .features-header-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+     }
+
+    .features-header-right svg {
+        z-index: -1;
+        color: var(--grid-color);
+        position: absolute;
+    }
+
+    #support {
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+    
+    #support svg {
+        fill: var(--background-accent-yellow);
+        margin-block-end: 32px;
+    }
+
+    #support :global(.page-section-inner) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #support img {
+        margin-bottom: -260px;
+        width: 80%;
+        height: auto;
+        margin-top: 32px;
+        border-radius: 16px;
+        border: 1px solid var(--background-secondary);
+        background-color: var(--background-primary);
+        background-size: 20px 20px;
+        background-image:
+            linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+    }
+
+    #support .subtitle {
+        max-inline-size: 68ch;
+    }
+
+    .concentric-circles {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 175%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        /* background: red; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: -1;
+    }
+
+    .concentric-circles div {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px dashed var(--background-secondary);
+        width: calc(100% - (10% * var(--i)));
+        height: calc(100% - (10% * var(--i)));
+    }
+    
+    @media (prefers-reduced-motion: no-preference) {
+        .concentric-circles div {
+            animation: concentric-circle-pulse 4s ease-in-out infinite;
+            animation-delay: calc(0.5s * var(--i));
+        }
+    }
+
+    .concentric-circles div:nth-child(1) { --i: 0; }
+    .concentric-circles div:nth-child(2) { --i: 1; }
+    .concentric-circles div:nth-child(3) { --i: 2; }
+    .concentric-circles div:nth-child(4) { --i: 3; }
+    .concentric-circles div:nth-child(5) { --i: 4; }
+    .concentric-circles div:nth-child(6) { --i: 5; }
+
+    @keyframes concentric-circle-pulse {
+        0%, 40%, 100% {
+            border-color: var(--background-secondary);
+            opacity: 1;
+        }
+        15% {
+            opacity: 0.75;
+            border-color: var(--foreground-tertiary);
+        }
+    }
+
+    :global(.page-section::after) {
+        content: "";
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-bottom: 1px solid var(--background-secondary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .features-header-right svg {
+            animation: spin 60s linear infinite;
+        }
+    }
+
+    @media screen and not (max-width: 1024px) {
+        #hero > :global(.page-section-inner) {
+            margin-top: 64px;
+        }
+
+        :global(.navigation) {
+            position: fixed !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        :global(.navigation::after) {
+            content: "";
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 150%;
+            background: linear-gradient(var(--background-primary), transparent);
+            z-index: -1;
+        }
+
+        :global(.navigation > .navigation-inner) {
+            block-size: 64px !important;
+        }
+    }
+
     @media screen and (max-width: 1024px) {
+        .hero-left {
+            max-inline-size: unset;
+        }
+
         #hero > :global(.page-section-inner) {
             max-block-size: unset;
             padding-block: 64px;
@@ -173,11 +459,26 @@ const latestBlogPost = (
         }
     }
 
-    @media screen and (max-width: 1280px) {
+    @media screen and (max-width: 1200px) {
         #hero > :global(.page-section-inner) {
             block-size: unset;
             min-block-size: unset;
             padding-block: 48px;
+        }
+    }
+
+    @media screen and (min-width: 2048px) {
+        :global(.page-section::after) {
+            mask: linear-gradient(90deg, transparent, black, transparent);
+        }
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
         }
     }
 </style>

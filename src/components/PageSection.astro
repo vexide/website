@@ -24,52 +24,61 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 	.page-section-inner {
 		display: block;
 		position: relative;
+		z-index: 1;
 		box-sizing: border-box;
 		inline-size: 100%;
-		max-inline-size: 1280px;
+		max-inline-size: 1200px;
 		padding-inline: 48px;
 		padding-block: 128px;
 		margin-inline: auto;
 	}
 
 	.page-section :global(.title) {
-		line-height: 1.4;
+		line-height: 1.5;
 		color: var(--foreground-primary);
 		font-family: var(--font-monospace);
 		font-weight: 200;
 		margin-block-start: 0;
+		margin: 0;
 	}
 
 	.page-section :global(h1.title) {
-		font-size: 5.6rem;
-		margin: 0;
+		font-size: 5.2rem;
 	}
 
 	.page-section :global(h2.title) {
-		font-size: 4.8rem;
-		margin: 0;
+		font-size: 2.8rem;
+		font-weight: 500;
 	}
 
 	.page-section :global(.subtitle) {
-		font-size: 2.0rem;
+		font-size: 1.8rem;
 		line-height: 2;
 		font-weight: 400;
 		max-inline-size: 50ch;
 		color: var(--foreground-secondary);
 	}
 
-	.page-section :global(.subtitle a) {
+	.page-section :global(.subtitle a),
+	.page-section :global(.anchor) {
 		color: var(--foreground-accent-red);
 		text-decoration: none;
 		border-bottom: 1px solid currentColor;
 		transition: 250ms ease;
+
 	}
 
-	.page-section :global(.subtitle a:hover) {
+	.page-section :global(.subtitle a svg),
+	.page-section :global(.anchor svg) {
+		vertical-align: middle;
+	}
+
+	.page-section :global(.subtitle a:hover),
+	.page-section :global(.anchor:hover) {
 		opacity: 0.8;
 	}
 
-	@media screen and (max-width: 1280px) {
+	@media screen and (max-width: 1200px) {
 		.page-section :global(h1.title) {
 			font-size: 5.6rem;
 		}
@@ -79,14 +88,11 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		.page-section :global(h1.title) {
 			font-size: 4.8rem;
 		}
-
-		.page-section :global(p.subtitle) {
-			font-size: 2.0rem;
-		}
 	}
 	
 	@media screen and (max-width: 768px) {
 		.page-section-inner {
+			padding-block: 64px;
 			padding-inline: 24px;
 		}
 	}
