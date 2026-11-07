@@ -90,12 +90,11 @@ const latestBlogPost = (
                     </p>
                 </div>
                 <div class="features-header-right">
-                    <img
-                        alt="ferris the crab next to a box of crates"
-                        width="346"
-                        height="203"
-                        src="/docs/crates.svg"
-                    />
+                    <picture>
+                        <source srcset="/docs/crates.svg" media="(prefers-reduced-motion: reduce)" width="346" height="203" />
+                        <img src="/blog/hologram.webp" alt="spinning vexide logo" width="300" height="300" />
+                    </picture>
+
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="-1 -1 108 108"
@@ -477,10 +476,6 @@ const latestBlogPost = (
         }
     }
 
-    :global(html) {
-        scroll-behavior: smooth;
-    }
-
     #hero {
         overflow: hidden;
         display: flex;
@@ -678,6 +673,14 @@ const latestBlogPost = (
     }
 
     @media (prefers-reduced-motion: no-preference) {
+        :global(html) {
+            scroll-behavior: smooth;
+        }
+        
+        .features-header-right svg {
+            animation: spin 60s linear infinite;
+        }
+
         .concentric-circles div {
             animation: concentric-circle-pulse 4s ease-in-out infinite;
             animation-delay: calc(0.5s * var(--i));
@@ -724,12 +727,6 @@ const latestBlogPost = (
         bottom: 0;
         left: 0;
         border-bottom: 1px solid var(--background-secondary);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .features-header-right svg {
-            animation: spin 60s linear infinite;
-        }
     }
 
     @media screen and not (max-width: 1024px) {
