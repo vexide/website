@@ -70,7 +70,8 @@
 		color: var(--background-primary);
 	}
 
-	.button.variant-accent:active {
+	.button.variant-accent:active,
+	.button.variant-accent:focus {
 		background-color: #fff;
 		color: var(--background-primary);
 	}

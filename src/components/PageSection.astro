@@ -88,6 +88,10 @@ const { element: Element = "section", class: className, ...rest } = Astro.props;
 		.page-section :global(h1.title) {
 			font-size: 4.8rem;
 		}
+
+		.page-section :global(.subtitle) {
+			max-width: unset;
+		}
 	}
 	
 	@media screen and (max-width: 768px) {
