@@ -11,6 +11,7 @@ thumbnail: {
     url: "/images/thumbnails/melancholy.png",
     alt: "pink, blue, and white glowing vexide logo."
 }
+draft: true
 ---
 
 [Hi!](/blog/hi.png) It's been a while. Almost a whole year since our last blog post in fact. Yes, we're still alive!
