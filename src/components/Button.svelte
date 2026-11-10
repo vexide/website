@@ -43,7 +43,7 @@
 		font-family: inherit;
 		border-radius: 2px;
 		font-family: var(--font-monospace);
-		font-size: 1.6rem;
+		font-size: 1.4rem;
 		font-weight: 400;
 		padding-inline: 24px;
 		padding-block: 12px;
@@ -70,7 +70,8 @@
 		color: var(--background-primary);
 	}
 
-	.button.variant-accent:active {
+	.button.variant-accent:active,
+	.button.variant-accent:focus {
 		background-color: #fff;
 		color: var(--background-primary);
 	}

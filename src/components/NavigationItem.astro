@@ -23,9 +23,10 @@ const { selected = false, external = false } = Astro.props;
 		box-sizing: border-box;
 		text-decoration: none;
 		color: var(--foreground-secondary);
-		font-weight: 600;
 		padding-block: 4px;
 		transition: 150ms ease;
+		font-family: var(--font-monospace);
+		font-weight: 500;
 	}
 
 	.navigation-item:hover {
@@ -41,19 +42,18 @@ const { selected = false, external = false } = Astro.props;
 		outline: 2px solid var(--foreground-secondary);
 	}
 
-	.mobile-navigation-items .navigation-item {
+	:global(.mobile-navigation-items) .navigation-item {
 		color: var(--foreground-secondary);
-		font-size: 1.3rem;
-		padding-inline: 12px;
+		font-size: 1.8rem;
 		padding-block: 6px;
 		border-radius: 4px;
 	}
 
-	.mobile-navigation-items .navigation-item:hover {
+	:global(.mobile-navigation-items) .navigation-item:hover {
 		background-color: var(--background-primary);
 	}
 
-	.mobile-navigation-items .navigation-item:active {
+	:global(.mobile-navigation-items) .navigation-item:active {
 		background-color: var(--interactive-primary);
 	}
 </style>

@@ -1,0 +1,53 @@
+<svg class="vexide-logo" width="32" height="30" viewBox="0 0 375 193" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <clipPath id="bottom-clip">
+            <path d="M302.508 0H368.429C374.175 0 377.053 6.94758 372.99 11.0108L301.767 82.2336C299.248 84.7524 299.248 88.8366 301.767 91.3554L372.99 162.578C377.053 166.642 374.175 173.589 368.429 173.589H302.508C300.797 173.589 299.156 172.909 297.947 171.7L259.685 133.438C257.166 130.919 253.082 130.919 250.563 133.438L196.561 187.439C194.042 189.958 189.959 189.958 187.44 187.439L11.0115 11.0108C6.9482 6.94758 9.82598 0 15.5723 0H81.4932C83.2038 0 84.8448 0.679548 86.0544 1.88916L187.44 103.275C189.959 105.794 194.042 105.794 196.561 103.275L255.124 44.7123L297.947 1.88916C299.156 0.679554 300.797 0 302.508 0Z"/>
+        </clipPath>
+    </defs>
+
+    <path class="top" d="M137.288 11.0141L187.537 61.1904C190.055 63.705 194.134 63.705 196.652 61.1904L229.66 28.2311C232.183 25.7114 232.183 21.6224 229.66 19.1028L212.418 1.88585C211.208 0.678264 209.569 0 207.86 0H141.845C136.097 0 133.22 6.95226 137.288 11.0141Z" fill="#D8DBE9"/>
+
+    <path class="bottom" d="M302.508 0H368.429C374.175 0 377.053 6.94758 372.99 11.0108L301.767 82.2336C299.248 84.7524 299.248 88.8366 301.767 91.3554L372.99 162.578C377.053 166.642 374.175 173.589 368.429 173.589H302.508C300.797 173.589 299.156 172.909 297.947 171.7L259.685 133.438C257.166 130.919 253.082 130.919 250.563 133.438L196.561 187.439C194.042 189.958 189.959 189.958 187.44 187.439L11.0115 11.0108C6.9482 6.94758 9.82598 0 15.5723 0H81.4932C83.2038 0 84.8448 0.679548 86.0544 1.88916L187.44 103.275C189.959 105.794 194.042 105.794 196.561 103.275L255.124 44.7123L297.947 1.88916C299.156 0.679554 300.797 0 302.508 0Z" fill="#E6C85C"/>
+
+    <g clip-path="url(#bottom-clip)" class="rainbow">
+        <rect class="bar" x="0" y="0"   width="375" height="28" fill="#d20f39" style="--i:0"/>
+        <rect class="bar" x="0" y="28"  width="375" height="28" fill="#fe640b" style="--i:1"/>
+        <rect class="bar" x="0" y="56"  width="375" height="28" fill="#df8e1d" style="--i:2"/>
+        <rect class="bar" x="0" y="84"  width="375" height="28" fill="#40a02b" style="--i:3"/>
+        <rect class="bar" x="0" y="112" width="375" height="28" fill="#209fb5" style="--i:4"/>
+        <rect class="bar" x="0" y="140" width="375" height="28" fill="#1e66f5" style="--i:5"/>
+        <rect class="bar" x="0" y="168" width="375" height="28" fill="#7287fd" style="--i:6"/>
+    </g>
+</svg>
+
+<style>
+    .vexide-logo path {
+        transition: 250ms ease;
+    }
+
+    :global(.navigation-title:hover) .top {
+        transform: translateY(-8px);
+    }
+
+    :global(.navigation-title:active) .top {
+        transform: translateY(8px);
+    }
+
+    .vexide-logo .bar {
+        transform: translateX(-100%);
+        opacity: 0;
+        transition:
+            transform 350ms cubic-bezier(0.22, 1, 0.36, 1),
+            opacity 200ms ease;
+        transition-delay: calc(var(--i) * 45ms);
+    }
+
+    :global(.navigation-title:hover) .vexide-logo .bar {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    :global(.navigation-title:not(:hover)) .bar {
+        transition-delay: calc((6 - var(--i)) * 30ms);
+    }
+</style>

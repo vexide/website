@@ -80,7 +80,7 @@ const { title = "" } = Astro.props;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		max-inline-size: 1280px;
+		max-inline-size: 1200px;
 		padding-inline: 48px;
 		block-size: 48px;
 		margin-inline: auto;
@@ -105,14 +105,21 @@ const { title = "" } = Astro.props;
 	}
 
 	.navigation-title {
+		display: flex;
+		align-items: center;
 		margin-inline-end: 20px;
 		display: flex;
 		gap: 12px;
 		font-weight: 600;
-		font-size: 2.4rem;
+		font-size: 2.2rem;
 		text-decoration: none;
 		color: var(--foreground-primary);
 		transition: 150ms ease;
+	}
+
+	.navigation-title span {
+		position: relative;
+		top: -2px;
 	}
 
 	.navigation-title:hover {
@@ -184,14 +191,12 @@ const { title = "" } = Astro.props;
 		position: absolute;
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 16px;
 		inline-size: 100%;
 		inset-block-start: 100%;
 		inset-inline-start: 0;
 		margin: 0;
 		padding: 16px;
-		padding-bottom: 3rem;
-		font-size: 1.4em;
 		background: var(--background-primary);
 		border-bottom: 1px solid var(--background-secondary);
 		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.13);
