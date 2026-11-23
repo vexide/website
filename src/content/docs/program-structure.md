@@ -73,3 +73,30 @@ async fn main(peripherals: Peripherals) {
 `println!` simply prints some text for us to read. We'll learn how to read this as it runs [in a few pages](../using-the-terminal). This macro isn't a feature of vexide, but rather a part of Rust's standard library.
 
 If you've used Rust before, you should hopefully be [familiar](https://doc.rust-lang.org/book/ch01-02-hello-world.html#anatomy-of-a-rust-program) with this.
+
+# Analyzing the Rest of the Code
+
+Async main is the entry point of the code, but as you have probably seen, in your new project, there are other functions in the code. In order to fully utilize the Vexide runtime, it's important to understand the purpose of these functions.
+
+## Struct Robot
+
+In rust, a struct will create a new datatype. Inside, a struct, there are contents we call fields. Inside these fields, there are two parts:
+
+1. A name (for future use)
+2. A datatype (what the field is (a number, a boolean, or even a string)
+
+Struct Robot creates a new datatype named (you guessed it) robot. Inside this struct, you add everything that is in your robot. Here is a following example containing a piston and four motors:
+
+```rs
+struct Robot {
+//@focus start
+	solenoid: AdiDigitalOut,
+	motor1: Motor,
+	motor2: Motor,
+	motor3: Motor,
+	motor4: Motor,
+//@focus end
+}
+```
+> This is all great, but how can I define the ports of these devices in my robot? The robot doesn't automatically know, does it?
+
